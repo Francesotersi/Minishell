@@ -6,13 +6,8 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:08:08 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/19 12:08:38 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:47:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-
-void cacca()
-{
-	printf("merda\n");
-}

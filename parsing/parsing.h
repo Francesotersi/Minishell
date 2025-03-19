@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/19 12:06:01 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:14:50 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,17 @@
 # include <signal.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include "../minishell.h"
 
-void ciao();
+
+typedef struct s_token
+{
+	char	*str;
+	bool	exe;
+	int		whoami;
+	int		prior;
+	bool	is_and;
+	bool	is_or;
+} t_token;
 
 #endif

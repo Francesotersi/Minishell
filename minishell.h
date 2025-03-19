@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/19 12:14:29 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:54:53 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <signal.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <stdbool.h>
 # include "parsing/parsing.h"
 # include "executor/executor.h"
 
@@ -34,6 +35,7 @@ typedef struct s_data
 {
 	char	*input;
 	int		exit_code;
+	char	**env;
 	
 } t_data;
 
