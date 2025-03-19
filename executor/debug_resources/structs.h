@@ -1,21 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/03/19 16:52:49 by alerusso         ###   ########.fr       */
+/*   Created: 2025/02/18 11:46:24 by alerusso          #+#    #+#             */
+/*   Updated: 2025/02/18 13:21:22 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
-# include "../Ssj_libft/libft.h"
+#ifndef STRUCTS_H
+# define STRUCTS_H
 
-typedef struct s_executor
+typedef struct s_manage_fds
 {
-	
-}t_exec;
+	int		max_files;
+	int		file_num;
+	int		curr_fd;
+	int		fd_index;
+	char	*curr_file;
+	int		fds[20];
+	char	*filenames[20];
+}			t_manage_fds;
+
 #endif

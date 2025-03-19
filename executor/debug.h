@@ -1,21 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   debug.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/03/19 16:52:49 by alerusso         ###   ########.fr       */
+/*   Created: 2025/03/19 16:49:14 by alerusso          #+#    #+#             */
+/*   Updated: 2025/03/19 17:02:03 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
-# include "../Ssj_libft/libft.h"
+#ifndef DEBUG_H
+# define DEBUG_H
+# include "debug_resources/all.h"
 
-typedef struct s_executor
-{
-	
-}t_exec;
 #endif
