@@ -26,7 +26,7 @@ $(OBJ_DIR):
 
 deb: $(OBJ_DIR) $(OBJ) $(OBJ_DEBUG)
 	mkdir -p $(OBJ_DIR)
-	cc -D DEBUG=1 $(FLAGS) $(DEBUG_LIBFT) $(OBJ) $(OBJ_DEBUG) -o exe.out
+	cc -D DEBUG=1 $(FLAGS) $(OBJ) $(OBJ_DEBUG) $(DEBUG_LIBFT) -o exe.out
 
 clean:
 	rm -rf obj_executor/*.o *.out
