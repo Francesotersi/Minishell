@@ -6,32 +6,11 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/21 11:36:15 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:40:56 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// -CTRL-backslash = SIGQUIT
-// -CTRL-C = SIGINT
-// -CTRL-D command is controlled in the start() function cause 
-//		it sends a NULL string to readline()
-void	signals(int signal, siginfo_t *info, void *s)
-{
-	(void)info;
-	(void)s;
-	if (signal == SIGQUIT)
-	{
-		
-	}
-	else if (signal == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
 
 // readline ritorna una stringa da freeare ad ogni input
 int	start(t_data *gen)
