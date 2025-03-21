@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/19 14:54:53 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:06:51 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@
 # include "parsing/parsing.h"
 # include "executor/executor.h"
 
-// int	signal = 0;
-
 enum e_permission
 {
 	INFILE = O_CREAT | O_APPEND,	
@@ -38,5 +36,9 @@ typedef struct s_data
 	char	**env;
 	
 } t_data;
+
+//signals
+void	signals(int signal, siginfo_t *info, void *s);
+int		which_signal_received(void);
 
 #endif
