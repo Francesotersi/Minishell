@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/03/19 16:52:49 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:39:25 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,25 @@
 
 typedef struct s_executor
 {
-	
+	char			*content;
+	unsigned int	id;
+	unsigned int	prior;
+	unsigned int	type:4;
 }t_exec;
+
+enum e_types
+{
+	COMMAND = 0,
+	ARGUMENT = 1,
+	FILES = 2,
+	RED_OUT = 3,
+	RED_IN = 4,
+	RED_O_APPEND = 5,
+	HERE_DOC = 6,
+	PIPE = 7,
+	AND = 8,
+	OR = 9,
+	WILDCARD = 10,
+};
+
 #endif

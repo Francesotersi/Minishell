@@ -13,6 +13,5 @@
 #ifndef DEBUG_H
 # define DEBUG_H
 # include "debug_resources/all.h"
-# include "debug_resources/libft.h"
 
 #endif
