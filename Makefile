@@ -34,7 +34,6 @@ parsing:
 	make -C parsing
 	cc $(FLAGS) $(LIBFT) $(OBJ) -o $(NAME)
 
-
 executor:
 	make bonus -C Ssj_libft
 	make -C executor
@@ -61,3 +60,5 @@ libft:
 	make bonus -C Ssj_libft
 
 .PHONY: parsing executor clean fclean re
+
+# .SILENT:

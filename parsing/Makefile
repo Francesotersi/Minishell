@@ -1,6 +1,6 @@
 NAME = parsing
 
-SRC = debug.c
+SRC = start_token.c
 SRC_DEBUG = debug.c 
 
 OBJ_DIR = obj_parsing

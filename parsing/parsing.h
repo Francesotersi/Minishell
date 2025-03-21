@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/21 10:29:12 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:36:17 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,8 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdbool.h>
+# include "../minishell.h"
 
 
-typedef struct s_token
-{
-	char	*str;	// contenuto del token
-	int		type;	// tipo del token
-	int		id;		// posizione del token nell`input
-	int		prior;	// priorita`
-} t_token;
 
 #endif
