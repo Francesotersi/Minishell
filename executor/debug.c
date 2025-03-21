@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:08:08 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/21 15:11:44 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/03/21 17:01:33 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,23 +120,35 @@ int	read_tokens(char ***matrix, t_exec *exec, int line_num)
 	return (0);
 }
 
+int	execute(t_exec *exec)
+{
+	(void)exec;
+	return (0);
+}
+
 int	start_test_session(t_exec *exec)
 {
-	int	i;
+	t_exec	*head;
 
-	i = 0;
-	l_printf("[START]\n++++++++++++++++++++\n");
+	head = exec;
+	l_printf("\n[START]\n++++++++++++++++++++\n");
 	while (exec->content)
 	{
-		l_printf("\n+------------------+\nToken %d:\n", i);
+		l_printf("\n+------------------+\nToken %d:\n", exec->id);
 		l_printf("Content:\t|%s|\n", exec->content);
 		l_printf("Id:\t\t|%d|\n", exec->id);
 		l_printf("Type:\t\t|%d|\n", exec->type);
 		l_printf("Priority:\t|%d|\n", exec->prior);
 		++exec;
-		++i;
 	}
 	l_printf("\n+------------------+\n[END]\n++++++++++++++++++++\n");
-	l_printf("Your c");
-	return (0);
+	l_printf("\nTest for: ");
+	exec = head;
+	while (exec->content)
+	{
+		l_printf("%s ", exec->content);
+		++exec;
+	}
+	exec = head;
+	return (l_printf("\n\033[1;32mExecution:\033[0m\n"), execute(exec));
 }

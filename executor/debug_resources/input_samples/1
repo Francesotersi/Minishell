@@ -28,7 +28,7 @@ case: grep -v .c <(ls | grep -v .h)
 [END]
 
 case: grep -v .c <(ls | grep -v .h)
-[Test0, 9 token]
+[Test1, 9 token]
 	Token0 = grep,         0,  0, 0,
 	Token1 = -v,           1,  1, 0,
 	Token2 = .c,           2,  1, 0,
