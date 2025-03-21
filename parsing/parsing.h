@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/19 15:30:48 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/03/21 15:58:00 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,15 @@
 # include <signal.h>
 # include <stdlib.h>
 # include <fcntl.h>
-# include "../minishell.h"
+# include <stdbool.h>
 
 
 typedef struct s_token
 {
-	char	*str;
-	bool	exe;
-	int		whoami;
-	int		prior;
-	bool	is_and;
-	bool	is_or;
+	char	*str;	// contenuto del token
+	int		type;	// tipo del token
+	int		id;		// posizione del token nell`input
+	int		prior;	// priorita`
 } t_token;
 
 #endif
