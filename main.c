@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/24 08:44:30 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/03/25 10:00:26 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int	start(t_data *gen)
 			return(write(1, "exit\n", 5), free(gen->input), 0);
 		if (gen->input[0] != '\0')
 			add_history(gen->input);
-		//if (start_parsing(gen) == 1)
-		//	return (0);
+		if (start_lexing(gen) == -1)
+			return (0);
 		free(gen->input);
 	}
 	return (0);

@@ -24,7 +24,7 @@ $(NAME): $(OBJ_DIR) $(OBJ)
 	make -C parsing
 	make -C executor
 	cc $(FLAGS) $(LIBFT) $(OBJ) $(EXECUTOR) $(PARSING) -o $(NAME)
-	clear
+	
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
