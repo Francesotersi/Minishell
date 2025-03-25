@@ -1,9 +1,0 @@
-./:
-Makefile
-debug.c
-debug.h
-debug_resources
-exe.out
-executor.h
-grep
-obj_executor

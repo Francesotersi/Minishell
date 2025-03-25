@@ -1,7 +1,9 @@
 NAME = executor
 
-SRC = 
-SRC_DEBUG = debug.c 
+SRC = 	error_message.c execute.c general.c general2.c \
+		get_exec_data.c memory.c 
+
+SRC_DEBUG = debug.c
 
 OBJ_DIR = obj_executor
 
@@ -26,7 +28,7 @@ $(OBJ_DIR):
 
 deb: $(OBJ_DIR) $(OBJ) $(OBJ_DEBUG)
 	mkdir -p $(OBJ_DIR)
-	cc -D DEBUG=1 $(FLAGS) $(OBJ) $(OBJ_DEBUG) $(DEBUG_LIBFT) -o exe.out
+	cc -D DEBUG=1 $(FLAGS) $(OBJ_DEBUG) $(OBJ) $(DEBUG_LIBFT) -o exe.out
 
 clean:
 	rm -rf obj_executor/*.o *.out

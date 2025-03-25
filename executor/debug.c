@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:08:08 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/21 17:01:33 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/03/25 10:43:32 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 # include "debug_resources/all.h"
 
 int	testing(int test_num, int fd);
-int	alloc_memory_for_test(char *test, char ****matrix, t_exec **exec);
-int	read_tokens(char ***matrix, t_exec *exec, int line_num);
-int	start_test_session(t_exec *exec);
+int	alloc_memory_for_test(char *test, char ****matrix, t_token **exec);
+int	read_tokens(char ***matrix, t_token *exec, int line_num);
+int	start_test_session(t_token *exec);
 
 int	main(int argc, char **argv)
 {
@@ -52,7 +52,7 @@ int	testing(int test_num, int fd)
 	char	*test;
 	char	*temp;
 	int		num;
-	t_exec	*exec;
+	t_token	*exec;
 
 	temp = ft_itoa(test_num);
 	if (!temp)
@@ -75,7 +75,7 @@ int	testing(int test_num, int fd)
 	return (free_three_d_matrix(matrix), free(test), free(exec), 0);
 }
 
-int	alloc_memory_for_test(char *test, char ****matrix, t_exec **exec)
+int	alloc_memory_for_test(char *test, char ****matrix, t_token **exec)
 {
 	int	tokens;
 
@@ -93,13 +93,13 @@ int	alloc_memory_for_test(char *test, char ****matrix, t_exec **exec)
 	*matrix = (char ***)ft_calloc(tokens + 1, sizeof(char **));
 	if (!(*matrix))
 		return (1);
-	*exec = (t_exec *)ft_calloc(tokens + 1, sizeof(t_exec));
+	*exec = (t_token *)ft_calloc(tokens + 1, sizeof(t_token));
 	if (!(*exec))
 		return (1);
 	return (0);
 }
 
-int	read_tokens(char ***matrix, t_exec *exec, int line_num)
+int	read_tokens(char ***matrix, t_token *exec, int line_num)
 {
 	int		token_num;
 
@@ -120,15 +120,9 @@ int	read_tokens(char ***matrix, t_exec *exec, int line_num)
 	return (0);
 }
 
-int	execute(t_exec *exec)
+int	start_test_session(t_token *exec)
 {
-	(void)exec;
-	return (0);
-}
-
-int	start_test_session(t_exec *exec)
-{
-	t_exec	*head;
+	t_token	*head;
 
 	head = exec;
 	l_printf("\n[START]\n++++++++++++++++++++\n");
