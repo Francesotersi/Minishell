@@ -24,8 +24,15 @@
 # include "../minishell.h"
 
 typedef struct s_data t_data;
+typedef struct s_token t_token;
 
+//  start_lexing.c
 int		start_lexing(t_data *gen);
 
+//  fill_struct.c
+void     fill_struct(t_token *token, t_data *gen);
+
+//  utils.c
+void    printf_struct(t_token *token, t_data *gen);
 
 #endif

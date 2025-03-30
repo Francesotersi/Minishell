@@ -34,7 +34,7 @@ typedef struct s_data
 	char	*input;
 	int		exit_code;
 	char	**env;
-	
+	int		t_struct_len;
 } t_data;
 
 typedef struct s_token

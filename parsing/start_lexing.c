@@ -112,19 +112,21 @@ int	num_token(char *str)
 //
 //		casi limite
 //	1) cat <(ls) = funziona solo se le parentesi sono attaccate
-//	
+//
+// 		RICORDA!
+// 	1) La struttura e le stringhe all`interno di essa devono essere freeate
+// 
 int	start_lexing(t_data *gen)
 {
 	t_token			*token;
-	int				struct_len;
 
-	struct_len = num_token(gen->input);
-	if (struct_len == 0)
+	gen->t_struct_len = num_token(gen->input);
+	if (gen->t_struct_len == 0)
 		return (1);
-	printf("len = %d\n", struct_len);
-	token = (t_token*)malloc(sizeof(t_token) * struct_len);
+	printf("len = %d\n", gen->t_struct_len);
+	token = (t_token*)malloc(sizeof(t_token) * gen->t_struct_len);
 	if (!token)
 		return (write(2, "malloc error\n", 14), 1);
-	// fill_struct_token(token)
+	fill_struct(token, gen);
 	return (0);
 }

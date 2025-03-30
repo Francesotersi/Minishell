@@ -47,3 +47,14 @@ if (!(string) || !(*string) || (start > end))
 	string[temp1 - (end - start)] = 0;
 	return (0);
 }
+
+void	printf_struct(t_token *token, t_data *gen)
+{
+	int	i;
+
+	while (i < gen->t_struct_len)
+	{
+		printf("stringa contenuta nel token %s\n", token[i].str);
+		i++;
+	}
+}

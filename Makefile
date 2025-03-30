@@ -6,7 +6,7 @@ OBJ_DIR = obj_main
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
-FLAGS = -g -Wall -Werror -Wextra -lreadline -lhistory -ISsj_libft
+FLAGS = -g -Wall -Werror -Wextra -lreadline -lhistory -lncurses -ISsj_libft
 
 LIBFT = Ssj_libft/libft.a
 
@@ -23,7 +23,7 @@ $(NAME): $(OBJ_DIR) $(OBJ)
 	make bonus -C Ssj_libft
 	make -C parsing
 	make -C executor
-	cc $(FLAGS) $(LIBFT) $(OBJ) $(EXECUTOR) $(PARSING) -o $(NAME)
+	cc $(LIBFT) $(OBJ) $(EXECUTOR) $(PARSING) $(FLAGS) -o $(NAME)
 	
 
 $(OBJ_DIR):
