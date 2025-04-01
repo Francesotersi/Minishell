@@ -56,7 +56,7 @@ void	printf_struct(t_token *token, t_data *gen)
 	(void)token;
 	while (i < gen->token_num)
 	{
-		printf("stringa contenuta nel token %s\n", token[i].str);
+		printf("stringa contenuta nel token %d == %s\n",i , token[i].str);
 		i++;
 	}
 }

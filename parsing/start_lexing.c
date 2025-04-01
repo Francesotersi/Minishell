@@ -97,11 +97,9 @@ int	count_char_token(char *str, int *i, int *len)
 int	num_token(char *str)
 {
 	int	i;
-	int	temp;
 	int	len;
 
 	i = 0;
-	temp = 0;
 	len = 0;
 	while (str[i] != '\0')
 	{ 
@@ -133,7 +131,7 @@ int	start_lexing(t_data *gen)
 	gen->token_num = num_token(gen->input);
 	if (gen->token_num == 0)
 		return (1);
-	// printf("len = %d\n", gen->token_num);
+	printf("numero di token = %d\n", gen->token_num);
 	token = (t_token*)malloc(sizeof(t_token) * gen->token_num);
 	if (!token)
 		return (write(2, "bash: malloc error\n", 14), 1);

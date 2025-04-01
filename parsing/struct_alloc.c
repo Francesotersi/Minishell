@@ -23,7 +23,7 @@ int	string_allocation(t_token *token, int counter, int *token_id)
 			return (write(2, "bash: allocation error\n", 24), 1);
 		token->id = (*token_id);
 		(*token_id)++;
-		// printf("token numero = %d; allocato di %d\n", *token_id, counter);
+		printf("token numero = %d; allocato di %d\n", *token_id, counter);
 	}
 	return (0);
 }

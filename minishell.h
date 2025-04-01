@@ -43,6 +43,7 @@ typedef struct s_token
 	int		type;	// tipo del token
 	int		id;		// posizione del token nell`input
 	int		prior;	// priorita`
+	bool	space_on_right;
 } t_token;
 
 //signals
