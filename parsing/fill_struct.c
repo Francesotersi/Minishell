@@ -3,61 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   fill_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>              +#+  +:+       +#+    */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/28 09:38:38 by ftersill            #+#    #+#           */
-/*   Updated: 2025/03/28 09:38:38 by ftersill           ###   ########.fr     */
+/*   Created: 2025/03/28 09:38:38 by ftersill          #+#    #+#             */
+/*   Updated: 2025/04/01 12:44:50 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-// void	copy_operator_fill(t_token token, char *str, int *i, int *token_id)
-// {
-// 	int	token_roll;
-
-// 	token_roll = 0;
-// 	while ((str[*i] == '>' || str[*i] == '<' || str[*i] == '&' \
-// 		|| str[*i] == '|' || str[*i] == '(' || str[*i] == ')') \
-// 		&& str[*i] != '\0')
-// 	{
-// 		if ((str[*i] == '<' && str[*i + 1] == '<') || \ //	caso per <<, >>, ||, &&, 
-// 			(str[*i] == '>' && str[*i + 1] == '>') || \
-// 			(str[*i] == '&' && str[*i + 1] == '&') || \
-// 			(str[*i] == '|' && str[*i + 1] == '|'))
-// 		{
-
-// 		}
-// 		else //  caso <, >
-
-// 	}
-// }
-
-// va in segfault
-void	copy_char_fill(t_token token, char *str, int *i, int *token_id)
+int	copy_quotes_fill(t_token *token, t_data *gen, int *i, int *roll)
 {
-	int token_roll;
-
-	token_roll = 0;
-	while (str[*i] != '\"' && str[*i] != '\'' && str[*i] != '&' \
-		&& str[*i] != '|' && str[*i] != '<' && str[*i] != '>' \
-		&& str[*i] != ' ' && str[*i] != '(' && str[*i] != ')' \
-		&& str[*i] != '\0')
+	if (gen->input[*i] == '\"')
 	{
-		token.str[token_roll] = str[*i];
+		while (gen->input[++(*i)] != '\"' && gen->input[*i] != '\0')
+			token->str[(*roll)++] = gen->input[*i];
 		(*i)++;
-		token_roll++;
-		if (str[*i] != '\"' && str[*i] != '\'' && str[*i] != '&' \
-				&& str[*i] != '|' && str[*i] != '<' && str[*i] != '>' \
-				&& str[*i] != ' ' && str[*i] != '(' && str[*i] != ')' \
-				&& str[*i] != '\0')
-			(*token_id)++;
+		copy_quotes_fill(token, gen, i, roll);
+		return (0);
 	}
-	printf("caccaa %s", token.str);
-	// 					FORSE
-	//aggiungere qua la parte per contare gli spazi a sinistra del token
+	if (gen->input[*i] == '\'')
+	{
+		while (gen->input[*i] != '\'' && gen->input[*i] != '\0')
+			token->str[(*roll)++] = gen->input[(*i)++];
+		(*i)++;
+		copy_quotes_fill(token, gen, i, roll);
+		return (0);
+	}
+	return (2);
 }
 
+void	copy_char_fill(t_token *token, t_data *gen, int *i)
+{
+	int	roll;
+
+	roll = 0;
+	while (gen->input[*i] != '&' && gen->input[*i] != '|' \
+		&& gen->input[*i] != '<' && gen->input[*i] != '>' \
+		&& gen->input[*i] != ' ' && gen->input[*i] != '(' \
+		&& gen->input[*i] != ')' && gen->input[*i] != '\0')
+	{
+		if (copy_quotes_fill(token, gen, i, &roll) == 0)
+			continue ;
+		token->str[roll++] = gen->input[(*i)++];
+		// aggiungere qua la parte per la conta degli spazi a destra del token
+	}
+}
+
+// se dai un input con spazi o piu di un token rimane aperto da qualche parte fixalo coglione
 void	fill_struct(t_token *token, t_data *gen)
 {
 	int	token_id;
@@ -69,9 +62,9 @@ void	fill_struct(t_token *token, t_data *gen)
 		i++;
 	while (gen->input[i] != '\0')
 	{
-		copy_char_fill(token[token_id], gen->input, &i, &token_id);
+		copy_char_fill(&token[token_id], gen, &i);
 		// copy_operator_fill(token[token_id], gen->input, &i, &token_id);
-		
+		token_id++;
 	}
 	printf_struct(token, gen);
 }

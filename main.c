@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/25 10:00:26 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:04:34 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	start(t_data *gen)
 		if (gen->input[0] != '\0')
 			add_history(gen->input);
 		if (start_lexing(gen) == -1)
-			return (0);
+			return (1);
 		free(gen->input);
 	}
 	return (0);
