@@ -48,7 +48,7 @@ int	quotes_token(char *str, int *i, int *len, int *temp)
 	if (str[*i] == '\"')
 	{
 		while (str[++(*i)] != '\"' && str[*i] != '\0');
-		if (str[*i] == '\0')
+		if (str[(*i)++] == '\0')
 			return (1);
 		if ((*temp) == 0 && str[*i])
 		{
@@ -77,7 +77,7 @@ int	count_char_token(char *str, int *i, int *len)
 	int temp;
 
 	temp = 0;
-	while (str[*i] != '&' && str[*i] != '|' && str[*i] != '<' \
+		while (str[*i] != '&' && str[*i] != '|' && str[*i] != '<' \
 		&& str[*i] != '>' && str[*i] != ' ' && str[*i] != '(' \
 		&& str[*i] != ')' && str[*i] != '\0')
 	{
@@ -126,8 +126,7 @@ int	num_token(char *str)
 int	start_lexing(t_data *gen)
 {
 	t_token			*token;
-	
-	gen->token_num = 0;
+
 	gen->token_num = num_token(gen->input);
 	if (gen->token_num == 0)
 		return (1);
@@ -135,6 +134,7 @@ int	start_lexing(t_data *gen)
 	token = (t_token*)malloc(sizeof(t_token) * gen->token_num);
 	if (!token)
 		return (write(2, "bash: malloc error\n", 14), 1);
+	token_struct_init(token, gen);
 	(*token) = (t_token){0};
 	if (alloc_str_token(token, gen) == 1)
 		return (1);

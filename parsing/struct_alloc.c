@@ -18,7 +18,7 @@ int	string_allocation(t_token *token, int counter, int *token_id)
 {
 	if (counter != 0)
 	{
-		token[(*token_id)].str = malloc(sizeof(char) * counter);
+		token[(*token_id)].str = malloc(sizeof(char) * counter + 1);
 		if (!token[(*token_id)].str)
 			return (write(2, "bash: allocation error\n", 24), 1);
 		token->id = (*token_id);

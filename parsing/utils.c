@@ -48,6 +48,21 @@ string becomes: "Helloworld!\0"
 // 	return (0);
 // }
 
+void	token_struct_init(t_token *token, t_data *gen)
+{
+	int	i;
+	
+	i = 0;
+	while (i < gen->token_num)
+	{
+		token[i].id = 0;
+		token[i].type = 0;
+		token[i].space_on_right = 0;
+		token[i].prior = 0;
+		i++;
+	}
+}
+
 void	printf_struct(t_token *token, t_data *gen)
 {
 	int	i;

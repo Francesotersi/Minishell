@@ -12,14 +12,35 @@
 
 #include "parsing.h"
 
-// controlla il caso echo "'salvini'"il piu forte del mondo
-//'salvini'il lo mette nello stesso token e non va bene fixalo coglione
+// adesso vedi i casi con gli operatori che non funziona daaaaai
+int	copy_operator_fill(t_token *token, t_data *gen, int *i)
+{
+	int	roll;
+
+	roll = 0;
+	while ((gen->input[*i] == '>' || gen->input[*i] == '<' \
+		|| gen->input[*i] == '&' || gen->input[*i] == '|' \
+		|| gen->input[*i] == '(' || gen->input[*i] == ')') \
+		&& gen->input[*i] != '\0')
+	{
+		token->str[roll++] = gen->input[(*i)++];
+		if ((gen->input[*i] == '<' && gen->input[*i + 1] == '<') || \
+				(gen->input[*i] == '>' && gen->input[*i + 1] == '>') || \
+				(gen->input[*i] == '&' && gen->input[*i + 1] == '&') || \
+				(gen->input[*i] == '|' && gen->input[*i + 1] == '|'))
+			token->str[roll++] = gen->input[(*i)++];
+		return (0);
+	}
+	return (2);
+}
+
 int	copy_quotes_fill(t_token *token, t_data *gen, int *i, int *roll)
 {
 	if (gen->input[*i] == '\"')
 	{
-		while (gen->input[++(*i)] != '\"' && gen->input[*i] != '\0')
-			token->str[(*roll)++] = gen->input[*i];
+		(*i)++;
+		while (gen->input[*i] != '\"' && gen->input[*i] != '\0')
+			token->str[(*roll)++] = gen->input[(*i)++];
 		(*i)++;
 		if (gen->input[*i] == '\"' || gen->input[*i] == '\'')
 			copy_quotes_fill(token, gen, i, roll);
@@ -28,6 +49,7 @@ int	copy_quotes_fill(t_token *token, t_data *gen, int *i, int *roll)
 	}
 	if (gen->input[*i] == '\'')
 	{
+		(*i)++;
 		while (gen->input[*i] != '\'' && gen->input[*i] != '\0')
 			token->str[(*roll)++] = gen->input[(*i)++];
 		(*i)++;
@@ -76,9 +98,15 @@ void	fill_struct(t_token *token, t_data *gen)
 		while (gen->input[i] == ' ' && gen->input[i] != '\0')
 			i++;
 		if (copy_char_fill(&token[token_id], gen, &i) == 0)
-			if (gen->input[i + 1] == ' ')
+		{
+			if (gen->input[i + 1] == ' '  && gen->input[i + 1] != '\0')
 				token[token_id].space_on_right = true;
-		//else if (copy_operator_fill(token[token_id], gen->input, &i, &token_id))
+		}
+		else if (copy_operator_fill(&token[token_id], gen, &i) == 0)
+		{
+			if (gen->input[i + 1] == ' '  && gen->input[i + 1] != '\0')
+				token[token_id].space_on_right = true;
+		}
 		token_id++;
 	}
 	printf_struct(token, gen);

@@ -33,6 +33,7 @@ int		start_lexing(t_data *gen);
 void	fill_struct(t_token *token, t_data *gen);
 
 //  utils.c
+void	token_struct_init(t_token *token, t_data *gen);
 void	printf_struct(t_token *token, t_data *gen);
 void	free_all(t_token *token, t_data *gen);
 void	free_token(t_token *token, t_data *gen);
