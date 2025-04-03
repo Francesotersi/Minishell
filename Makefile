@@ -23,7 +23,7 @@ $(NAME): $(OBJ_DIR) $(OBJ)
 	make bonus -C Ssj_libft
 	make -C parsing
 	make -C executor
-	cc $(LIBFT) $(OBJ) $(EXECUTOR) $(PARSING) $(FLAGS) -o $(NAME)
+	cc $(OBJ) $(EXECUTOR) $(PARSING) $(LIBFT) $(FLAGS) -o $(NAME)
 	
 
 $(OBJ_DIR):

@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/01 12:33:38 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:04:46 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ int	start_lexing(t_data *gen)
 {
 	t_token			*token;
 
+
 	gen->token_num = num_token(gen->input);
 	if (gen->token_num == 0)
 		return (1);
@@ -140,7 +141,8 @@ int	start_lexing(t_data *gen)
 		return (1);
 	fill_struct(token, gen);
 
-	// free_all(token, gen);
+	printf_struct(token, gen);
+	free_all(token, gen);
 
 	return (0);
 }

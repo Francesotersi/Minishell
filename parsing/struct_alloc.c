@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:22:31 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/01 11:57:46 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/03 12:16:38 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	string_allocation(t_token *token, int counter, int *token_id)
 {
 	if (counter != 0)
 	{
-		token[(*token_id)].str = malloc(sizeof(char) * counter + 1);
+		token[(*token_id)].str = malloc(sizeof(char) * (counter + 1));
 		if (!token[(*token_id)].str)
 			return (write(2, "bash: allocation error\n", 24), 1);
 		token->id = (*token_id);
