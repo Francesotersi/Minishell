@@ -26,14 +26,15 @@ int	copy_operator_fill(t_token *token, t_data *gen, int *i)
 	{
 		if ((gen->input[*i] == '<' && gen->input[*i + 1] == '<') || \
 			(gen->input[*i] == '>' && gen->input[*i + 1] == '>') || \
-				(gen->input[*i] == '&' && gen->input[*i + 1] == '&') || \
-				(gen->input[*i] == '|' && gen->input[*i + 1] == '|'))
+			(gen->input[*i] == '&' && gen->input[*i + 1] == '&') || \
+			(gen->input[*i] == '|' && gen->input[*i + 1] == '|'))
 		{
 			token->str[roll++] = gen->input[(*i)++];
 			token->str[roll++] = gen->input[(*i)++];
 		}
 		else
 			token->str[roll++] = gen->input[(*i)++];
+		token->str[roll] = '\0';
 		return (0);
 	}
 	return (2);
@@ -103,15 +104,17 @@ void	fill_struct(t_token *token, t_data *gen)
 		if (copy_char_fill(&token[token_id], gen, &i) == 0 \
 			&&  i < (int)ft_strlen(gen->input))
 		{
-			if (gen->input[i + 1] && gen->input[i + 1] == ' ')
+			if (gen->input[i] && gen->input[i] == ' ')
 				token[token_id].space_on_right = true;
 		}
 		else if (copy_operator_fill(&token[token_id], gen, &i) == 0 \
 			&&  i < (int)ft_strlen(gen->input))
 		{
-			if (gen->input[i + 1] && gen->input[i + 1] == ' ')
+			if (gen->input[i] && gen->input[i] == ' ')
 				token[token_id].space_on_right = true;
 		}
+		token[token_id].id = token_id;
+		printf("|%d|\n", token[token_id].space_on_right);
 		token_id++;
 	}
 }

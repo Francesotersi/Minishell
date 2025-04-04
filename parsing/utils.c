@@ -53,6 +53,7 @@ void	token_struct_init(t_token *token, t_data *gen)
 	int	i;
 	
 	i = 0;
+	(void)i, (void)token, (void)gen;
 	while (i < gen->token_num)
 	{
 		token[i].id = 0;

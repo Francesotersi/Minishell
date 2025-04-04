@@ -34,7 +34,7 @@ int	main(int ac, char **av, char **env)
 	t_data				gen;
 	struct sigaction	sa;
 
-	(void)ac, (void)env, (void)av;
+	(void)ac, (void)av;
 	gen = (t_data){0};
 	gen.env = env;
 	sa.sa_flags = SA_SIGINFO;

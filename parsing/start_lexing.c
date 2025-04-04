@@ -140,6 +140,9 @@ int	start_lexing(t_data *gen)
 	if (alloc_str_token(token, gen) == 1)
 		return (1);
 	fill_struct(token, gen);
+	// da fare define_token_arg e aggiungerlo al .h sta nel file define_token.h
+	if (define_token_arg(token, gen))bash
+		return (1);
 
 	printf_struct(token, gen);
 	free_all(token, gen);
