@@ -6,92 +6,101 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:22:31 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/03 12:16:38 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/09 11:40:38 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-// qua da risdcrivere la parte delle quotes perche 1) conta male, 2)seie gay sium! 
+// qua da risdcrivere la parte delle quotes perche 1) conta male
 
 int	string_allocation(t_token *token, int counter, int *token_id)
 {
-	if (counter != 0)
+	if (counter)
 	{
-		token[(*token_id)].str = malloc(sizeof(char) * (counter + 1));
+		token[(*token_id)].str = (char*)ft_calloc(counter + 1, sizeof(char));
 		if (!token[(*token_id)].str)
-			return (write(2, "bash: allocation error\n", 24), 1);
-		token->id = (*token_id);
+			return (write(2, "bash: allocation error\n", 23), 1);
+		printf("il token |%d| e` stato allocato di |%d|\n", (*token_id), counter);
 		(*token_id)++;
-		printf("token numero = %d; allocato di %d\n", *token_id, counter);
 	}
 	return (0);
 }
 
-int	alloc_quotes_token(t_token *token, t_data *gen, int *i, int *counter)
+int alloc_operator_token(t_token *token, t_data *gen, int *i, int *token_id)
 {
-	if (gen->input[*i] == '\"')
-	{
-		while (gen->input[++(*i)] != '\"' && gen->input[*i] != '\0')
-			(*counter)++;
-		(*i)++;
-		alloc_quotes_token(token, gen, i, counter);
-		return (0);
-	}
-	if (gen->input[*i] == '\'')
-	{
-		while (gen->input[++(*i)] != '\'' && gen->input[*i] != '\0')
-			(*counter)++;
-		(*i)++;
-		alloc_quotes_token(token, gen, i, counter);
-		return (0);
-	}
-	return (2);
+    int counter;
+    
+	counter = 0;
+    if (gen->input[*i] == '&' || gen->input[*i] == '|' || 
+        gen->input[*i] == '(' || gen->input[*i] == ')' || 
+        gen->input[*i] == '>' || gen->input[*i] == '<')
+    {
+        if ((gen->input[*i] == '&' && gen->input[*i + 1] == '&') ||
+            (gen->input[*i] == '|' && gen->input[*i + 1] == '|') ||
+            (gen->input[*i] == '>' && gen->input[*i + 1] == '>') ||
+            (gen->input[*i] == '<' && gen->input[*i + 1] == '<'))
+        {
+            counter = 2;
+            *i += 2;
+        }
+        else
+        {
+            counter = 1;
+            *i += 1;
+        }
+        if (string_allocation(token, counter, token_id) == 1)
+            return (1);
+    }
+    return (0);
 }
 
-int	alloc_operator_token(t_token *token, t_data *gen, int *i, int *token_id)
+int	alloc_quotes_token(t_data *gen, int *i, int *counter)
 {
-	int	counter;
-
-	counter = 0;
-	while ((gen->input[*i] == '>' || gen->input[*i] == '<' \
-		|| gen->input[*i] == '&' || gen->input[*i] == '|' \
-		|| gen->input[*i] == '(' || gen->input[*i] == ')') \
-		&& gen->input[*i] != '\0')
+	if (gen->input[(*i)] == '\"')
 	{
-		if ((gen->input[*i] == '<' && gen->input[*i + 1] == '<') || \
-				(gen->input[*i] == '>' && gen->input[*i + 1] == '>') || \
-				(gen->input[*i] == '&' && gen->input[*i + 1] == '&') || \
-				(gen->input[*i] == '|' && gen->input[*i + 1] == '|'))
+		(*counter)++;
+		while (gen->input[++(*i)] != '\"' && gen->input[(*i)] != '\0')
+			(*counter)++;
+		if (gen->input[(*i)] == '\"')
 		{
-			(*i) += 2;
-			counter += 2;
-			break ;
+			(*i)++;
+			(*counter)++;
 		}
-		else
-			counter += 1;
-		(*i)++;
-		break ;
-	}
-	if (string_allocation(token, counter, token_id) == 1)
 		return (1);
+	}
+	if (gen->input[(*i)] == '\'')
+	{
+		(*counter)++;
+		while (gen->input[++(*i)] != '\'' && gen->input[(*i)] != '\0')
+			(*counter)++;
+		if (gen->input[(*i)] == '\'')
+		{
+			(*i)++;
+			(*counter)++;
+		}
+		return (1);
+	}
 	return (0);
 }
 
 int	alloc_char_token(t_token *token, t_data *gen, int *i, int *token_id)
 {
-	int counter;
+	int	counter;
 
 	counter = 0;
-	while (gen->input[*i] != '&' && gen->input[*i] != '|' \
-		&& gen->input[*i] != '<' && gen->input[*i] != '>' \
-		&& gen->input[*i] != ' ' && gen->input[*i] != '(' \
-		&& gen->input[*i] != ')' && gen->input[*i] != '\0')
+	while (gen->input[(*i)] != '&' && gen->input[(*i)] != '|' && \
+	gen->input[(*i)] != '(' && gen->input[(*i)] != ')' && \
+	gen->input[(*i)] != '>' && gen->input[(*i)] != '<' &&\
+	gen->input[(*i)] != ' ' && gen->input[(*i)] != '\0')
 	{
-		if (alloc_quotes_token(token, gen, i, &counter) == 0)
+		if (alloc_quotes_token(gen, i, &counter) == 1)
 			continue ;
-		(*i)++;
-		counter++;
+		else
+		{
+			(*i)++;
+			counter++;	
+		}
 	}
 	if (string_allocation(token, counter, token_id) == 1)
 		return (1);
@@ -110,10 +119,10 @@ int	alloc_str_token(t_token *token, t_data *gen)
 	{
 		while (gen->input[i] != '\0' && gen->input[i] == ' ')
 			i++;
-		if (alloc_char_token(token, gen, &i, &token_id) == 1)
-			return (write(2, "alloc error\n", 12), 1);
+		if (alloc_char_token(token, gen, &i, &token_id) == 1)	
+			return (1);
 		if (alloc_operator_token(token, gen, &i, &token_id) == 1)
-			return (write(2, "alloc error\n", 12), 1);
+			return (1);
 	}
 	return (0);
 }

@@ -6,65 +6,61 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 09:38:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/03 14:12:18 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:28:08 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-// allora funziona il fill ma se usi un operatore hai un uniunistialized value che dovresti togliere in qualche modo ricordatio di controllare daiiii coglione
+// il conteggio dei numero e` sbagliato quando sono presenti quote singole e doppie una dopo l`altra senza spazi in mezzo
 
 int	copy_operator_fill(t_token *token, t_data *gen, int *i)
 {
 	int	roll;
 
 	roll = 0;
-	while ((gen->input[*i] == '>' || gen->input[*i] == '<' \
-		|| gen->input[*i] == '&' || gen->input[*i] == '|' \
-		|| gen->input[*i] == '(' || gen->input[*i] == ')') \
-		&& gen->input[*i] != '\0')
+	// printf("sono qua |%d| e sono |%c|\n", (*i), gen->input[*i]);
+	if ((gen->input[*i] == '&' || gen->input[*i] == '|' || 
+		gen->input[*i] == '(' || gen->input[*i] == ')' || 
+		gen->input[*i] == '>' || gen->input[*i] == '<') && \
+		gen->input[*i] != '\0')
 	{
-		if ((gen->input[*i] == '<' && gen->input[*i + 1] == '<') || \
-			(gen->input[*i] == '>' && gen->input[*i + 1] == '>') || \
-			(gen->input[*i] == '&' && gen->input[*i + 1] == '&') || \
-			(gen->input[*i] == '|' && gen->input[*i + 1] == '|'))
+		if ((gen->input[*i] == '&' && gen->input[*i + 1] == '&') ||
+			(gen->input[*i] == '|' && gen->input[*i + 1] == '|') ||
+			(gen->input[*i] == '>' && gen->input[*i + 1] == '>') ||
+			(gen->input[*i] == '<' && gen->input[*i + 1] == '<'))
 		{
 			token->str[roll++] = gen->input[(*i)++];
 			token->str[roll++] = gen->input[(*i)++];
 		}
 		else
 			token->str[roll++] = gen->input[(*i)++];
-		token->str[roll] = '\0';
 		return (0);
 	}
-	return (2);
+	return (1);
 }
 
 int	copy_quotes_fill(t_token *token, t_data *gen, int *i, int *roll)
 {
-	if (gen->input[*i] == '\"')
+	if (gen->input[(*i)] == '\"' && gen->input[(*i)] != '\0')
 	{
-		(*i)++;
-		while (gen->input[*i] != '\"' && gen->input[*i] != '\0')
+		token->str[(*roll)++] = gen->input[(*i)];
+		while (gen->input[++(*i)] != '\"' && gen->input[(*i)] != '\0')
+			token->str[(*roll)++] = gen->input[(*i)];
+		if (gen->input[(*i)] == '\"' && gen->input[(*i)] != '\0')
 			token->str[(*roll)++] = gen->input[(*i)++];
-		(*i)++;
-		if (gen->input[*i] == '\"' || gen->input[*i] == '\'')
-			copy_quotes_fill(token, gen, i, roll);
-		else
-			return (0);
+		return (1);
 	}
-	if (gen->input[*i] == '\'')
+	if (gen->input[(*i)] == '\'' && gen->input[(*i)] != '\0')
 	{
-		(*i)++;
-		while (gen->input[*i] != '\'' && gen->input[*i] != '\0')
+		token->str[(*roll)++] = gen->input[(*i)];
+		while (gen->input[++(*i)] != '\'' && gen->input[(*i)] != '\0')
+			token->str[(*roll)++] = gen->input[(*i)];
+		if (gen->input[(*i)] == '\'' && gen->input[(*i)] != '\0')
 			token->str[(*roll)++] = gen->input[(*i)++];
-		(*i)++;
-		if (gen->input[*i] == '\"' || gen->input[*i] == '\'')
-			copy_quotes_fill(token, gen, i, roll);
-		else
-			return (0);
+		return (1);
 	}
-	return (2);
+	return (0);
 }
 
 int	copy_char_fill(t_token *token, t_data *gen, int *i)
@@ -72,22 +68,20 @@ int	copy_char_fill(t_token *token, t_data *gen, int *i)
 	int	roll;
 
 	roll = 0;
-	while (gen->input[*i] != '&' && gen->input[*i] != '|' \
-		&& gen->input[*i] != '<' && gen->input[*i] != '>' \
-		&& gen->input[*i] != ' ' && gen->input[*i] != '(' \
-		&& gen->input[*i] != ')' && gen->input[*i] != '\0')
+	while (gen->input[(*i)] != '&' && gen->input[(*i)] != '|' && \
+	gen->input[(*i)] != '(' && gen->input[(*i)] != ')' && \
+	gen->input[(*i)] != '>' && gen->input[(*i)] != '<' &&\
+	gen->input[(*i)] != ' ' && gen->input[(*i)] != '\0')
 	{
-		if (copy_quotes_fill(token, gen, i, &roll) == 0)
+		if (copy_quotes_fill(token, gen, i, &roll) == 1)
 			continue ;
 		else
 			token->str[roll++] = gen->input[(*i)++];
 	}
-	if (roll != 0)
-	{
-		token->str[roll] = '\0';
-		return (0);
-	}
-	return (2);
+	if (!roll)
+		return (1);
+	return (0);
+	
 }
 
 void	fill_struct(t_token *token, t_data *gen)
@@ -97,24 +91,24 @@ void	fill_struct(t_token *token, t_data *gen)
 
 	i = 0;
 	token_id = 0;
-	while (gen->input[i] != '\0')
+	while (gen->input[i] != '\0' && token_id < gen->token_num)
 	{
 		while (gen->input[i] == ' ' && gen->input[i] != '\0')
 			i++;
-		if (copy_char_fill(&token[token_id], gen, &i) == 0 \
-			&&  i < (int)ft_strlen(gen->input))
+		if (!copy_operator_fill(&token[token_id], gen, &i))
 		{
 			if (gen->input[i] && gen->input[i] == ' ')
 				token[token_id].space_on_right = true;
+			token[token_id].id = token_id;
+			token_id++;
 		}
-		else if (copy_operator_fill(&token[token_id], gen, &i) == 0 \
-			&&  i < (int)ft_strlen(gen->input))
+		if (!copy_char_fill(&token[token_id], gen, &i))
 		{
 			if (gen->input[i] && gen->input[i] == ' ')
 				token[token_id].space_on_right = true;
+			token[token_id].id = token_id;
+			token_id++;
 		}
-		token[token_id].id = token_id;
-		printf("|%d|\n", token[token_id].space_on_right);
-		token_id++;
 	}
+	remove_quotes_token(token);
 }

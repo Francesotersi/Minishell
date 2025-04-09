@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/01 10:58:06 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:28:00 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,8 @@ void	free_token(t_token *token, t_data *gen);
 
 // struct_alloc.c
 int		alloc_str_token(t_token *token, t_data *gen);
+
+// remove_quotes.c
+void	remove_quotes_token(t_token *token);
 
 #endif

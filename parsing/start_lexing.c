@@ -6,15 +6,11 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/03 14:04:46 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/09 09:22:39 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-// se && o || = token singoli
-// se redirection = token singoli
-// per il resto mettere tutto dentro un token singolo con delimitatore ' '
 
 int	operator_token(char *str, int *i, int *len)
 {
@@ -45,29 +41,26 @@ int	operator_token(char *str, int *i, int *len)
 // gestisce le quotes
 int	quotes_token(char *str, int *i, int *len, int *temp)
 {
-	if (str[*i] == '\"')
+	(void)temp;
+	if (str[(*i)] == '\"' && str[(*i)] != '\0')
 	{
-		while (str[++(*i)] != '\"' && str[*i] != '\0');
-		if (str[(*i)++] == '\0')
-			return (1);
-		if ((*temp) == 0 && str[*i])
-		{
-			(*len)++;
-			(*temp) = 1;
-		}
-		quotes_token(str, i, len, temp);
+		(*len)++;
+		while (str[++(*i)] != '\"' && str[(*i)] != '\0');
+		if (str[(*i)] == '\0')
+			return (2);
+		if (str[(*i)] == '\"')
+			(*i)++;
+		return (1);
 	}
-	if (str[*i] == '\'')
+	if (str[(*i)] == '\'' && str[(*i)] != '\0')
 	{
-		while (str[++(*i)] != '\'' && str[*i] != '\0');
-		if (str[(*i)++] == '\0')
-			return (1);
-		if ((*temp) == 0 && str[*i])
-		{
 			(*len)++;
-			(*temp) = 1;
-		}
-		quotes_token(str, i, len, temp);
+		while (str[++(*i)] != '\'' && str[(*i)] != '\0');
+		if (str[(*i)] == '\0')
+			return (2);
+		if (str[(*i)] == '\'')
+			(*i)++;
+		return (1);
 	}
 	return (0);
 }
@@ -75,20 +68,26 @@ int	quotes_token(char *str, int *i, int *len, int *temp)
 int	count_char_token(char *str, int *i, int *len)
 {
 	int temp;
+	int	temp2;
 
 	temp = 0;
-		while (str[*i] != '&' && str[*i] != '|' && str[*i] != '<' \
-		&& str[*i] != '>' && str[*i] != ' ' && str[*i] != '(' \
-		&& str[*i] != ')' && str[*i] != '\0')
+	temp2 = 0;
+	while (str[*i] != '&' && str[*i] != '|' && str[*i] != '<' \
+	&& str[*i] != '>' && str[*i] != ' ' && str[*i] != '(' \
+	&& str[*i] != ')' && str[*i] != '\0')
 	{
-		if (temp == 0 && str[*i])
+		temp2 = quotes_token(str, i, len, &temp);
+		if (temp2 == 2)
+			return (1);
+		else if (temp2 == 1)
+			continue ;
+		else if (temp == 0 && str[*i])
 		{
 			(*len)++;
 			temp = 1;
 		}
-		if (quotes_token(str, i, len, &temp) == 1)
-			return (1);
-		(*i)++;
+		if (str[*i])
+			(*i)++;
 	}
 	return (0);
 }
@@ -127,12 +126,11 @@ int	start_lexing(t_data *gen)
 {
 	t_token			*token;
 
-
 	gen->token_num = num_token(gen->input);
 	if (gen->token_num == 0)
 		return (1);
 	printf("numero di token = %d\n", gen->token_num);
-	token = (t_token*)malloc(sizeof(t_token) * gen->token_num);
+	token = (t_token*)ft_calloc(sizeof(t_token),  gen->token_num + 1);
 	if (!token)
 		return (write(2, "bash: malloc error\n", 14), 1);
 	token_struct_init(token, gen);
@@ -141,8 +139,8 @@ int	start_lexing(t_data *gen)
 		return (1);
 	fill_struct(token, gen);
 	// da fare define_token_arg e aggiungerlo al .h sta nel file define_token.h
-	if (define_token_arg(token, gen))bash
-		return (1);
+	// if (define_token_arg(token, gen))bash
+	// 	return (1);
 
 	printf_struct(token, gen);
 	free_all(token, gen);
