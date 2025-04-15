@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   general.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:32:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/03/25 15:32:49 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:04:08 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-/*
-	Always return NULL
+/*REVIEW - _free_matrix
+
+//	Safely free a 2D matrix, even if NULL.
+	Always return NULL.
 */
 void	*_free_matrix(char **matrix)
 {
@@ -34,8 +36,10 @@ void	*_free_matrix(char **matrix)
 	return (NULL);
 }
 
-/*
-	Always return NULL
+/*REVIEW - _free_three_d_matrix
+
+//	Safely free a 3D matrix, even if NULL.
+	Always return NULL.
 */
 void	*_free_three_d_matrix(char ***matrix)
 {
@@ -62,46 +66,57 @@ void	*_free_three_d_matrix(char ***matrix)
 	return (NULL);
 }
 
-/*
-	Count until the char is in the charset.
-	TWO MODES:
+/*REVIEW - count_commands
 
-	INCL: Count until the char is INCLUDED in the charset.
-	EXCL: Count until the char is NOT INCLUDED in the charset.
+//	Count the number of command block in the commands line sent by parsing.
+	exec allocation size depend on this number.
+	Checks if there are pipe on the commands line.
 */
-int	_sub_strlen(char *s, char *charset, int mode)
-{
-	int	i;
-
-	i = 0;
-	if (mode == INCL)
-	{
-		while (((s[i] != '\0')) && \
-		(ft_strchr(charset, s[i])))
-		{
-			++i;
-		}
-	}
-	else if (mode == EXCL)
-	{
-		while (((s[i] != '\0')) && \
-		!(ft_strchr(charset, s[i])))
-		{
-			++i;
-		}
-	}
-	return (i);
-}
-
-int	count_commands(t_token *tokens)
+int	count_commands(t_exec *exec, t_token *tokens)
 {
 	int	cmd_num;
+	int	pipe_num;
 
 	cmd_num = 0;
+	pipe_num = 0;
 	while (tokens->content != NULL)
 	{
+		pipe_num += (tokens->type == PIPE);
 		cmd_num += (tokens->type == COMMAND);
 		++tokens;
 	}
+	exec->at_least_one_pipe = pipe_num > 0;
 	return (cmd_num);
+}
+
+/*REVIEW - _ft_strjoin_free
+
+//	Like strjoin, but frees both string.
+*/
+char	*_ft_strjoin_free(char *s1, char *s2)
+{
+	char	*new_str;
+	int		index;
+	int		size;
+
+	if ((!s1) || (!s2))
+		return (free(s1), free(s2), NULL);
+	index = 0;
+	while (s1[index])
+		++index;
+	size = index;
+	index = 0;
+	while (s2[index])
+		++index;
+	size += index;
+	new_str = (char *)ft_calloc(size + 2, sizeof(char));
+	if (!new_str)
+		return (free(s1), free(s2), NULL);
+	index = -1;
+	while (s1[++index])
+		new_str[index] = s1[index];
+	size = -1;
+	while (s2[++size])
+		new_str[index++] = s2[size];
+	return (free(s1), free(s2), new_str);
 }

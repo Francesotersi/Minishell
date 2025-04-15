@@ -1,41 +1,42 @@
 types:
 
- COMMAND = 0;
- ARGUMENT = 1;
- FILE = 2;
- > = 3;
- < = 4;
- >> = 5;
- << = 6;
- | = 7;
- && = 8;
- || = 9;
- *  = 10;
+COMMAND = 0;
+ARGUMENT = 1;
+FILE = 2;
+> = 3;
+< = 4;
+>> = 5;
+<< = 6;
+| = 7;
+&& = 8;
+|| = 9;
+*  = 10;
 
-Row are: token_content // token_id // type // priority
+Row are: token_content // type // priority
 
-case: grep -v .c <(ls | grep -v .h)
-[Test0, 9 token]
-	Token0 = grep,         0,  0, 0,
-	Token1 = -v,           1,  1, 0,
-	Token2 = .c,           2,  1, 0,
-	Token3 = <,            3,  4, 0,
-	Token4 = ls,           4,  0, 1,
-	Token5 = |,            5,  7, 1,
-	Token6 = grep,         6,  0, 1,
-	Token7 = -v,           7,  1, 1,
-	Token8 = .c,           8,  1, 1,
+
+[Test0, 2 token]
+	Token = make, 0, 0,
+	Token = frm, 1, 0,
+	[END]
+	
+
+case: cat < input.txt | grep "error" > out1.txt >> out2.txt || echo "ERROR!!!" >> log.txt
+	[Test1, 15 token]
+	Token = cat,              0, 0,
+	Token = <,                4, 0,
+	Token = debug_resources/input_samples/1,        2, 0,
+	Token = |,                7, 0,
+	Token = grep,             0, 0,
+	Token = "error",          1, 0,
+	Token = >,                3, 0,
+	Token = out1.txt,         2, 0,
+	Token = >>,               5, 0,
+	Token = out2.txt,         2, 0,
+	Token = ||,	              9, 0,
+	Token = echo,             0, 0,
+	Token = "ERROR!",			1, 0,
+	Token = >>,               5, 0,
+	Token = log.txt,          2, 0,
 [END]
-
-case: grep -v .c <(ls | grep -v .h)
-[Test1, 9 token]
-	Token0 = grep,         0,  0, 0,
-	Token1 = -v,           1,  1, 0,
-	Token2 = .c,           2,  1, 0,
-	Token3 = <,            3,  4, 0,
-	Token4 = ls,           4,  0, 1,
-	Token5 = |,            5,  7, 1,
-	Token6 = grep,         6,  0, 1,
-	Token7 = -v,           7,  1, 1,
-	Token8 = .c,           8,  1, 1,
-[END]
+	

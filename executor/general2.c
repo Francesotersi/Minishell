@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 15:10:30 by alerusso          #+#    #+#             */
-/*   Updated: 2025/03/25 16:58:12 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:32:55 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,50 @@
 int	is_red_sign(int sign)
 {
 	if (sign == RED_OUT)
-		return (YES);
+		return (_YES);
 	else if (sign == RED_IN)
-		return (YES);
+		return (_YES);
 	else if (sign == RED_O_APPEND)
-		return (YES);
+		return (_YES);
 	else if (sign == HERE_DOC)
-		return (YES);
-	return (NO);
+		return (_YES);
+	else if (sign == RED_SUBSHELL)
+		return (_YES);
+	return (_NO);
+}
+
+/*REVIEW - 
+	is_redirector_input_sign searches for:	
+										{<}
+										{<<}
+	
+	Returns 1 (_YES) on success;
+	Returns 0 (_NO) on failure.
+*/
+int	is_red_input_sign(int sign)
+{
+	if (sign == RED_IN)
+		return (_YES);
+	else if (sign == HERE_DOC)
+		return (_YES);
+	return (_NO);
+}
+
+/*REVIEW - 
+	is_redirector_output_sign searches for:	
+										{>}
+										{>>}
+	
+	Returns 1 (_YES) on success;
+	Returns 0 (_NO) on failure.
+*/
+int	is_red_output_sign(int sign)
+{
+	if (sign == RED_OUT)
+		return (_YES);
+	else if (sign == RED_O_APPEND)
+		return (_YES);
+	return (_NO);
 }
 
 /*REVIEW - 
@@ -37,14 +73,44 @@ int	is_red_sign(int sign)
 											{|}
 											{&&}
 											{||}
+	
+	Returns 1 (_YES) on success;
+	Returns 0 (_NO) on failure.
 */
 int	is_exec_sep(int sign)
 {
 	if (sign == PIPE)
-		return (YES);
+		return (_YES);
 	else if (sign == AND)
-		return (YES);
+		return (_YES);
 	else if (sign == OR)
-		return (YES);
-	return (NO);
+		return (_YES);
+	return (_NO);
+}
+
+/*REVIEW - is_a_builtin_cmd
+//
+		1)	Takes the command len;
+		2)	Searches for every builtin command.
+*/
+int	is_a_builtin_cmd(char *cmd)
+{
+	int	len;
+
+	len = ft_strlen(cmd);
+	if (!ft_strncmp(cmd, "echo", 4) && !ft_strncmp(cmd, "echo", len))
+		return (B_ECHO);
+	else if (!ft_strncmp(cmd, "cd", 2) && !ft_strncmp(cmd, "cd", len))
+		return (B_CD);
+	else if (!ft_strncmp(cmd, "pwd", 3) && !ft_strncmp(cmd, "pwd", len))
+		return (B_PWD);
+	else if (!ft_strncmp(cmd, "export", 6) && !ft_strncmp(cmd, "export", len))
+		return (B_EXPORT);
+	else if (!ft_strncmp(cmd, "unset", 5) && !ft_strncmp(cmd, "unset", len))
+		return (B_UNSET);
+	else if (!ft_strncmp(cmd, "env", 3) && !ft_strncmp(cmd, "env", len))
+		return (B_ENV);
+	else if (!ft_strncmp(cmd, "exit", 4) && !ft_strncmp(cmd, "exit", len))
+		return (B_EXIT);
+	return (_NO);
 }

@@ -172,7 +172,6 @@ static void	close_one(int *fd)
 		close(*fd);
 	*fd = -1;
 }*/
-
 /*
 	Calls waitpid for every pid in the pid_list.
 	Very cool, right?
