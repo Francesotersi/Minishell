@@ -1,0 +1,104 @@
+types:
+
+ COMMAND = 0;
+ ARGUMENT = 1;
+ FILE = 2;
+ > = 3;
+ < = 4;
+ >> = 5;
+ << = 6;
+ | = 7;
+ && = 8;
+ || = 9;
+ *  = 10;
+
+Row are: token_content // type // priority
+
+Complete bash test:
+make frm ; \
+ls  >>file6.txt | grep -v .c >file7.txt > file8.txt > file5.txt <file6.txt | grep -v .h >file5.txt >file4.txt ; \
+grep -v .c <(ls | grep -v .h) ; \
+cat <<EOF ; \
+ls -a --author | grep .c -v | grep .h -v ; \
+cat file4.txt >> file4.txt | grep "error" < file3.txt >> file2.txt
+
+case: make frm
+[Test0, 2 token]
+	Token = make, 0, 0,
+	Token = frm, 1, 0,
+	[END]
+	
+
+case: ls  file6.txt | grep -v .c file7.txt file8.txt file5.txt file6.txt | grep -v .h file5.txt file4.txt
+[Test1, 16 token]
+		Token = ls, 0, 0,
+		Token = file6.txt, 3, 0,
+		Token = |, 7, 0,
+		Token = grep, 0, 0,
+		Token = -v, 1, 0,
+		Token = .c, 1, 0,
+		Token = file7.txt, 3, 0,
+		Token = file8.txt, 3, 0,
+		Token = file5.txt, 3, 0,
+		Token = file6.txt, 4, 0,
+		Token = |, 7, 0,
+		Token = grep, 0, 0,
+		Token = -v, 1, 0,
+		Token = .h, 1, 0,
+		Token = file5.txt, 4, 0,
+		Token = file4.txt, 3, 0,
+		[END]
+		
+
+case: grep -v .c (ls | grep -v .h)
+[Test2, 10 token]
+Token = grep, 0, 0,
+Token = -v, 1, 0,
+Token = .c, 1, 0,
+Token = (, 6, 0,
+Token = ls, 0, 0,
+Token = |, 7, 0,
+Token = grep, 0, 0,
+Token = -v, 1, 0,
+Token = .h, 1, 0,
+Token = ), 6, 0,
+[END]
+
+
+case: cat EOF ;
+[Test3, 2 token]
+Token = cat, 0, 0,
+Token = EOF, 6, 0,
+[END]
+
+
+case: ls -a --author | grep .c -v | grep .h -v
+[Test4, 11 token]
+Token = ls, 0, 0,
+Token = -a, 1, 0,
+Token = --author, 2, 0,
+Token = |, 7, 0,
+Token = grep, 0, 0,
+Token = .c, 1, 0,
+Token = -v, 1, 0,
+Token = |, 7, 0,
+Token = grep, 0, 0,
+Token = .h, 1, 0,
+Token = -v, 1, 0,
+[END]
+
+
+case: cat file4.txt file4.txt | grep "error" file3.txt file2.txt
+[Test5, 8 token]
+Token = cat, 0, 0,
+Token = file4.txt, 1, 0,
+Token = file4.txt, 5, 0,
+Token = |, 7, 0,
+Token = grep, 0, 0,
+Token = "error", 1, 0,
+Token = file3.txt, 4, 0,
+Token = file2.txt, 3, 0,
+[END]
+
+
+

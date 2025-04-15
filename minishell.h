@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
 /*   Updated: 2025/04/15 09:43:06 by ftersill         ###   ########.fr       */
@@ -27,7 +27,7 @@
 
 enum e_permission
 {
-	INFILE = O_CREAT | O_APPEND,	
+	INFILE = O_CREAT | O_APPEND,
 };
 
 typedef struct s_data

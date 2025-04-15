@@ -1,0 +1,9 @@
+#SEG FAULT
+case: < builtin_cd.c "" | "" > tuononno.txt
+[Test0, 4 Token]
+Token = builtin_cd.c,	 4, 0,
+Token = s,				 0, 0,
+Token =	|, 				 7, 0,
+Token = s,				 0, 0,
+Token = tuononno.txt,	 3, 0,
+[END]
