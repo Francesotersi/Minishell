@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:13:21 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/08 12:41:12 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/14 09:01:37 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	printf_struct(t_token *token, t_data *gen)
 	int	i;
 
 	i = 0;
+	printf("numero di token = %d\n", gen->token_num);
 	while (i <= gen->token_num)
 	{
 		printf("stringa contenuta nel token %d == %s\n",i + 1 , token[i].str);

@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/09 09:22:39 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/15 09:48:05 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,17 +111,18 @@ int	num_token(char *str)
 	}
 	return (len);
 }
+
 //		to-do list:
 //	X) Allocare la stringa
-//	2) riempire la struttura con le stringhe
+//	X) riempire la struttura con le stringhe
 //  3) fare controlli per il parsing effettivo
 //
 //		casi limite
-//	1) cat <(ls) = funziona solo se le parentesi sono attaccate
 //
 // 		RICORDA!
 // 	1) La struttura e le stringhe all`interno di essa devono essere freeate
-//	
+//
+
 int	start_lexing(t_data *gen)
 {
 	t_token			*token;
@@ -129,7 +130,6 @@ int	start_lexing(t_data *gen)
 	gen->token_num = num_token(gen->input);
 	if (gen->token_num == 0)
 		return (1);
-	printf("numero di token = %d\n", gen->token_num);
 	token = (t_token*)ft_calloc(sizeof(t_token),  gen->token_num + 1);
 	if (!token)
 		return (write(2, "bash: malloc error\n", 14), 1);
@@ -141,7 +141,7 @@ int	start_lexing(t_data *gen)
 	// da fare define_token_arg e aggiungerlo al .h sta nel file define_token.h
 	// if (define_token_arg(token, gen))bash
 	// 	return (1);
-
+	
 	printf_struct(token, gen);
 	free_all(token, gen);
 

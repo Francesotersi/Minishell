@@ -6,11 +6,25 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/09 12:29:48 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/15 09:44:32 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "parsing.h" 
+
+// types:
+
+// COMMAND = 0;
+// ARGUMENT = 1;
+// FILE = 2;
+// > = 3;
+// < = 4;
+// >> = 5;
+// << = 6;
+// | = 7;
+// && = 8;
+// || = 9; 
+// * = 10.
 
 //			TO DEFINE IN TOKEN STRUCT
 //	1) tipo di token

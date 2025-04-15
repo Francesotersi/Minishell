@@ -6,64 +6,91 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/09 15:27:29 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/15 09:37:25 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-
-
-void	actual_removal(t_token *token)
+void	fix_gen_token_num(t_token *token, t_data *gen)
 {
-	char	quote;
-	char	*temp;
-	int		i;
-	int		roll;
-	tekken 3 online
+	int	i;
+
 	i = 0;
-	roll = 0;
+	while (token[i].str != NULL)
+	{
+		i++;
+	}
+	gen->token_num = i;
+}
+
+char *actual_removal_temp_alloc(t_token *token)
+{
+	char *temp;
+
 	temp = ft_strdup(token->str);
 	free(token->str);
 	token->str = (char*)ft_calloc(ft_strlen(temp) - 2 + 1, sizeof(char));
 	if (!token->str)
-		return (free_all(token, NULL));
-	while (temp[i])
 	{
-		if (temp[i] == '\'' || temp[i] == '\"')
-		{
-			quote = temp[i++];
-			while (temp[i] && temp[i] != quote)
-				token->str[roll++] = temp[i++];
-			if (temp[i] != quote)
-				i++;
-			continue ;
-		}
-		token->str[roll++] = temp[i];
-		i++;
+		free_all(token, NULL);
+		return (NULL);
 	}
+	return (temp);
 }
 
-void	remove_quotes_token(t_token *token)
+void	actual_removal(t_token *token, bool check, char *temp)
 {
-	int	id;
-	int	i;
+	int		j;
+	char	quote;
+	int		i;
 
+	(void)check;
+	i = 0;
+	j = 0;
+	while (temp[i] != '\0')
+	{
+		quote = temp[i];
+		if (quote == '\"' || quote == '\'')
+		{
+			i++;
+			while (temp[i] != '\0' && temp[i] != quote)
+			{
+				token->str[j++] = temp[i++];
+			}
+			i++;
+			continue ;
+		}
+		token->str[j++] = temp[i++];
+	}
+	free(temp);
+}
+
+void	remove_quotes_token(t_token *token, t_data *gen)
+{
+	int		id;
+	int		i;
+	bool	check;
+	char	*temp;
+
+	check = false;
 	i = 0;
 	id = 0;
-	while (token[id].str)
+	temp = NULL;
+	while (token[id].str != NULL)
 	{
-		while (token[id].str[i])
+		while(token[id].str[i] != '\0')
 		{
-			if (token[id].str[i] == '\"' || token[id].str[i] == '\'')
+			if (token[id].str[i] == '\'' || token[id].str[i] == '\"')
 			{
-				actual_removal(&token[id]);
+				temp = actual_removal_temp_alloc(&token[id]);
+				actual_removal(&token[id], check, temp);
 				break ;
 			}
-			else
-				i++;
+			i++;
 		}
 		i = 0;
 		id++;
 	}
+	fix_gen_token_num(token, gen);
 }
