@@ -1,6 +1,7 @@
 NAME = parsing
 
-SRC = start_lexing.c fill_struct.c utils.c struct_alloc.c remove_quotes.c
+SRC = start_lexing.c fill_struct.c utils.c struct_alloc.c remove_quotes.c \
+	define_token.c
 SRC_DEBUG = debug.c 
 
 OBJ_DIR = obj_parsing

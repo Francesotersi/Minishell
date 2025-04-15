@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/14 08:42:05 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/15 13:40:02 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,15 @@ void	token_struct_init(t_token *token, t_data *gen);
 void	printf_struct(t_token *token, t_data *gen);
 void	free_all(t_token *token, t_data *gen);
 void	free_token(t_token *token, t_data *gen);
+int		ft_strcmp(char *s1, char *s2);
 
 // struct_alloc.c
 int		alloc_str_token(t_token *token, t_data *gen);
 
 // remove_quotes.c
 void	remove_quotes_token(t_token *token, t_data *gen);
+
+// define_token.c
+int		define_token_arg(t_token *token, t_data *gen);
 
 #endif

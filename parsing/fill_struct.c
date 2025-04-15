@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 09:38:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/14 08:42:14 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:20:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	copy_operator_fill(t_token *token, t_data *gen, int *i)
 	int	roll;
 
 	roll = 0;
-	// printf("sono qua |%d| e sono |%c|\n", (*i), gen->input[*i]);
 	if ((gen->input[*i] == '&' || gen->input[*i] == '|' || 
 		gen->input[*i] == '(' || gen->input[*i] == ')' || 
 		gen->input[*i] == '>' || gen->input[*i] == '<') && \
@@ -30,11 +29,11 @@ int	copy_operator_fill(t_token *token, t_data *gen, int *i)
 			(gen->input[*i] == '>' && gen->input[*i + 1] == '>') ||
 			(gen->input[*i] == '<' && gen->input[*i + 1] == '<'))
 		{
-			token->str[roll++] = gen->input[(*i)++];
-			token->str[roll++] = gen->input[(*i)++];
+			token->content[roll++] = gen->input[(*i)++];
+			token->content[roll++] = gen->input[(*i)++];
 		}
 		else
-			token->str[roll++] = gen->input[(*i)++];
+			token->content[roll++] = gen->input[(*i)++];
 		return (0);
 	}
 	return (1);
@@ -44,20 +43,20 @@ int	copy_quotes_fill(t_token *token, t_data *gen, int *i, int *roll)
 {
 	if (gen->input[(*i)] == '\"' && gen->input[(*i)] != '\0')
 	{
-		token->str[(*roll)++] = gen->input[(*i)];
+		token->content[(*roll)++] = gen->input[(*i)];
 		while (gen->input[++(*i)] != '\"' && gen->input[(*i)] != '\0')
-			token->str[(*roll)++] = gen->input[(*i)];
+			token->content[(*roll)++] = gen->input[(*i)];
 		if (gen->input[(*i)] == '\"' && gen->input[(*i)] != '\0')
-			token->str[(*roll)++] = gen->input[(*i)++];
+			token->content[(*roll)++] = gen->input[(*i)++];
 		return (1);
 	}
 	if (gen->input[(*i)] == '\'' && gen->input[(*i)] != '\0')
 	{
-		token->str[(*roll)++] = gen->input[(*i)];
+		token->content[(*roll)++] = gen->input[(*i)];
 		while (gen->input[++(*i)] != '\'' && gen->input[(*i)] != '\0')
-			token->str[(*roll)++] = gen->input[(*i)];
+			token->content[(*roll)++] = gen->input[(*i)];
 		if (gen->input[(*i)] == '\'' && gen->input[(*i)] != '\0')
-			token->str[(*roll)++] = gen->input[(*i)++];
+			token->content[(*roll)++] = gen->input[(*i)++];
 		return (1);
 	}
 	return (0);
@@ -76,14 +75,15 @@ int	copy_char_fill(t_token *token, t_data *gen, int *i)
 		if (copy_quotes_fill(token, gen, i, &roll) == 1)
 			continue ;
 		else
-			token->str[roll++] = gen->input[(*i)++];
+			token->content[roll++] = gen->input[(*i)++];
 	}
 	if (!roll)
 		return (1);
 	return (0);
 	
 }
-
+// riempie la struttura dei token e una volta finito rimuove le quotes
+// correttamente e espande le variabili di ambiente e exit status
 void	fill_struct(t_token *token, t_data *gen)
 {
 	int	token_id;
