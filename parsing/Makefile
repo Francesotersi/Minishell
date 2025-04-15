@@ -1,6 +1,6 @@
 NAME = parsing
 
-SRC = debug.c
+SRC = start_lexing.c fill_struct.c utils.c struct_alloc.c remove_quotes.c
 SRC_DEBUG = debug.c 
 
 OBJ_DIR = obj_parsing
@@ -9,6 +9,8 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 OBJ_DEBUG = $(addprefix $(OBJ_DIR)/, $(SRC_DEBUG:.c=.o))
 
 FLAGS = -Wall -Werror -Wextra -lreadline -lhistory -g
+
+CFLAGS = -Wall -Werror -Wextra -g
 
 LIBFT = ../Ssj_libft/libft.a
 

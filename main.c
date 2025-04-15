@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/03/21 11:40:56 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:10:30 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int	start(t_data *gen)
 	{
 		gen->input = readline("minishell$> ");
 		if (!gen->input)
-			return(write(1, "exit\n", 5), 0);
+			return(write(1, "exit\n", 5), free(gen->input), 0);
 		if (gen->input[0] != '\0')
 			add_history(gen->input);
-		//if (start_parsing(gen) == 1)
-		//	return (0);
+		if (start_lexing(gen) == -1)
+			return (1);
 		free(gen->input);
 	}
 	return (0);
@@ -34,7 +34,7 @@ int	main(int ac, char **av, char **env)
 	t_data				gen;
 	struct sigaction	sa;
 
-	(void)ac, (void)env, (void)av;
+	(void)ac, (void)av;
 	gen = (t_data){0};
 	gen.env = env;
 	sa.sa_flags = SA_SIGINFO;
