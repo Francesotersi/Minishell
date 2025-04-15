@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/14 22:25:36 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:13:00 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,20 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <dirent.h>
+# include "../minishell.h"
 
 typedef struct s_exec	t_exec;
 typedef int				(*t_builtin)(char **, t_exec *);
+typedef struct s_token t_token;
 
-typedef struct s_token
-{
-	char			*content;
-	int				id;
-	int				prior;
-	unsigned int	type:4;
-}	t_token;
+
+// typedef struct s_token
+// {
+// 	char			*content;
+// 	int				id;
+// 	int				prior;
+// 	unsigned int	type:4;
+// }	t_token;
 
 struct s_exec
 {

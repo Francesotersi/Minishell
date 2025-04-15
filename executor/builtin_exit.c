@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/12 16:26:11 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:30:29 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ int	ft_exit(char **args, t_exec *exec)
 		free_debug_data((t_debug_data *)exec->main_struct_pointer);
 	else
 		(void)args;
+	// creare una funzione che faccia il free di tutto
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);
 	return (exit(exit_status), 0);
 }
+

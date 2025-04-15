@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 15:17:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/14 16:22:06 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:31:12 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 void	get_main_struct_data(t_exec *exec, void *data, int debug)
 {
 	t_debug_data	*debug_data;
-	t_debug_data	*dati_da_france;
+	t_data			*gen;
 
 	exec->main_struct_pointer = data;
 	exec->debug = debug;
@@ -32,8 +32,14 @@ void	get_main_struct_data(t_exec *exec, void *data, int debug)
 		exec->last_env = &debug_data->last_env;
 		exec->exit_status = &debug_data->exit_status;
 		*exec->exit_status = 0;
+		return ;
 	}
-	(void)dati_da_france;
+	gen = (t_data*)data;
+	exec->env = &gen->env;
+	exec->env_size = &gen->env_size;
+	exec->last_env = &gen->last_env;
+	exec->exit_status = &gen->exit_status;
+	*exec->exit_status = 0;
 }
 
 /*REVIEW - close_and_reset

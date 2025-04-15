@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 09:37:25 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:15:33 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	fix_gen_token_num(t_token *token, t_data *gen)
 	int	i;
 
 	i = 0;
-	while (token[i].str != NULL)
+	while (token[i].content != NULL)
 	{
 		i++;
 	}
@@ -28,10 +28,10 @@ char *actual_removal_temp_alloc(t_token *token)
 {
 	char *temp;
 
-	temp = ft_strdup(token->str);
-	free(token->str);
-	token->str = (char*)ft_calloc(ft_strlen(temp) - 2 + 1, sizeof(char));
-	if (!token->str)
+	temp = ft_strdup(token->content);
+	free(token->content);
+	token->content = (char*)ft_calloc(ft_strlen(temp) - 2 + 1, sizeof(char));
+	if (!token->content)
 	{
 		free_all(token, NULL);
 		return (NULL);
@@ -56,12 +56,12 @@ void	actual_removal(t_token *token, bool check, char *temp)
 			i++;
 			while (temp[i] != '\0' && temp[i] != quote)
 			{
-				token->str[j++] = temp[i++];
+				token->content[j++] = temp[i++];
 			}
 			i++;
 			continue ;
 		}
-		token->str[j++] = temp[i++];
+		token->content[j++] = temp[i++];
 	}
 	free(temp);
 }
@@ -77,11 +77,11 @@ void	remove_quotes_token(t_token *token, t_data *gen)
 	i = 0;
 	id = 0;
 	temp = NULL;
-	while (token[id].str != NULL)
+	while (token[id].content != NULL)
 	{
-		while(token[id].str[i] != '\0')
+		while(token[id].content[i] != '\0')
 		{
-			if (token[id].str[i] == '\'' || token[id].str[i] == '\"')
+			if (token[id].content[i] == '\'' || token[id].content[i] == '\"')
 			{
 				temp = actual_removal_temp_alloc(&token[id]);
 				actual_removal(&token[id], check, temp);

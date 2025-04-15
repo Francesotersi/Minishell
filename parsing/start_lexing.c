@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 09:48:05 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:24:16 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,9 +141,9 @@ int	start_lexing(t_data *gen)
 	// da fare define_token_arg e aggiungerlo al .h sta nel file define_token.h
 	// if (define_token_arg(token, gen))bash
 	// 	return (1);
-	
+	gen->token = token;
 	printf_struct(token, gen);
-	free_all(token, gen);
+	// free_all(token, gen);
 
 	return (0);
 }
