@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 13:40:02 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/17 12:08:10 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,16 @@ void	remove_quotes_token(t_token *token, t_data *gen);
 
 // define_token.c
 int		define_token_arg(t_token *token, t_data *gen);
+
+// temp_files_from_ale.c
+char	*_cut_string(char *string, size_t start, size_t end);
+char	*get_env(char **env, char *search);
+int		_sub_strlen(char *s, char *charset, int mode);
+int		cpy_env(char **old_env, char ***new_env, int *env_size, int *last_env);
+char	*ft_getenv(char **env, char *search, int *where);
+void	*_free_matrix(char **matrix);
+
+// expand_env.c
+void	expanding_variables(t_token *token, t_data *gen);
 
 #endif

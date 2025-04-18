@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 13:50:34 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/16 08:35:48 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ int	count_parenthesis(t_token *token, t_data *gen)
 	id = 0;
 	while (token[id].content != NULL)
 	{
-		if (ft_strcmp(token[id].content, ")") == 0)
+		if (ft_strncmp(token[id].content, ")", 1) == 0)
 			close_par_count++;
-		else if (ft_strcmp(token[id].content, "(") == 0)
+		else if (ft_strncmp(token[id].content, "(", 1) == 0)
 			open_par_count++;
 		id++;
 	}
@@ -65,30 +65,22 @@ int	count_parenthesis(t_token *token, t_data *gen)
 }
 
 //	assegna la priorita` ad ogni singolo token in base alle parentesi tonde
-int	prior_of_token(t_token *token, t_data *gen, int prior, int token_id)
+int	prior_of_token(t_token *token, t_data *gen)
 {
 	int	id;
+	int prior;
 
-	id = token_id;
+	(void)gen;
+	id = 0;
+	prior = 0;
 	while (token[id].content != NULL)
 	{
-		if (ft_strcmp(token[id].content, "(") == 0)
-		{
-			token[id].prior = prior + 1;
-			id++;
-			prior_of_token(token, gen, prior + 1, id);
-		}
-		else if (ft_strcmp(token[id].content, ")") == 0)
-		{																// non funziona
-			token[id].prior = prior - 1;
-			id++;
-			prior_of_token(token, gen, prior - 1, id);
-		}	
-		else
-		{
-			id++;
-			token[id].prior = prior;
-		}
+		if (ft_strncmp(token[id].content, "(", 1) == 0)
+			prior++;
+		if (ft_strncmp(token[id].content, ")", 1) == 0)
+			prior--;
+		token[id].prior = prior;
+		id++;
 	}
 	return(0);
 }
@@ -103,8 +95,8 @@ int	define_token_arg(t_token *token, t_data *gen)
 	while (token[id].content != NULL)
 	{
 		if (count_parenthesis(token, gen))
-			return (printf("MRASDSADASDAD\n"), 1);
-		if (prior_of_token(token, gen, 0, 0))
+			return (/* syntax error */ 1);
+		if (prior_of_token(token, gen))
 			return (1);
 		id++;
 	}

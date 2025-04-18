@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/03 14:10:30 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/18 08:44:29 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,15 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac, (void)av;
 	gen = (t_data){0};
-	gen.env = env;
+	if (cpy_env(env, &gen.env, &gen.env_size, &gen.last_env) != 0)
+		return (/* malloc error */1);
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
 	sigaddset(&sa.sa_mask, SIGQUIT);
 	sa.sa_sigaction = signals;
 	signal(SIGQUIT, SIG_IGN);
 	sigaction(SIGINT, &sa, NULL);
+	_free_matrix(gen.env);
 	if (start(&gen) == 1)
 		return (1);
 	return (0);

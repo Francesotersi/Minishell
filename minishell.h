@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 13:34:24 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/17 12:02:49 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ typedef struct s_data
 	int		exit_code;
 	int		token_num;
 	char	**env;
+	int		last_env;
+	int		env_size;
 } t_data;
 
 typedef struct s_token

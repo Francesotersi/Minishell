@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:22:31 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 14:06:54 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/16 08:29:08 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	string_allocation(t_token *token, int counter, int *token_id)
 	return (0);
 }
 // g = gen accorciato perche le colonne superavano di 1 80
-int alloc_operator_token(t_token *token, t_data *g, int *i, int *token_id)
+int alloc_operator_token(t_token *token, t_data *gen, int *i, int *token_id)
 {
     int counter;
     

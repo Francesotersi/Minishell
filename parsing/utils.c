@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:13:21 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 13:37:17 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/16 08:19:55 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,4 @@ void	free_all(t_token *token, t_data *gen)
 {
 	free_token(token, gen);
 	free_struct(token);
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] && s2[i] && (s1[i] == s2[i]))
-		i++;
-	return (s1 - s2);
 }
