@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/18 08:44:29 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:18:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,12 @@ int	start(t_data *gen)
 			return (1);
 		free(gen->input);
 	}
+	gen->env = _free_matrix(gen->env);
 	return (0);
 }
 
+
+// ricordarsi di fare il free sull`env
 int	main(int ac, char **av, char **env)
 {
 	t_data				gen;
@@ -44,7 +47,6 @@ int	main(int ac, char **av, char **env)
 	sa.sa_sigaction = signals;
 	signal(SIGQUIT, SIG_IGN);
 	sigaction(SIGINT, &sa, NULL);
-	_free_matrix(gen.env);
 	if (start(&gen) == 1)
 		return (1);
 	return (0);

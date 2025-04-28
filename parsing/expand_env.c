@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:55:30 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/18 11:55:36 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:58:28 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,14 @@ void	insert_exit_code(t_token *token, int *i, int e_l, char *exit_code)
 		j = 0;
 		while (j < (e_l))
 			token->content[k++] = exit_code[j++];
-		(*i) += 1; 
 	}
-	j = (*i) + 1;
+	j = (*i) + 2;
 	while (temp[j] != '\0')
 		token->content[k++] = temp[j++];
 	free(temp);
 }
 
-void	expand_exit_code_2(t_token *token, t_data *gen, int *i, 
+void	expand_exit_code_2(t_token *token, t_data *gen, int *i,
 	char *exit_code)
 {
 	int		exit_code_len;
@@ -127,10 +126,10 @@ char	*what_to_search(t_token *token, int *i)
 	int		j;
 	int		k;
 	char	*to_search;
+	int		u;
 
 	to_search = NULL;
-	(*i)++;
-	k = (*i);
+	k = (*i) + 1;
 	j = 0;
 	while (token->content[k] && token->content[k] != '$' && \
 	token->content[k] != ' ' && token->content[k] != '\'' && \
@@ -139,45 +138,112 @@ char	*what_to_search(t_token *token, int *i)
 	to_search = (char*)ft_calloc(k, sizeof(char));
 	if (!to_search)
 		return (NULL);
-	while (token->content[(*i)] && token->content[(*i)] != '$' && \
-	token->content[(*i)] != ' ' && token->content[(*i)] != '\'' && \
-	token->content[(*i)] != '\"' && j < k)
+	u = (*i) + 1;
+	while (token->content[u] && token->content[u] != '$' && \
+	token->content[u] != ' ' && token->content[u] != '\'' && \
+	token->content[u] != '\"' && j < k)
 	{
-		to_search[j++] = token->content[(*i)++];
+		to_search[j++] = token->content[u++];
 	}
 	return (to_search);
 }
 
-// tok = token norminette is a piece of shit
+void	insert_var_env(char *search, t_token *token, int *i, char *temp)
+{
+	char	*dup;
+	int		k;
+	int		j;
+	
+	k = 0;
+	j = 0;
+	// ricordati che se get_env ritorna NULL te la variabile da espandere la devi COMPLETAMENTE saltare
+	dup = ft_strdup(token->content);
+	free(token->content);
+	token->content = (char*)ft_calloc(ft_strlen(dup) + ft_strlen(temp) + \
+		ft_strlen(search) + 1, sizeof(char));
+	if (!token->content)
+		return /* MALLOC ERROR */;
+	while (j < (*i))
+		token->content[k++] = dup[j++];
+	if (dup[j] == '$' && dup[j] != '\0')
+	{
+		j = 0;
+		while (j < (int)ft_strlen(search))
+			token->content[k++] = search[j++];
+	}
+	j = (*i) + ft_strlen(temp) + 1;
+	while (dup[j] != '\0')
+		token->content[k++] = dup[j++];
+	free(dup);
+}
+
+// CHIEDERE AL FHURER ALERUSSO SE LA GESTIONE DEI DELLARI SINGOLI DEVE ESSERE GESTITA
+
+void	skip_env_var(t_token *token, int *i, char *temp)
+{
+	int		k;
+	int		j;
+	int		temp_len;
+	char	*dup;
+	
+	dup = ft_strdup(token->content);
+	free(token->content);
+	token->content = (char*)ft_calloc(ft_strlen(dup) + 1, sizeof(char));
+	if (!token->content)
+		return /* malloc error */;
+	temp_len = ft_strlen(temp);
+	j = 0;
+	k = 0;
+	while (k < (*i))
+		token->content[j++] = dup[k++];
+	while (k <= ((*i) + temp_len))
+		k++;
+	while (dup[k])
+		token->content[j++] = dup[k++];
+	free(dup);
+}
+
+// tok = token, norminette is a piece of shit echo '$HOME'"$HOME'$HOME'"
 void	expand_var(t_token *tok, int *i ,t_data *gen, char *search)
 {
 	char	*temp;
 
-	(void)gen, (void)search;
 	temp = NULL;
 	if (tok->content[(*i)] == '\"')
 	{
-		while (tok->content[++(*i)] && tok->content[(*i)] != '\"')
+		(*i)++;
+		while (tok->content[(*i)] && tok->content[(*i)] != '\"')
 		{
 			if (tok->content[(*i)] && tok->content[(*i)] == '$' && \
 			tok->content[(*i) + 1] != '\"' && tok->content[(*i) + 1] != '\'' \
 			&& tok->content[(*i) + 1] != ' ')
 			{
-				temp = what_to_search(tok, i);
-				printf("||%s||", temp);
-				// search = search_in_env(gen->env);
+				temp = what_to_search(tok, i); //da fare free
+				search = get_env(gen->env, temp);
+				if (search)
+					insert_var_env(search, tok, i, temp);
+				else
+					skip_env_var(tok, i, temp);
 			}
+			else
+				(*i)++;
 		}
-		// (*i)++; // forse da rimuovere
+		(*i)++;
 	}
 	else if (tok->content[(*i)] == '$' && tok->content[(*i) + 1] && \
 	tok->content[(*i) + 1] != '\"' && tok->content[(*i) + 1] != '\'' \
 	&& tok->content[(*i) + 1] != ' ')
 	{
 		temp = what_to_search(tok, i); //da fare free
-		printf("||%s||", temp);
-		
+		search = get_env(gen->env, temp);
+		if (search)
+			insert_var_env(search, tok, i, temp);
+		else
+			skip_env_var(tok, i, temp);
 	}
+	else
+		(*i)++;
+	free(temp);
 }
 
 void	expand_env(t_token *token, t_data *gen)
@@ -218,7 +284,6 @@ void	expanding_variables(t_token *token, t_data *gen)
 	id = 0;
 	i = 0;
 	var_id = 1;
-	gen->exit_code = 100;
 	expand_exit_code(token, gen);
 	expand_env(token, gen);
 }

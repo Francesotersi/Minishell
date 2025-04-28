@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 09:26:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/18 08:40:58 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:12:31 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,8 @@ char	*get_env(char **env, char *search)
 {
 	char	*item;
 
+	if (!env[0])
+		return (NULL);
 	item = ft_getenv(env, search, NULL);
 	if (!item)
 		return (NULL);
