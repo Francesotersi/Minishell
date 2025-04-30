@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:55:30 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/30 08:50:41 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:23:11 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	expand_var_alone(t_token *tok, int *i ,t_data *gen, char *search)
 
 	temp = NULL;
 	if (tok->content[(*i)] == '$' && tok->content[(*i) + 1] && \
-	tok->content[(*i) + 1] != '\"' && tok->content[(*i) + 1] != '\'' \
+	tok->content[(*i) + 1] != '\"' && tok->content[(*i) + 1] != '\'' \ // da levare questo controllo anche nelle altre funzioni per questo caso = echo $"HOE"
 	&& tok->content[(*i) + 1] != ' ')
 	{
 		temp = what_to_search(tok, i);
@@ -92,6 +92,7 @@ void	expand_var_alone(t_token *tok, int *i ,t_data *gen, char *search)
 		(*i)++;
 }
 
+// gestisci il caso delle espansioni infinite se non ri ricordi chiedi a vale greg o ale
 void	expand_env(t_token *token, t_data *gen)
 {
 	int		id;

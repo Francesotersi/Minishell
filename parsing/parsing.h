@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/29 11:31:50 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:10:29 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,23 @@
 # include <fcntl.h>
 # include <stdbool.h>
 # include "../minishell.h"
+
+enum e_types
+{
+	COMMAND = 0,
+	ARGUMENT = 1,
+	FILES = 2,
+	RED_OUT = 3,
+	RED_IN = 4,
+	RED_O_APPEND = 5,
+	HERE_DOC = 6,
+	PIPE = 7,
+	AND = 8,
+	OR = 9,
+	PARENTHESIS = 10,
+	RED_SUBSHELL = 11,
+	NONE = 12,
+};
 
 typedef struct s_data	t_data;
 typedef struct s_token	t_token;
@@ -49,7 +66,7 @@ int		alloc_str_token(t_token *token, t_data *gen);
 void	remove_quotes_token(t_token *token, t_data *gen);
 
 // define_token.c
-int		define_token_arg(t_token *token, t_data *gen);
+int	define_token_and_parenthesis(t_token *token, t_data *gen);
 
 // temp_files_from_ale.c
 char	*_cut_string(char *string, size_t start, size_t end);

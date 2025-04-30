@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/30 08:51:32 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:27:09 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,11 @@ int	num_token(char *str)
 //
 // 		RICORDA!
 // 	1) La struttura e le stringhe all`interno di essa devono essere freeate
-//
+// 	2) QUANDO VAI AD ESPANDERE RICORDATI DI INSERIRE DELLE "" DOPO IL PRIMO SPAZIO COSI` ALMENO ALLA FINE DI TUTTO LE RIMUOVI
+//	2) DEVI CAMBIARE L`ORDINE IN CUI FAI LE COSE NEL PROGRAMMA PERCHE BISOGNA ANCORA IMPLEMENTARE LE ESPANSIONI INFINITE E ALTRA ROBA
+//	   ES. DIVIDI IN TOKEN-->ESPANSIONE EXIT CODE-->ESPANSIONE-->-->RIMUOVI QUOTES
+// 				 ^         	                             |
+//               \--------------------------------------/  
 
 int	start_lexing(t_data *gen)
 {
