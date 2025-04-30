@@ -1,1 +1,0 @@
-ls | (cd .. ; ( cd executor ; (cd obj_executor ; (echo $PWD && (sleep 2)))) ; echo $PWD && sleep 1) ; echo $PWD
