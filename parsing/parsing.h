@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/17 12:08:10 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:31:50 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include <stdbool.h>
 # include "../minishell.h"
 
-typedef struct s_data t_data;
-typedef struct s_token t_token;
+typedef struct s_data	t_data;
+typedef struct s_token	t_token;
 
 //  start_lexing.c
 int		start_lexing(t_data *gen);
@@ -38,6 +38,9 @@ void	printf_struct(t_token *token, t_data *gen);
 void	free_all(t_token *token, t_data *gen);
 void	free_token(t_token *token, t_data *gen);
 int		ft_strcmp(char *s1, char *s2);
+
+// utils_2.c
+void	skip_single_quotes(char *str, int *i);
 
 // struct_alloc.c
 int		alloc_str_token(t_token *token, t_data *gen);
@@ -58,5 +61,17 @@ void	*_free_matrix(char **matrix);
 
 // expand_env.c
 void	expanding_variables(t_token *token, t_data *gen);
+
+// expand_env_2.c
+char	*what_to_search(t_token *token, int *i);
+void	expand_exit_code(t_token *token, t_data *gen);
+void	expand_exit_code_2(t_token *token, t_data *gen, int *i,
+			char *exit_code);
+void	insert_exit_code(t_token *token, int *i, int e_l, char *exit_code);
+void	skip_env_var(t_token *token, int *i, char *temp);
+
+// parenthesis.c
+int	prior_of_token(t_token *token, t_data *gen);
+int	count_parenthesis(t_token *token, t_data *gen);
 
 #endif

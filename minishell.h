@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/17 12:02:49 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:33:09 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct s_data
 	char	**env;
 	int		last_env;
 	int		env_size;
-} t_data;
+}	t_data;
 
 typedef struct s_token
 {
@@ -47,7 +47,7 @@ typedef struct s_token
 	int		id;		// posizione del token nell`input
 	int		prior;	// priorita`
 	bool	space_on_right;
-} t_token;
+}	t_token;
 
 //signals
 void	signals(int signal, siginfo_t *info, void *s);

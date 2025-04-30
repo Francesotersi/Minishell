@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/22 10:18:57 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:32:45 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	start(t_data *gen)
 	{
 		gen->input = readline("minishell$> ");
 		if (!gen->input)
-			return(write(1, "exit\n", 5), free(gen->input), 0);
+			return (write(1, "exit\n", 5), free(gen->input), 0);
 		if (gen->input[0] != '\0')
 			add_history(gen->input);
 		if (start_lexing(gen) == -1)
@@ -29,7 +29,6 @@ int	start(t_data *gen)
 	gen->env = _free_matrix(gen->env);
 	return (0);
 }
-
 
 // ricordarsi di fare il free sull`env
 int	main(int ac, char **av, char **env)

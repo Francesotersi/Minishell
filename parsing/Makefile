@@ -1,7 +1,7 @@
 NAME = parsing
 
 SRC = start_lexing.c fill_struct.c utils.c struct_alloc.c remove_quotes.c \
-	define_token.c expand_env.c\
+	define_token.c expand_env.c expand_env_2.c utils_2.c parenthesis.c\
 	temp_files_from_ale.c
 SRC_DEBUG = debug.c 
 

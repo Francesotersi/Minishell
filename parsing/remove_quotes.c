@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/17 08:41:09 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:30:43 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	actual_removal(t_token *token, char *temp)
 	free(temp);
 }
 
+// funzione chiamata nel file fill_struct.c in fondo 
+// all`ultima funzione del file
 void	remove_quotes_token(t_token *token, t_data *gen)
 {
 	int		id;
