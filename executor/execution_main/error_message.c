@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:47:51 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 20:07:10 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/01 12:21:57 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,38 +102,4 @@ static int	bash_message2(int message, char *file)
 	else
 		_fd_printf(2, "ERROR MESSAGE NOT REGISTERED.\n");
 	return (1);
-}
-
-/*
-//REVIEW - is_a_valid_executable
-
-	This function is launched before command execution.
-	It checks the executability of the program, and prints a bash_message if:
-
-	1)	The executable is a directory 	(Exit status 126);
-	2)	There executable does not exist (Exit status 127).
-*/
-int	is_a_valid_executable(t_exec *exec, int i)
-{
-	DIR	*dir;
-
-	if (exec->which_cmd[i] != 0)
-		return (_YES);
-	if (!exec->commands[i][0])
-		return (_NO);
-	dir = opendir(exec->commands[i][0]);
-	if (dir)
-	{
-		bash_message(E_IS_DIRECTORY, exec->commands[i][0]);
-		closedir(dir);
-		set_exit_status(exec, 126);
-		return (_NO);
-	}
-	else if (access(exec->commands[i][0], F_OK | X_OK) != 0)
-	{
-		bash_message(E_CMD_NOTFOUND, exec->commands[i][0]);
-		set_exit_status(exec, 127);
-		return (_NO);
-	}
-	return (_YES);
 }

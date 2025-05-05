@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   general7.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:40:44 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:23:03 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/30 09:20:50 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
-
-void	next_token(t_token **token, int search1, int search2, int search3)
-{
-	while ((*token)->content)
-	{
-		if ((*token)->type != search1 && \
-		(*token)->type != search2 && \
-		(*token)->type != search3)
-			++(*token);
-		else
-			break ;
-	}
-}
 
 void	next_cmd_block(t_token **token, int layer, bool accept_deeper_token)
 {

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   general.c                                          :+:      :+:    :+:   */
+/*   utils_matrix.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:32:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:22:43 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/04 11:21:39 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,39 +66,81 @@ void	*_free_three_d_matrix(char ***matrix)
 	return (NULL);
 }
 
-/*REVIEW - _ft_strjoin_free
-
-//	Like strjoin, but frees both string.
-*/
-char	*_ft_strjoin_free(char *s1, char *s2)
+char	*_reverse_split(char **matrix, char separator)
 {
-	char	*new_str;
-	int		index;
+	char	*string;
+	int		i;
 	int		size;
+	int		j;
 
-	if ((!s1) || (!s2))
-		return (free(s1), free(s2), NULL);
-	index = 0;
-	while (s1[index])
-		++index;
-	size = index;
-	index = 0;
-	while (s2[index])
-		++index;
-	size += index;
-	new_str = (char *)ft_calloc(size + 2, sizeof(char));
-	if (!new_str)
-		return (free(s1), free(s2), NULL);
-	index = -1;
-	while (s1[++index])
-		new_str[index] = s1[index];
-	size = -1;
-	while (s2[++size])
-		new_str[index++] = s2[size];
-	return (free(s1), free(s2), new_str);
+	i = 0;
+	size = 0;
+	while (matrix[i])
+	{
+		size += ft_strlen(matrix[i]) + 1;
+		++i;
+	}
+	string = (char *)ft_calloc(size + 1, sizeof(char));
+	if (!string)
+		return (NULL);
+	i = -1;
+	j = 0;
+	while (matrix[++i])
+	{
+		while (string[j])
+			++j;
+		if (j != 0 && separator)
+			string[j++] = separator;
+		_sub_strcpy(&string[j], matrix[i], "", EXCL);
+	}
+	return (string);
 }
 
-int	bigger(int n1, int n2)
+void	sort_matrix(char **matrix)
 {
-	return (n1 * (n1 >= n2) + n2 * (n1 < n2));
+	char	*temp;
+	int		i;
+	int		j;
+
+	if (!matrix || !matrix[0])
+		return ;
+	i = 0;
+	while (matrix[i + 1])
+	{
+		j = 0;
+		while (matrix[j + 1])
+		{
+			if (ft_strncmp(matrix[j], matrix[j + 1], INT_MAX) > 0)
+			{
+				temp = matrix[j];
+				matrix[j] = matrix[j + 1];
+				matrix[j + 1] = temp;
+			}
+			++j;
+		}
+		++i;
+	}
+}
+
+char	*lowest_ascii_matrix(char **matrix, char *current)
+{
+	char	*lowest;
+	int		i;
+
+	if (!matrix || !matrix[0])
+		return (NULL);
+	lowest = NULL;
+	i = 0;
+	while (matrix[i])
+	{
+		if ((current && ft_strncmp(matrix[i], current, INT_MAX) <= 0))
+		{
+			++i;
+			continue ;
+		}
+		if (!lowest || ft_strncmp(matrix[i], lowest, INT_MAX) < 0)
+			lowest = matrix[i];
+		++i;
+	}
+	return (lowest);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:08:08 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/28 19:47:25 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/30 17:16:00 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,30 @@ int	start_test_session(t_token *exec, t_debug_data *deb);
 int	main(int argc, char **argv, char **env)
 {
 	int					fd;
-	static char			*filename;
 	static int			i = 0;
 	static t_debug_data	deb;
 
 	if (argc != 2 || argv[1][0] == '\0')
 		return (fd_printf(2, "\nInsert a file num.\n"));
 	if (getenv("CODESPACES"))
-		filename = ft_strjoin(CODESPACE_DEBUG_PATH, argv[1]);
+		deb.filename2 = ft_strjoin(CODESPACE_DEBUG_PATH, argv[1]);
+	else if (ft_strncmp(getenv("HOME"), "/nfs/homes/alerusso", 22) == 0)
+		deb.filename2 = ft_strjoin(SCHOOL_DEBUG_PATH, argv[1]);
 	else
-		filename = ft_strjoin(PCHOME_DEBUG_PATH, argv[1]);
-	fd = open(filename, O_RDWR, 0666);
-	if (fd == -1 || !filename)
-		return (l_printf("Err: |%s|", filename), free(filename), close(fd), 1);
+		deb.filename2 = ft_strjoin(PCHOME_DEBUG_PATH, argv[1]);
+	fd = open(deb.filename2, O_RDWR, 0666);
+	if (fd == -1 || !deb.filename2)
+		return (l_printf("Err: |%s|", deb.filename2), \
+		free(deb.filename2), close(fd), 1);
 	cpy_env(env, &deb.env, &deb.env_size, &deb.last_env);
-	give_filedata(fd, filename);
+	give_filedata(fd, deb.filename2);
 	while ("LOOP: while there are tests to do")
 	{
-		deb.filename2 = filename;
 		if (testing(i++, fd, &deb) != 0)
 			break ;
 		l_printf("\n\033[1;33mStop.\033[0m\n");
 	}
-	return (del_filedata(), free(filename), free_matrix(deb.env), 0);
+	return (del_filedata(), free(deb.filename2), free_matrix(deb.env), 0);
 }
 
 int	testing(int test_num, int fd, t_debug_data *deb)
@@ -127,29 +128,5 @@ int	read_tokens(char ***matrix, t_token *exec, int line_num)
 
 int	start_test_session(t_token *exec, t_debug_data *deb)
 {
-	t_token	*head;
-
-	head = exec;
-	l_printf("\n[START]\n++++++++++++++++++++\n");
-	while (exec->content)
-	{
-		l_printf("\n+------------------+\nToken %d:\n", exec->id);
-		l_printf("Content:\t|%s|\n", exec->content);
-		l_printf("Id:\t\t|%d|\n", exec->id);
-		l_printf("Type:\t\t|%d|\n", exec->type);
-		l_printf("Priority:\t|%d|\n", exec->prior);
-		++exec;
-	}
-	l_printf("\n+------------------+\n[END]\n++++++++++++++++++++\n");
-	l_printf("\nTest for: ");
-	exec = head;
-	while (exec->content)
-	{
-		l_printf("%s ", exec->content);
-		++exec;
-	}
-	exec = head;
-	l_printf("\n\033[1;32mExecution:\033[0m\n");
-	execute(exec, (void *)deb, _YES);
-	return (l_printf("\n\033[1;33mExit code:\033[0m %d", deb->exit_status));
+	return (execute(exec, (void *)deb, _YES));
 }

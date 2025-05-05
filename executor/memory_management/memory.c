@@ -3,16 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:46 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/29 14:35:24 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 11:04:13 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
 static void	free_memory2(t_exec *exec);
+
+/*REVIEW - get_main_struct_data
+
+//		This function is a bridge between Minishell parsing part by ftersill
+		or execution debug program.
+*/
+void	get_main_struct_data(t_exec *exec, void *data, int debug)
+{
+	t_debug_data	*debug_data;
+	t_data			*gen;
+
+	exec->main_struct_pointer = data;
+	exec->debug = debug;
+	if (debug)
+	{
+		debug_data = (t_debug_data *)data;
+		exec->env = &debug_data->env;
+		exec->env_size = &debug_data->env_size;
+		exec->last_env = &debug_data->last_env;
+		exec->exit_status = &debug_data->exit_status;
+		*exec->exit_status = 0;
+		return ;
+	}
+	gen = (t_data*)data;
+	exec->env = &gen->env;
+	exec->env_size = &gen->env_size;
+	exec->last_env = &gen->last_env;
+	exec->exit_status = &gen->exit_status;
+	*exec->exit_status = 0;
+}
 
 //REVIEW - Free for data used in execution Minishell part debug program
 void	*free_debug_data(t_debug_data *data)
@@ -37,7 +67,7 @@ void	alloc_memory(t_exec *exec, t_token *token, int cmd_num)
 {
 	exec->stdin_fd = dup(0);
 	exec->stdout_fd = dup(1);
-	exec->cmd_num = cmd_num;
+	exec->curr_cmd = cmd_num;
 	exec->commands = (char ***)ft_calloc(cmd_num + 2, sizeof(char **));
 	if (!exec->commands)
 		error(E_MALLOC, exec);
@@ -57,7 +87,7 @@ void	alloc_memory(t_exec *exec, t_token *token, int cmd_num)
 	if (!exec->proc_sub_fds)
 		error(E_MALLOC, exec);
 	exec->proc_sub_temp_fds = (int *)ft_calloc(deepest(token) * 2, sizeof(int));
-	if (!exec->proc_sub_fds)
+	if (!exec->proc_sub_temp_fds)
 		error(E_MALLOC, exec);
 }
 
@@ -88,7 +118,7 @@ static void	free_memory2(t_exec *exec)
 	int	i;
 
 	i = -1;
-	while (++i != exec->cmd_num)
+	while (++i != exec->curr_cmd)
 	{
 		close_and_reset(&exec->here_doc_fds[i]);
 	}

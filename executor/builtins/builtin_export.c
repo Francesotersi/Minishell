@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:04 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:19:48 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/04 11:35:13 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ static char	*remove_plus(char *str)
 	if (!str)
 		return (NULL);
 	i = 0;
-	while (str[i] && str[i] != '+')
+	while (str[i] && str[i] != '+' && str[i] != '=')
 		++i;
 	if (str[i] == '+')
 		_cut_string(str + i, 0, 0);
@@ -204,28 +204,26 @@ static char	*remove_plus(char *str)
 */
 static void	print_export(char **env)
 {
-	int	i;
-	int	j;
+	char	*lowest;
+	int		i;
 
-	i = 0;
-	if (!env)
-		return ;
-	while (env[i])
+	lowest = lowest_ascii_matrix(env, NULL);
+	while (lowest)
 	{
 		write(1, "declare -x ", 11);
-		j = 0;
-		while (env[i][j] && env[i][j] != '=')
-			write(1, &env[i][j++], 1);
-		if (!env[i][j])
+		i = 0;
+		while (lowest[i] && lowest[i] != '=')
+			write(1, &lowest[i++], 1);
+		if (!lowest[i])
 		{
 			write(1, "\n", 1);
-			++i;
+			lowest = lowest_ascii_matrix(env, lowest);
 			continue ;
 		}
 		write(1, "=\"", 2);
-		while (env[i][++j])
-			write(1, &env[i][j], 1);
+		while (lowest[++i])
+			write(1, &lowest[i], 1);
 		write(1, "\"\n", 2);
-		++i;
+		lowest = lowest_ascii_matrix(env, lowest);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:19:35 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/30 17:33:01 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ static void	back_to_home(char **env, char **new_dir);
 
 //		Cd is a program that takes ONLY one argument.
 
-//		If there are no arguments, it does nothing, and returns ES 0.
-		Same if there are more than one arguments, but returns ES 1..
+//		If there are no arguments, it does nothing, and returns Exit Code 0.
+		Same if there are more than one arguments, but returns Exit Code 1.
+		Same if there is one or more pipe, returning Exit Code 0.
 
 //		Basically, the cd program does three operations:
 			Update the environment variable OLDPWD with getcwd;
@@ -31,8 +32,8 @@ static void	back_to_home(char **env, char **new_dir);
 		To apply the environment changes, we call ft_export.
 
 //		Operations:
-		1)	Check for args size. If more than one arguments, ES 1.
-			If less than one, ES 0;
+		1)	Check for args size. If more than one arguments, Exit Code 1.
+			If less than one, Exit Code 0;
 		2)	We get old_pwd, we change the directory, we get pwd;
 		3)	We alloc a matrix (pwd_update), that will store the data
 			to pass to ft_export (to update OLD_PWD and PWD);
@@ -46,6 +47,8 @@ int	ft_cd(char **args, t_exec *exec)
 	char	*new_dir;
 
 	*exec->exit_status = 0;
+	if (exec->at_least_one_pipe)
+		return (0);
 	if (args[1] && args[2])
 		return (bash_message(E_CD_ARGS, NULL), set_exit_status(exec, 1));
 	old_pwd = getcwd(NULL, 0);
@@ -62,9 +65,7 @@ int	ft_cd(char **args, t_exec *exec)
 	pwd_update = (char **)ft_calloc(3, sizeof(char *));
 	if (!pwd_update)
 		return (free(old_pwd), free(pwd), error(E_MALLOC, exec));
-	pwd_update[0] = NULL;
-	up_env(pwd_update, old_pwd, pwd, exec);
-	return (0);
+	return (up_env(pwd_update, old_pwd, pwd, exec), 0);
 }
 
 /*REVIEW - back_to_home
@@ -97,6 +98,7 @@ static int	up_env(char **update, char *old_pwd, char *pwd, t_exec *exec)
 {
 	char	*str;
 
+	update[0] = NULL;
 	str = ft_strjoin("PWD=", pwd);
 	if (!str)
 		return (free(old_pwd), free(pwd), free(update), error(E_MALLOC, exec));

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   general6.c                                         :+:      :+:    :+:   */
+/*   utils_fds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 12:15:15 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:23:00 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:03:08 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	close_all(t_exec *exec)
 {
 	t_debug_data	*debug;
+	int				i;
 
 	close_and_reset(&exec->pipe_fds[0]);
 	close_and_reset(&exec->pipe_fds[1]);
@@ -25,6 +26,9 @@ void	close_all(t_exec *exec)
 		debug = exec->main_struct_pointer;
 		close_and_reset(&debug->fd_to_close);
 	}
+	i = 0;
+	while (exec->proc_sub_temp_fds[i])
+		close_and_reset(&exec->proc_sub_temp_fds[i++]);
 }
 
 void	save_process_substitution_fd(t_exec *exec, int proc_sub_fd)
@@ -41,7 +45,7 @@ void	close_temp_files(t_exec *exec)
 {
 	int	i;
 
-	close_and_reset(&exec->here_doc_fds[exec->cmd_num]);
+	close_and_reset(&exec->here_doc_fds[exec->curr_cmd]);
 	i = 0;
 	while (exec->proc_sub_fds[i])
 	{

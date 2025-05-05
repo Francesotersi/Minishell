@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:19:43 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 11:58:51 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	ft_exit(char **args, t_exec *exec)
 {
 	int	exit_status;
 
+	if (exec->at_least_one_pipe)
+		return (set_exit_status(exec, 0), 0);
 	if (exec->prior_layer == 0)
 		_fd_printf(2, "exit\n");
 	if (check_args(args, exec))

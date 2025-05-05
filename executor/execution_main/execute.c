@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/29 14:52:38 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 11:08:02 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
-static int	next_command(t_exec *exec, t_token **token, t_token *first_token);
+static int	next_command(t_exec *exec, t_token **token);
 static int	invoke_programs(t_exec *exec, int i);
-static int	wait_everyone(t_exec *exec, t_token *first_token);
 
 //NOTE - Il main della parte di esecuzione.
 //		Utilizzo:
@@ -48,11 +47,10 @@ int	execute(t_token *token, void *data, int debug)
 {
 	t_exec	exec;
 
+	p_tok(token);
 	merge_tokens(token, debug);
 	exec = (t_exec){0};
 	get_main_struct_data(&exec, data, debug);
-	if (!token)
-		error(E_ARGS, &exec);
 	alloc_memory(&exec, token, count_commands(&exec, token));
 	prepare_here_docs(&exec, token);
 	get_commands_data(&exec, token);
@@ -65,7 +63,9 @@ int	execute(t_token *token, void *data, int debug)
 			dup_and_reset(&exec.pipe_fds[0], 0);
 		}
 	}
-	execute_loop(token, &exec);
+	if (token->content)
+		execute_loop(token, &exec);
+	p_end(&exec);
 	free_memory(&exec);
 	return (0);
 }
@@ -83,58 +83,54 @@ int	execute(t_token *token, void *data, int debug)
 */
 int	execute_loop(t_token *token, t_exec *exec)
 {
-	t_token	*first_token;
-
-	first_token = token;
 	exec->prior_layer = token->prior;
-	exec->cmd_num = token->cmd_num;
+	exec->curr_cmd = token->cmd_num;
 	exec->at_least_one_pipe = detect_pipe(token, _NO, token->prior);
 	while (token->content)
 	{
-		find_command_id(exec, token);
 		*exec->exit_status = 0;
 		if (get_file_data(exec, token) == 0)
-			invoke_programs(exec, exec->cmd_num);
+			invoke_programs(exec, exec->curr_cmd);
+		else
+			*exec->exit_status = 1;
 		close_temp_files(exec);
-		if (next_command(exec, &token, first_token))//FIXME - Togliere if!
+		if (next_command(exec, &token))//FIXME - Togliere if!
 			return (0);
-		exec->cmd_num = token->cmd_num;
+		exec->curr_cmd = token->cmd_num;
 		if (exec->pipe_fds[0])
 		{
-			dup2(exec->pipe_fds[0], 0);
-			close_and_reset(&exec->pipe_fds[0]);
+			dup_and_reset(&exec->pipe_fds[0], 0);
 		}
 	}
-	wait_everyone(exec, first_token);
+	wait_everyone(exec);
 	if (exec->prior_layer != 0)
-		return (0);
-		//exit_process(exec);
+		exit_process(exec);
 	return (0);
 }
 
 /*REVIEW - execute
 
 */
-static int	next_command(t_exec *exec, t_token **token, t_token *first_token)
+static int	next_command(t_exec *exec, t_token **token)
 {
 	while (exec->prior_layer <= (*token)->prior && \
 		!(exec->prior_layer == (*token)->prior && is_exec_sep((*token)->type)))
 		++(*token);
 	if ((*token)->type == AND || (*token)->type == OR)
 	{
-		exec->cmd_num += 1;
-		wait_everyone(exec, first_token);
+		exec->curr_cmd += 1;
+		wait_everyone(exec);
 		goto_valid_block(exec, token);
+		exec->at_least_one_pipe = detect_pipe(*token, _NO, (*token)->prior);
 	}
-	exec->cmd_num = (*token)->cmd_num;
+	exec->curr_cmd = (*token)->cmd_num;
 	if (!(*token)->content)
 		return (0);
 	++(*token);
 	if (exec->prior_layer < (*token)->prior)
 		manage_parenthesis(exec, token, 0);
-	if (exec->prior_layer > (*token)->prior)
-		//return (wait_everyone(exec, first_token), exit_process(exec), 0);
-		return (1);//FIXME - Togliere!
+	if ((*token)->content && exec->prior_layer > (*token)->prior)
+		return (wait_everyone(exec), exit_process(exec), 0);
 	return (0);
 }
 
@@ -155,7 +151,7 @@ static int	invoke_programs(t_exec *exec, int i)
 {
 	pid_t	pid;
 
-	if (!exec->commands[i][0])
+	if (!exec->commands[i] || !exec->commands[i][0])
 		return (0);
 	if (is_a_valid_executable(exec, i) == _NO)
 		return (0);
@@ -183,7 +179,7 @@ static int	invoke_programs(t_exec *exec, int i)
 	4)	If a pid exist and it's the last command, update the exit status;
 	5)	We set last_command_done to i.
 */
-static int	wait_everyone(t_exec *exec, t_token *first_token)
+int	wait_everyone(t_exec *exec)
 {
 	int	i;
 	int	exit_status;
@@ -191,14 +187,14 @@ static int	wait_everyone(t_exec *exec, t_token *first_token)
 	exit_status = 0;
 	dup2(exec->stdin_fd, 0);
 	dup2(exec->stdout_fd, 1);
-	i = first_token->cmd_num;
-	while (i != exec->cmd_num)
+	i = 0;
+	while (i != exec->last_cmd)
 	{
 		if (exec->pid_list[i])
 		{
 			waitpid(exec->pid_list[i], &exit_status, 0);
-			if (i == exec->cmd_num - 1)
-				*exec->exit_status = exit_status;
+			if (i == exec->curr_cmd - 1)
+				*exec->exit_status = exit_status / 256;
 			exec->pid_list[i] = 0;
 		}
 		++i;

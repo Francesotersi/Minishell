@@ -1,0 +1,56 @@
+==6272== FILE DESCRIPTORS: 8 open (1 std) at exit.
+==6272== Open file descriptor 22: /dev/ptmx
+==6272==    <inherited from parent>
+==6272== 
+==6272== Open file descriptor 21: /home/alerusso/.vscode-server/data/logs/20250504T141342/remoteagent.log
+==6272==    <inherited from parent>
+==6272== 
+==6272== Open file descriptor 20: /home/alerusso/.vscode-server/data/logs/20250504T141342/remoteTelemetry.log
+==6272==    <inherited from parent>
+==6272== 
+==6272== Open file descriptor 19: /home/alerusso/.vscode-server/data/logs/20250504T141342/ptyhost.log
+==6272==    <inherited from parent>
+==6272== 
+==6272== Open file descriptor 9:
+==6272==    <inherited from parent>
+==6272== 
+==6272== Open file descriptor 4: /home/alerusso/Common_core/Minishell-test/executor/builtins/val.log
+==6272==    <inherited from parent>
+==6272== 
+==6272== Open file descriptor 3: /home/alerusso/Common_core/Minishell-test/executor/val.log
+==6272==    <inherited from parent>
+==6272== 
+==6272== 
+==6272== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+-amd64-linux.so)
+==6274==    by 0x11A819: ??? (in /usr/bin/grep)
+==6274==    by 0x10E047: ??? (in /usr/bin/grep)
+==6274==    by 0x49271C9: (below main) (libc_start_call_main.h:58)
+==6274== 
+==6274== 128 bytes in 1 blocks are possibly lost in loss record 12 of 25
+==6274==    at 0x484DB80: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6274==    by 0x11D347: ??? (in /usr/bin/grep)
+==6274==    by 0x11F5F4: ??? (in /usr/bin/grep)
+==6274==    by 0x113CA6: ??? (in /usr/bin/grep)
+==6274==    by 0x112FAC: ??? (in /usr/bin/grep)
+==6274==    by 0x11547F: ??? (in /usr/bin/grep)
+==6274==    by 0x10E19F: ??? (in /usr/bin/grep)
+==6274==    by 0x49271C9: (below main) (libc_start_call_main.h:58)
+==6274== 
+==6274== 4,096 bytes in 2 blocks are possibly lost in loss record 24 of 25
+==6274==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==6274==    by 0x11DC95: ??? (in /usr/bin/grep)
+==6274==    by 0x11F3E2: ??? (in /usr/bin/grep)
+==6274==    by 0x113CA6: ??? (in /usr/bin/grep)
+==6274==    by 0x112FAC: ??? (in /usr/bin/grep)
+==6274==    by 0x11547F: ??? (in /usr/bin/grep)
+==6274==    by 0x10E19F: ??? (in /usr/bin/grep)
+==6274==    by 0x49271C9: (below main) (libc_start_call_main.h:58)
+==6274== 
+==6274== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+--6274-- 
+--6274-- used_suppression:      7 r2 /home/alerusso/Common_core/Minishell-test/executor/v.supp:10 suppressed: 113,451 bytes in 7 blocks
+--6274-- used_suppression:     11 r1 /home/alerusso/Common_core/Minishell-test/executor/v.supp:2 suppressed: 3,294 bytes in 26 blocks
+--6274-- used_suppression:      4 r3 /home/alerusso/Common_core/Minishell-test/executor/v.supp:18 suppressed: 1,192 bytes in 4 blocks
+==6274== 
+==6274== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)

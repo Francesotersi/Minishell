@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:49:14 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:20:55 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/04/30 10:38:04 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,4 +21,7 @@
 //SECTION - Path Codespace
 # define CODESPACE_DEBUG_PATH "/workspaces/Common_core/Minishell-test/executor\
 /debug_tools/debug_resources/input_samples/"
+//SECTION - Path school 42
+# define SCHOOL_DEBUG_PATH "/nfs/homes/alerusso/Desktop/Common_core\
+/Minishell-test/executor/debug_tools/debug_resources/input_samples/"
 #endif

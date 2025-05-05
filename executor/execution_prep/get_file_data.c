@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:22:18 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:01:01 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	get_file_data(t_exec *exec, t_token *token)
 		pipe(exec->pipe_fds);
 		dup_and_reset(&exec->pipe_fds[1], 1);
 	}
-	exec->cmd_num = current_cmd;
+	exec->curr_cmd = current_cmd;
 	return (file_not_found);
 }
 
@@ -116,13 +116,13 @@ static int	add_one(t_exec *exec, t_token *token, t_token **token_address)
 	if (token->type == RED_IN)
 		fd = open(token->content, INFILE);
 	else if (token->type == HERE_DOC)
-		fd = exec->here_doc_fds[exec->cmd_num];
+		fd = exec->here_doc_fds[exec->curr_cmd];
 	else if (token->type == RED_OUT)
 		fd = open(token->content, OUTFILE_TRUNC, 0666);
 	else if (token->type == RED_O_APPEND)
 		fd = open(token->content, OUTFILE_APPEND, 0666);
 	else
-		return (get_subshell_filename(exec, token_address, exec->cmd_num));
+		return (get_subshell_filename(exec, token_address, exec->curr_cmd));
 	if (fd == -1 && (token->type == RED_OUT || token->type == RED_O_APPEND))
 		error(E_OPEN, exec);
 	if (fd == -1)

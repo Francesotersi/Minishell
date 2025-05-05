@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   general8.c                                         :+:      :+:    :+:   */
+/*   utils_parenthesis2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:40:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/29 14:40:49 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/04 16:29:47 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 
 void	goto_valid_block(t_exec *exec, t_token **token)
 {
-	while ((exec->prior_layer <= (*token)->prior && \
-	(*token)->type != AND && (*token)->type != OR) || \
+	while ((exec->prior_layer != (*token)->prior || \
+	((*token)->type != AND && (*token)->type != OR)) || \
 	(((*token)->type == AND && *exec->exit_status != 0) || \
 	((*token)->type == OR && *exec->exit_status == 0)))
 	{
+		if (!(*token)->content)
+			return ;
 		++(*token);
 	}
 }
@@ -49,6 +51,13 @@ bool	detect_pipe(t_token *token, int getfd, int layer)
 	if (getfd)
 		return (0);
 	skip_deeper_layers(&token, layer);
+	while (token->content && !is_exec_sep(token->type))
+	{
+		if (token->type == RED_SUBSHELL)
+			skip_deeper_layers(&token, layer);
+		else
+			++token;
+	}
 	if (token->type == PIPE)
 		return (1);
 	return (0);

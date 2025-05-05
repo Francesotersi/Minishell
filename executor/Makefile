@@ -38,14 +38,14 @@ EXECUTION_PREP_FILES = 	get_commands_data.c get_file_data.c \
 EXECUTION_PREP =		$(addprefix $(PREP_DIR)/, $(EXECUTION_PREP_FILES))
 
 #SECTION - allocate, get memory from main program, free
-MEMORY_FILES = 			memory.c memory2.c
+MEMORY_FILES = 			memory.c
 MEMORY = 				$(addprefix $(MEM_DIR)/, $(MEMORY_FILES))
 
 #SECTION - General utilities to abstract part of program
-UTILS_FILES = 			general.c general2.c general3.c \
-						general4.c general5.c general6.c \
-						general7.c general8.c \
-						printf_fd.c
+UTILS_FILES = 			printf_fd.c utils_count.c utils_debug.c utils_fds.c \
+						utils_generic.c utils_matrix.c  \
+						utils_parenthesis2.c utils_parenthesis.c  \
+						utils_string2.c utils_string.c utils_tokencheck.c
 UTILS = 				$(addprefix $(UTILS_DIR)/, $(UTILS_FILES))
 
 #SECTION - Putting all together:
@@ -84,7 +84,7 @@ deb: $(OBJ_DIR) $(OBJ) $(OBJ_DEBUG)
 	cc -D DEBUG=1 $(FLAGS) -fPIE $(OBJ_DEBUG) $(OBJ) $(DEBUG_LIBFT) -o exe.out
 
 clean: frm
-	rm -rf obj_executor/*.o *.out
+	rm -rf obj_executor/*.o *.out *.gdb *.supp
 	rm -f debug_tools/*.out
 	rm -rf obj_executor
 
@@ -96,7 +96,7 @@ re: fclean all
 
 #frm = file remove
 frm: 
-	rm -f *.txt *.gdb *.supp
+	rm -f *.txt
 	rm -f $(DEBUG_DIR)/debug_resources/bash_tests/*.txt
 
 gdb: 
