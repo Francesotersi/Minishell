@@ -1,0 +1,78 @@
+#!FIXME - non scrive in output.txt e cat non prende in tempo  file.
+case: touch file1.txt file2.txt | cat file1.txt file2.txt > output.txt && echo "Done!" >> output.txt
+[Test1, 12 token]
+Token = touch, 0, 0,
+Token = file1.txt, 1, 0,
+Token = file2.txt, 1, 0,
+Token = |, 7, 0,
+Token = cat, 0, 0,
+Token = file1.txt, 1, 0,
+Token = file2.txt, 1, 0,
+Token = output.txt, 3, 0,
+Token = &&, 8, 0,
+Token = /bin/echo, 0, 0,
+Token = "Done!", 1, 0,
+Token = output.txt, 5, 0,
+[END]
+
+#!FIXME - sort fa andare in freeze l'esecuzione. bash non freeza.
+case: cat << START | grep "error" << MID <<END | tee log.txt >> final_log.txt | sort | uniq > result.txt && echo "Processing complete" >> result.txt || echo "An error occurred" > error.log
+[Test1, 25 token]
+Token = cat, 0, 0,
+Token = START, 6, 0,
+Token = |, 7, 0,
+Token = grep, 0, 0,
+Token = "error", 1, 0,
+Token = MID, 6, 0,
+Token = END, 6, 0,
+Token = |, 7, 0,
+Token = tee, 0, 0,
+Token = log.txt, 1, 0,
+Token = final_log.txt, 5, 0,
+Token = |, 7, 0,
+Token = sort, 0, 0,
+Token = |, 7, 0,
+Token = uniq, 0, 0,
+Token = result.txt, 3, 0,
+Token = &&, 8, 0,
+Token = echo, 0, 0,
+Token = "Processing complete", 1, 0,
+Token = result.txt, 5, 0,
+Token = ||, 9, 0,
+Token = echo, 0, 0,
+Token = "An error occurred", 1, 0,
+Token = error.log, 3, 0,
+[END]
+
+#Niente errore per 2
+case: caio cat | belin che bello
+[Test1, 8 token]
+Token = caio, 4, 0,
+Token = cat, 0, 0,
+Token = |,	7, 0,
+Token = belin, 0, 0,
+Token = che, 1, 0,
+Token = bello, 1, 0,
+[END]
+
+
+#Esecuzione senza valgrind/gdb dà output strano
+case: make frm
+	[Test0, 2 token]
+	Token = make, 0, 0,
+	Token = frm, 1, 0,
+	[END]
+
+case: export ciao=pippo | echo ciao
+[Test1, 6 Token]
+T = export,		0, 0,
+T = ciao=pippo,	1, 0,
+T = |, 			7, 0,
+T = echo, 		0, 0,
+T = ciao,		1, 0,
+[END]
+
+[Test2, 1 Token]
+T = export, 0, 0,
+[END]
+

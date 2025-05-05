@@ -1,0 +1,21 @@
+//TODO
+
+[ ]	Norminette
+[ ]	Documentazione
+[X]	Migliorare nomi utils
+[X]	Tok_next e next_token.. migliorare nomi
+[X] Preparare funzione che stampi il token
+[X]	Stringa vuota ai comandi per RED_SUBSHELL
+[X] Skippare && / || dopo ricorsione
+[X]	Sort ascii su wildcards
+[X]	aggiungere deepest_layer
+[X]	aggiornare at_least_one_pipe inizio execute_loop
+[X]	Salvare pid quando getfd == 0
+[ ]	Ricezione segnali con here_doc
+[ ]	Ricezione generica segnali
+[ ] Controllo overflow di exit e cd -
+[ ]	ls > file.txt | grep a
+[X]	forkare con le parentesi senza esplodere
+	[X]	Rimangono aperti fd 5, 6, 7, 8 con "cat < ( cat < ( ls ) )"
+	[X]	Ordine sbagliato comando demon, segfaulta un figlio
+	[X]	Fixare detect pipe
