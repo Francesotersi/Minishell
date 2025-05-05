@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 09:43:06 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:29:20 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,25 @@
 # include "parsing/parsing.h"
 # include "executor/executor.h"
 
-enum e_permission
-{
-	INFILE = O_CREAT | O_APPEND,
-};
-
 typedef struct s_data
 {
 	char	*input;
-	int		exit_code;
+	int		exit_status;
 	int		token_num;
 	char	**env;
+	int		last_env;
+	int		env_size;
+	t_token *token;
 } t_data;
 
 typedef struct s_token
 {
-	char	*str;	// contenuto del token
+	char	*content;	// contenuto del token
 	int		type;	// tipo del token
 	int		id;		// posizione del token nell`input
 	int		prior;	// priorita`
 	int		t_quote; //tipo di quote contenuta nel token
+	int		cmd_num;//numero del blocco di esecuzione
 	bool	space_on_right;
 } t_token;
 
