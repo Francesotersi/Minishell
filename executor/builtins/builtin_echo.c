@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:44:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 20:33:30 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:24:09 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_echo(char **args, t_exec *exec)
 	i = 1;
 	print_slash_n = _YES;
 	stop_check = _NO;
-	*exec->exit_status = 0;
+	*exec->exit_code = 0;
 	while (args[i])
 	{
 		j = 0;

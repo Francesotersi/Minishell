@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_debug.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 10:48:38 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/30 18:14:14 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:33:39 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,5 @@ void	p_tok(t_token *token)
 
 void	p_end(t_exec *exec)
 {
-	_fd_printf(2, "\n\033[1;33mE. code:\033[0m %d", *exec->exit_status);
+	_fd_printf(2, "\n\033[1;33mE. code:\033[0m %d\n", *exec->exit_code);
 }

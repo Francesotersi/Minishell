@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 11:03:56 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:26:46 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <sys/types.h>
 # include <dirent.h>
 # include "../minishell.h"
+# include "../enum.h"
 
 typedef struct s_exec	t_exec;
 typedef int				(*t_builtin)(char **, t_exec *);
@@ -121,7 +122,7 @@ valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
 	//			(cmd_block with biggest proc sub num) * 2.
 	//			this data is found with proc_sub_num() ft
 	//
--	*exit_status:a pointer to the main struct exit code
+-	*exit_code:a pointer to the main struct exit code
 	//
 	pipe_fds[2]:an array that stores, with pipes, 
 	//			pipe STDIN and pipe STDOUT,
@@ -180,7 +181,7 @@ struct s_exec
 	int				*here_doc_fds;
 	int				*proc_sub_fds;
 	int				*proc_sub_temp_fds;
-	int				*exit_status;
+	int				*exit_code;
 	int				pipe_fds[2];
 	int				last_in;
 	int				last_out;
@@ -232,143 +233,11 @@ typedef struct s_debug_data
 	char	*filename2;
 	char	**env;
 	t_token	*tokens;
-	int		exit_status;
+	int		exit_code;
 	int		last_env;
 	int		env_size;
 	int		fd_to_close;
 }	t_debug_data;
-
-//ANCHOR - Enums
-
-/*REVIEW - token types 
-
-	Token are organized by 12 types.
-	Here's the explanation for all of those:
-	
-	0)	COMMAND:		grep, ls...
-	1)	ARGUMENT:		-n, filename, ../ ...
-	2)	FILES:			filename, EOF...
-	3)	RED_OUT:		>
-	4)	RED_IN:			<
-	5)	RED_O_APPEND:	>>
-	6)	HERE_DOC:		<<
-	7)	PIPE:			|
-	8)	AND:			&&
-	9)	OR:				||
-	10)	PARENTHESIS:	(, )
-	11)	RED_SUBSHELL:	redirect subshell: cat <(ls)
-*/
-enum e_types
-{
-	COMMAND,
-	ARGUMENT,
-	FILES,
-	RED_OUT,
-	RED_IN,
-	RED_O_APPEND,
-	HERE_DOC,
-	PIPE,
-	AND,
-	OR,
-	PARENTHESIS,
-	RED_SUBSHELL,
-	NONE,
-};
-
-/*REVIEW - builtins enum
-
-	Builtins enum. BUILT_N is used to allocate
-	t_builtin *builtins
-*/
-enum e_builtin
-{
-	B_ECHO = 1,
-	B_CD = 2,
-	B_PWD = 3,
-	B_EXPORT = 4,
-	B_UNSET = 5,
-	B_ENV = 6,
-	B_EXIT = 7,
-	BUILT_N = 8,
-};
-
-/*REVIEW - permissions enum
-
-	Every file opened with open in the program has a
-	set of permissions allowed, using bitwise
-	operations.
-*/
-enum e_permissions
-{
-	INFILE = O_RDONLY,
-	INFILE_DOC = O_RDWR | O_CREAT,
-	OUTFILE_TRUNC = O_RDWR | O_CREAT | O_TRUNC,
-	OUTFILE_APPEND = O_RDWR | O_CREAT | O_APPEND,
-};
-
-/*REVIEW - error enum 
-
-	Error enum, used to print different error messages 
-	in the function bash_message() and error()
-*/
-enum e_exec_errors
-{
-	NO_ERR,
-	E_ARGS,
-	E_MALLOC,
-	E_OPEN,
-	E_FORK,
-	E_NOENV,
-	E_ENV_PARSING,
-	E_CD_ARGS,
-	E_CD_PATH,
-	E_CD_NOHOME,
-	E_EXIT_NUMERIC,
-	E_EXIT_ARGS,
-	E_CMD_NOTFOUND,
-	E_IS_DIRECTORY,
-	E_PERMISSION_DENIED,
-};
-
-/*REVIEW - sub_strlen enum 
-
-	sub_strlen and sub_strcpy are utilities functions,
-	that counts/copy strings until a set of characters
-	is INCLUDED/EXCLUDED.
-
-	string = ffffile.txt
-	_sub_strlen(string, ".", INCL) = 4
-	_sub_strlen(string, ".", EXCL) = 7
-*/
-enum e_sub_strlen
-{
-	INCL,
-	EXCL,
-};
-
-/*REVIEW - environment enum
-
-	//TODO - 
-*/
-enum e_environment
-{
-	ENV_NO_EQ_PLUS = 0,
-	ENV_NAME_SIZE = 1,
-	ENV_CONT_SIZE = 2,
-	ENV_WHICH_VAL = 3,
-};
-
-/*REVIEW - sub_strlen enum
-
-	boolean yes/no. Stop is set here to avoid creating
-	a new enum
-*/
-enum e_bools
-{
-	_NO = 0,
-	_YES = 1,
-	_STOP = 2,
-};
 
 //ANCHOR - 	List of unctions called in all program.
 //			Section name is folder name.
@@ -400,7 +269,7 @@ char	*get_pwd_address(char **env);
 
 //	NOTE -	Functions to use in execution part only
 
-int		expand_env(char ***env, int *env_size, t_exec *exec);
+int		realloc_env(char ***env, int *env_size, t_exec *exec);
 char	*ft_getenv(char **env, char *search, int *where);
 int		env_pars(char *item, int *no_eq_plus, int *name_size, int *cont_size);
 
@@ -460,7 +329,7 @@ void	dup_and_reset(int *new_fd, int old_fd);
 
 int		bigger(int n1, int n2);
 int		is_a_valid_executable(t_exec *exec, int i);
-int		set_exit_status(t_exec *exec, int exit_status);
+int		set_exit_code(t_exec *exec, int exit_code);
 void	write_here_doc(char *line, t_exec *exec, int fd);
 
 //	NOTE -	matrix:		Matrix management

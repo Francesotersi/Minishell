@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_generic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:04:20 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/01 12:53:20 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:26:11 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ int	bigger(int n1, int n2)
 	return (n1 * (n1 >= n2) + n2 * (n1 < n2));
 }
 
-/*REVIEW - set_exit_status
+/*REVIEW - set_exit_code
 
 //	Set exit status. Returns it.
 */
-int	set_exit_status(t_exec *exec, int exit_status)
+int	set_exit_code(t_exec *exec, int exit_code)
 {
-	*exec->exit_status = exit_status;
-	return (exit_status);
+	*exec->exit_code = exit_code;
+	return (exit_code);
 }
 
 /*
@@ -49,13 +49,13 @@ int	is_a_valid_executable(t_exec *exec, int i)
 	{
 		bash_message(E_IS_DIRECTORY, exec->commands[i][0]);
 		closedir(dir);
-		set_exit_status(exec, 126);
+		set_exit_code(exec, 126);
 		return (_NO);
 	}
 	else if (access(exec->commands[i][0], F_OK | X_OK) != 0)
 	{
 		bash_message(E_CMD_NOTFOUND, exec->commands[i][0]);
-		set_exit_status(exec, 127);
+		set_exit_code(exec, 127);
 		return (_NO);
 	}
 	return (_YES);

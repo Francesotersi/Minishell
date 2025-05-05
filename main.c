@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/05 10:39:20 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:31:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,12 @@ int	start(t_data *gen)
 			add_history(gen->input);
 		if (start_lexing(gen) == -1)
 			return (1);
+		
 		execute(gen->token, (void*)gen, 0);
 		free(gen->input);
-		free_all(gen->token, gen);
-		_free_matrix(gen->env);
 	}
+	free_all(gen->token, gen);
+	_free_matrix(gen->env);
 	return (0);
 }
 
@@ -53,6 +54,6 @@ int	main(int ac, char **av, char **env)
 	if (start(&gen) == 1)
 		return (1);
 	// ricordarsi di forse levare sta cosa
-	gen.env = _free_matrix(gen.env);
+	// gen.env = _free_matrix(gen.env);
 	return (0);
 }

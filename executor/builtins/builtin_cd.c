@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/30 17:33:01 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:24:05 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ int	ft_cd(char **args, t_exec *exec)
 	char	**pwd_update;
 	char	*new_dir;
 
-	*exec->exit_status = 0;
+	*exec->exit_code = 0;
 	if (exec->at_least_one_pipe)
 		return (0);
 	if (args[1] && args[2])
-		return (bash_message(E_CD_ARGS, NULL), set_exit_status(exec, 1));
+		return (bash_message(E_CD_ARGS, NULL), set_exit_code(exec, 1));
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd)
 		error(E_MALLOC, exec);
@@ -58,7 +58,7 @@ int	ft_cd(char **args, t_exec *exec)
 	if (!args[1])
 		back_to_home(*exec->env, &new_dir);
 	if (chdir(new_dir) != 0)
-		return (free(old_pwd), set_exit_status(exec, 1));
+		return (free(old_pwd), set_exit_code(exec, 1));
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		return (free(old_pwd), error(E_MALLOC, exec));

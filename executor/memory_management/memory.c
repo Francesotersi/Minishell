@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:46 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 11:04:13 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:25:56 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ void	get_main_struct_data(t_exec *exec, void *data, int debug)
 		exec->env = &debug_data->env;
 		exec->env_size = &debug_data->env_size;
 		exec->last_env = &debug_data->last_env;
-		exec->exit_status = &debug_data->exit_status;
-		*exec->exit_status = 0;
+		exec->exit_code = &debug_data->exit_code;
+		*exec->exit_code = 0;
 		return ;
 	}
 	gen = (t_data*)data;
 	exec->env = &gen->env;
 	exec->env_size = &gen->env_size;
 	exec->last_env = &gen->last_env;
-	exec->exit_status = &gen->exit_status;
-	*exec->exit_status = 0;
+	exec->exit_code = &gen->exit_code;
+	*exec->exit_code = 0;
 }
 
 //REVIEW - Free for data used in execution Minishell part debug program
