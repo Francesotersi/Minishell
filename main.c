@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/29 09:32:45 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:39:20 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	start(t_data *gen)
 			return (1);
 		free(gen->input);
 	}
-	gen->env = _free_matrix(gen->env);
 	return (0);
 }
 
@@ -48,5 +47,7 @@ int	main(int ac, char **av, char **env)
 	sigaction(SIGINT, &sa, NULL);
 	if (start(&gen) == 1)
 		return (1);
+	// ricordarsi di forse levare sta cosa
+	gen.env = _free_matrix(gen.env);
 	return (0);
 }

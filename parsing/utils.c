@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:13:21 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/30 11:10:52 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 08:58:16 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,12 @@ void	printf_struct(t_token *token, t_data *gen)
 	int	i;
 
 	i = 0;
-	printf("numero di token = %d\n", gen->token_num);
+	// printf("numero di token = %d\n", gen->token_num);
 	while (i <= gen->token_num)
 	{
 		// printf("stringa contenuta nel token %d == %s\n",i + 1 , token[i].content);
-		printf("stringa contenuta nel token |%d| == |%s| con priorita` di |%d|\n",i + 1 , token[i].content, token[i].prior);
+		// printf("stringa contenuta nel token |%d| == |%s| con priorita` di |%d|\n",i + 1 , token[i].content, token[i].prior);
+		printf("|%s| = | %d |\n", token[i].content, token[i].type);
 		i++;
 	}
 }

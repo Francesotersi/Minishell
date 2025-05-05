@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:22:31 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/16 08:29:08 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 08:58:34 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	string_allocation(t_token *token, int counter, int *token_id)
 		token[(*token_id)].content = (char*)ft_calloc(counter + 1, sizeof(char));
 		if (!token[(*token_id)].content)
 			return (write(2, "bash: allocation error\n", 23), 1);
-		printf("il token |%d| e` stato allocato di |%d|\n", (*token_id), counter);
+		// printf("il token |%d| e` stato allocato di |%d|\n", (*token_id), counter);
 		(*token_id)++;
 	}
 	return (0);

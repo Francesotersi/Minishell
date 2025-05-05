@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:58:54 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/29 09:18:59 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 09:00:26 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,3 +20,4 @@ void	skip_single_quotes(char *str, int *i)
 	if (str[(*i)] == '\'')
 		(*i)++;
 }
+
