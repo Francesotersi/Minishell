@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/05 14:06:47 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:19:16 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,24 @@
 # include <fcntl.h>
 # include <stdbool.h>
 # include "../minishell.h"
+# include "../enum.h"
 
-enum e_types
-{
-	COMMAND = 0,
-	ARGUMENT = 1,
-	FILES = 2,
-	RED_OUT = 3,
-	RED_IN = 4,
-	RED_O_APPEND = 5,
-	HERE_DOC = 6,
-	PIPE = 7,
-	AND = 8,
-	OR = 9,
-	PARENTHESIS = 10,
-	RED_SUBSHELL = 11,
-	NONE = 12,
-};
+// enum e_types
+// {
+// 	COMMAND = 0,
+// 	ARGUMENT = 1,
+// 	FILES = 2,
+// 	RED_OUT = 3,
+// 	RED_IN = 4,
+// 	RED_O_APPEND = 5,
+// 	HERE_DOC = 6,
+// 	PIPE = 7,
+// 	AND = 8,
+// 	OR = 9,
+// 	PARENTHESIS = 10,
+// 	RED_SUBSHELL = 11,
+// 	NONE = 12,
+// };
 
 typedef struct s_data	t_data;
 typedef struct s_token	t_token;
@@ -67,14 +68,6 @@ void	remove_quotes_token(t_token *token, t_data *gen);
 
 // define_token.c
 int		define_token_and_parenthesis(t_token *token, t_data *gen);
-
-// temp_files_from_ale.c
-char	*_cut_string(char *string, size_t start, size_t end);
-char	*get_env(char **env, char *search);
-int		_sub_strlen(char *s, char *charset, int mode);
-int		cpy_env(char **old_env, char ***new_env, int *env_size, int *last_env);
-char	*ft_getenv(char **env, char *search, int *where);
-void	*_free_matrix(char **matrix);
 
 // expand_env.c
 void	expanding_variables(t_token *token, t_data *gen);

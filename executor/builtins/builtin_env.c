@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:57 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:19:40 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:24:12 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_env(char **args, t_exec *exec)
 {
 	if (args[1])
 		return (what_file_is(exec, args[1]));
-	*exec->exit_status = 0;
+	*exec->exit_code = 0;
 	print_env(*exec->env);
 	return (0);
 }
@@ -72,18 +72,18 @@ static int	what_file_is(t_exec *exec, char *arg)
 	{
 		_fd_printf(2, "env: %s: Is a directory\n", arg);
 		closedir(dir);
-		return (set_exit_status(exec, 126));
+		return (set_exit_code(exec, 126));
 	}
 	else if (access(arg, F_OK) != 0)
 	{
 		_fd_printf(2, "env: %s: No such file or directory\n");
-		return (set_exit_status(exec, 127));
+		return (set_exit_code(exec, 127));
 	}
 	else if (access(arg, F_OK | X_OK) != 0)
 	{
 		_fd_printf(2, "env: %s: Cannot execute for Minishell subject\n");
-		return (set_exit_status(exec, 127));
+		return (set_exit_code(exec, 127));
 	}
 	_fd_printf(2, "env: %s: permission denied\n");
-	return (set_exit_status(exec, 126));
+	return (set_exit_code(exec, 126));
 }

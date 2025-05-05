@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 14:43:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:21:53 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:21:36 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ char	*ft_getenv(char **env, char *search, int *where)
 }
 
 /*
-//REVIEW - expand_env
+//REVIEW - realloc_env
 
 //		Doubles the size of the environment.
 		Save the new size in the env_size variable.
 */
-int	expand_env(char ***env, int *env_size, t_exec *exec)
+int	realloc_env(char ***env, int *env_size, t_exec *exec)
 {
 	char	**new_env;
 	int		temp;

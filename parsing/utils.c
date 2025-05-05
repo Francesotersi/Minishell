@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:13:21 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/05 08:58:16 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:15:23 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	token_struct_init(t_token *token, t_data *gen)
 		token[i].type = 1;
 		token[i].space_on_right = false;
 		token[i].prior = 0;
-		// token[i].cmd_num = 0;
+		token[i].cmd_num = 0;
 		i++;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 11:08:02 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:25:12 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,11 @@ int	execute_loop(t_token *token, t_exec *exec)
 	exec->at_least_one_pipe = detect_pipe(token, _NO, token->prior);
 	while (token->content)
 	{
-		*exec->exit_status = 0;
+		*exec->exit_code = 0;
 		if (get_file_data(exec, token) == 0)
 			invoke_programs(exec, exec->curr_cmd);
 		else
-			*exec->exit_status = 1;
+			*exec->exit_code = 1;
 		close_temp_files(exec);
 		if (next_command(exec, &token))//FIXME - Togliere if!
 			return (0);
@@ -165,7 +165,7 @@ static int	invoke_programs(t_exec *exec, int i)
 	{
 		close_all(exec);
 		execve(exec->commands[i][0], exec->commands[i], *exec->env);
-		return (set_exit_status(exec, 127), ft_exit(NULL, exec), 1);
+		return (set_exit_code(exec, 127), ft_exit(NULL, exec), 1);
 	}
 	exec->pid_list[i] = pid;
 	return (0);
@@ -182,9 +182,9 @@ static int	invoke_programs(t_exec *exec, int i)
 int	wait_everyone(t_exec *exec)
 {
 	int	i;
-	int	exit_status;
+	int	exit_code;
 
-	exit_status = 0;
+	exit_code = 0;
 	dup2(exec->stdin_fd, 0);
 	dup2(exec->stdout_fd, 1);
 	i = 0;
@@ -192,9 +192,9 @@ int	wait_everyone(t_exec *exec)
 	{
 		if (exec->pid_list[i])
 		{
-			waitpid(exec->pid_list[i], &exit_status, 0);
+			waitpid(exec->pid_list[i], &exit_code, 0);
 			if (i == exec->curr_cmd - 1)
-				*exec->exit_status = exit_status / 256;
+				*exec->exit_code = exit_code / 256;
 			exec->pid_list[i] = 0;
 		}
 		++i;

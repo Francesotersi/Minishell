@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:04 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/04 11:35:13 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:24:17 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	ft_export(char **args, t_exec *exec)
 	int		pars_data[4];	
 
 	i = 1;
-	*exec->exit_status = 0;
+	*exec->exit_code = 0;
 	if (!args[1])
 		return (print_export(*exec->env), 0);
 	while (args[i])
@@ -64,7 +64,7 @@ int	ft_export(char **args, t_exec *exec)
 		else
 		{
 			bash_message(E_ENV_PARSING, args[i]);
-			*exec->exit_status = 1;
+			*exec->exit_code = 1;
 		}
 		++i;
 	}
@@ -108,7 +108,7 @@ static void	add_one(char *item, char ***env, t_exec *exec, int pars_data[4])
 	char	*name;
 
 	if (*exec->env_size <= *exec->last_env + 1)
-		if (expand_env(exec->env, exec->env_size, exec) == E_MALLOC)
+		if (realloc_env(exec->env, exec->env_size, exec) == E_MALLOC)
 			error(E_MALLOC, exec);
 	name = (char *)ft_calloc(pars_data[ENV_NAME_SIZE] + 2, sizeof(char));
 	if (!name)

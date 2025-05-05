@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:44:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 20:33:30 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:31:22 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_echo(char **args, t_exec *exec)
 	i = 1;
 	print_slash_n = _YES;
 	stop_check = _NO;
-	*exec->exit_status = 0;
+	*exec->exit_code = 0;
 	while (args[i])
 	{
 		j = 0;
@@ -67,7 +67,7 @@ int	ft_echo(char **args, t_exec *exec)
 				write(1, &args[i][j], 1);
 			++j;
 		}
-		if (args[++i])
+		if (args[++i] && stop_check == _YES)
 			write(1, " ", 1);
 	}
 	return (write(1, "\n", (int)print_slash_n));

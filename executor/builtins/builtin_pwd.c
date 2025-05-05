@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:06 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:19:53 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:24:20 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_pwd(char **args, t_exec *exec)
 	char	*pwd;
 
 	(void)args;
-	*exec->exit_status = 0;
+	*exec->exit_code = 0;
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		error(E_MALLOC, exec);

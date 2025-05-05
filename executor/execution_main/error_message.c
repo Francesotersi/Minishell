@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:47:51 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/01 12:21:57 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:25:15 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	bash_message2(int message, char *file);
 */
 int		error(int err, t_exec *memory)
 {
-	*memory->exit_status = 1;
+	*memory->exit_code = 1;
 	if (err == NONE)
 	{
 		ft_putstr_fd("Please insert an error.\n", 2);
