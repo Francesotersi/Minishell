@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:22:31 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 10:14:29 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 08:58:34 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,15 @@ int	string_allocation(t_token *token, int counter, int *token_id)
 {
 	if (counter)
 	{
-		token[(*token_id)].content = 
-			(char*)ft_calloc(counter + 1, sizeof(char));
+		token[(*token_id)].content = (char*)ft_calloc(counter + 1, sizeof(char));
 		if (!token[(*token_id)].content)
 			return (write(2, "bash: allocation error\n", 23), 1);
-		printf("il token |%d| e` stato allocato di |%d|\n", (*token_id), counter);
+		// printf("il token |%d| e` stato allocato di |%d|\n", (*token_id), counter);
 		(*token_id)++;
 	}
 	return (0);
 }
-
+// g = gen accorciato perche le colonne superavano di 1 80
 int alloc_operator_token(t_token *token, t_data *gen, int *i, int *token_id)
 {
     int counter;
@@ -120,6 +119,7 @@ int	alloc_str_token(t_token *token, t_data *gen)
 	{
 		while (gen->input[i] != '\0' && gen->input[i] == ' ')
 			i++;
+		// aggiungere token per il dollaro
 		if (alloc_char_token(token, gen, &i, &token_id) == 1)	
 			return (1);
 		if (alloc_operator_token(token, gen, &i, &token_id) == 1)

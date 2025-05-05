@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 10:15:33 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:30:43 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,12 @@ char *actual_removal_temp_alloc(t_token *token)
 	return (temp);
 }
 
-void	actual_removal(t_token *token, bool check, char *temp)
+void	actual_removal(t_token *token, char *temp)
 {
 	int		j;
 	char	quote;
 	int		i;
 
-	(void)check;
 	i = 0;
 	j = 0;
 	while (temp[i] != '\0')
@@ -66,17 +65,18 @@ void	actual_removal(t_token *token, bool check, char *temp)
 	free(temp);
 }
 
+// funzione chiamata nel file fill_struct.c in fondo 
+// all`ultima funzione del file
 void	remove_quotes_token(t_token *token, t_data *gen)
 {
 	int		id;
 	int		i;
-	bool	check;
 	char	*temp;
 
-	check = false;
 	i = 0;
 	id = 0;
 	temp = NULL;
+	expanding_variables(token, gen);
 	while (token[id].content != NULL)
 	{
 		while(token[id].content[i] != '\0')
@@ -84,7 +84,7 @@ void	remove_quotes_token(t_token *token, t_data *gen)
 			if (token[id].content[i] == '\'' || token[id].content[i] == '\"')
 			{
 				temp = actual_removal_temp_alloc(&token[id]);
-				actual_removal(&token[id], check, temp);
+				actual_removal(&token[id], temp);
 				break ;
 			}
 			i++;

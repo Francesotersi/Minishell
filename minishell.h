@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 10:29:20 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:33:09 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ typedef struct s_data
 	char	**env;
 	int		last_env;
 	int		env_size;
-	t_token *token;
-} t_data;
+}	t_data;
 
 typedef struct s_token
 {

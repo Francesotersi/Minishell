@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/15 10:34:04 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:39:20 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	start(t_data *gen)
 	{
 		gen->input = readline("minishell$> ");
 		if (!gen->input)
-			return(write(1, "exit\n", 5), free(gen->input), 0);
+			return (write(1, "exit\n", 5), free(gen->input), 0);
 		if (gen->input[0] != '\0')
 			add_history(gen->input);
 		if (start_lexing(gen) == -1)
@@ -32,6 +32,7 @@ int	start(t_data *gen)
 	return (0);
 }
 
+// ricordarsi di fare il free sull`env
 int	main(int ac, char **av, char **env)
 {
 	t_data				gen;
@@ -39,7 +40,8 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac, (void)av;
 	gen = (t_data){0};
-	gen.env = env;
+	if (cpy_env(env, &gen.env, &gen.env_size, &gen.last_env) != 0)
+		return (/* malloc error */1);
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
 	sigaddset(&sa.sa_mask, SIGQUIT);
@@ -50,5 +52,7 @@ int	main(int ac, char **av, char **env)
 		return (1);
 	if (start(&gen) == 1)
 		return (1);
+	// ricordarsi di forse levare sta cosa
+	gen.env = _free_matrix(gen.env);
 	return (0);
 }
