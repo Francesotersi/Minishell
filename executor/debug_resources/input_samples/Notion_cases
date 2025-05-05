@@ -1,0 +1,3 @@
+#Output: 	"ciaobruttobastardo" in file c.txt
+#File:		a.txt, b.txt, c.txt
+case: echo ciao > a.txt brutto > b.txt bastardo > c.txt

@@ -82,6 +82,7 @@ int	copy_char_fill(t_token *token, t_data *gen, int *i)
 	return (0);
 	
 }
+
 // riempie la struttura dei token e una volta finito rimuove le quotes
 // correttamente e espande le variabili di ambiente e exit status
 void	fill_struct(t_token *token, t_data *gen)

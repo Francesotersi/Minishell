@@ -24,7 +24,10 @@ int	start(t_data *gen)
 			add_history(gen->input);
 		if (start_lexing(gen) == -1)
 			return (1);
+		execute(gen->token, (void*)gen, 0);
 		free(gen->input);
+		free_all(gen->token, gen);
+		_free_matrix(gen->env);
 	}
 	return (0);
 }
@@ -45,6 +48,8 @@ int	main(int ac, char **av, char **env)
 	sa.sa_sigaction = signals;
 	signal(SIGQUIT, SIG_IGN);
 	sigaction(SIGINT, &sa, NULL);
+	if (cpy_env(env, &gen.env, &gen.env_size, &gen.last_env))
+		return (1);
 	if (start(&gen) == 1)
 		return (1);
 	// ricordarsi di forse levare sta cosa

@@ -25,15 +25,10 @@
 # include "parsing/parsing.h"
 # include "executor/executor.h"
 
-enum e_permission
-{
-	INFILE = O_CREAT | O_APPEND,	
-};
-
 typedef struct s_data
 {
 	char	*input;
-	int		exit_code;
+	int		exit_status;
 	int		token_num;
 	char	**env;
 	int		last_env;
@@ -46,8 +41,9 @@ typedef struct s_token
 	int		type;	// tipo del token
 	int		id;		// posizione del token nell`input
 	int		prior;	// priorita`
+	int		t_quote; //tipo di quote contenuta nel token
 	bool	space_on_right;
-}	t_token;
+} t_token;
 
 //signals
 void	signals(int signal, siginfo_t *info, void *s);
