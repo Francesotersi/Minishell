@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 12:51:59 by ftersill          #+#    #+#             */
-/*   Updated: 2024/11/28 11:31:53 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/04/17 12:13:14 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *s)
 	size_t	a;
 
 	a = 0;
+	if (!s)
+		return (NULL);
 	rts = (char *)s;
 	rts = malloc(sizeof(char) * (ft_strlen(s) + 1));
 	if (!rts)
