@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/05 14:08:35 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:44:35 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,38 @@ int	is_operator(t_token *tok, t_data *gen, int *id)
 	return (0);
 }
 
+int	is_cmd_2(t_token *tok, int *id)
+{
+	if ((*id) >= 2)
+	{
+		if (tok[(*id)].type == ARGUMENT && tok[(*id) - 1].type == PARENTHESIS &&
+		tok[(*id) - 2].type == RED_IN)
+			return(1);
+	}
+	return (0);
+}
+
 int	is_cmd(t_token *tok, t_data *gen)
 {
 	int	id;
 
 	id = 0;
+	(void)gen;
 	while (tok[id].content != NULL)
 	{
-		while (id < gen->token_num && tok[id].type != ARGUMENT)
+		while (tok[id].content && tok[id].type != ARGUMENT)
 			id++;
+		if (is_cmd_2(tok, &id) == 1)
+				tok[id].type = COMMAND;
 		if (tok[id].type == ARGUMENT)
-			tok[id++].type = COMMAND;
-		while (id < gen->token_num && tok[id].type == ARGUMENT)
+			tok[id].type = COMMAND;
+		while (tok[id].content && tok[id].type != AND && tok[id].type != OR &&
+		tok[id].type != PIPE)
+		{
+			if (is_cmd_2(tok, &id) == 1)
+				break;
 			id++;
-		while (id < gen->token_num && (tok[id].type != PIPE ||
-		tok[id].type != AND || tok[id].type != OR) && tok[id].type != ARGUMENT)
-			id++;
+		}
 	}
 	return (0);
 }

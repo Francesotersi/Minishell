@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/05 15:32:11 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:53:48 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,11 +138,12 @@ int	start_lexing(t_data *gen)
 	token = (t_token*)ft_calloc(sizeof(t_token),  gen->token_num + 1);
 	if (!token)
 		return (write(2, "bash: malloc error\n", 14), 1);
-	token_struct_init(token, gen);
-	(*token) = (t_token){0};
+	// (*token) = (t_token){0};
+	
 	if (alloc_str_token(token, gen) == 1)
 		return (1);
 	fill_struct(token, gen);
+	token_struct_init(token, gen);
 	// da fare define_token_arg e aggiungerlo al .h sta nel file define_token.h
 	if (define_token_and_parenthesis(token, gen) == 1)
 		return (1);
