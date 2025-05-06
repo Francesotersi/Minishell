@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/06 11:18:43 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:25:12 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	execute(t_token *token, void *data, int debug)
 	prepare_here_docs(&exec, token);
 	get_commands_data(&exec, token);
 	get_paths_data(&exec, token);
-	while (token->prior != 0)
+	if (token->prior != 0)
 	{
 		manage_parenthesis(&exec, &token, 0);
 		if (exec.pipe_fds[0])

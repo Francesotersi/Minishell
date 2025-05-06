@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/06 11:44:35 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:26:48 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,42 +69,6 @@ int	is_operator(t_token *tok, t_data *gen, int *id)
 	return (0);
 }
 
-int	is_cmd_2(t_token *tok, int *id)
-{
-	if ((*id) >= 2)
-	{
-		if (tok[(*id)].type == ARGUMENT && tok[(*id) - 1].type == PARENTHESIS &&
-		tok[(*id) - 2].type == RED_IN)
-			return(1);
-	}
-	return (0);
-}
-
-int	is_cmd(t_token *tok, t_data *gen)
-{
-	int	id;
-
-	id = 0;
-	(void)gen;
-	while (tok[id].content != NULL)
-	{
-		while (tok[id].content && tok[id].type != ARGUMENT)
-			id++;
-		if (is_cmd_2(tok, &id) == 1)
-				tok[id].type = COMMAND;
-		if (tok[id].type == ARGUMENT)
-			tok[id].type = COMMAND;
-		while (tok[id].content && tok[id].type != AND && tok[id].type != OR &&
-		tok[id].type != PIPE)
-		{
-			if (is_cmd_2(tok, &id) == 1)
-				break;
-			id++;
-		}
-	}
-	return (0);
-}
-
 int define_token_arg(t_token *token, t_data *gen)
 {
 	int	id;
@@ -121,8 +85,7 @@ int define_token_arg(t_token *token, t_data *gen)
 	return (0);
 }
 
-// 									RICORDA!
-// POTREBBE DARE PROBLEMI IL CASO ls <(ls) -R PERCHE IL -R NON VIENE FLAGGATO CORRETTAMENTE
+// funzione richiamata nel file start_lexing.c
 int	define_token_and_parenthesis(t_token *token, t_data *gen)
 {
 	int	i;

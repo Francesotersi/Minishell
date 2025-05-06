@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/05 15:19:16 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:28:09 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,7 @@ int		count_parenthesis(t_token *token, t_data *gen);
 // define_token_2.c
 int		is_redirection(t_token *tok, t_data *gen, int *id);
 int		is_redirection_2(t_token *tok, int *id);
+int		is_cmd(t_token *tok, t_data *gen);
+int		is_cmd_2(t_token *tok, int *id);
 
 #endif
