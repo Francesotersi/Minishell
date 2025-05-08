@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_parenthesis2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:40:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 15:26:30 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 15:13:24 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	goto_valid_block(t_exec *exec, t_token **token)
 	(((*token)->type == AND && *exec->exit_code != 0) || \
 	((*token)->type == OR && *exec->exit_code == 0)))
 	{
+		if (exec->prior_layer > (*token)->prior)
+			return ;
 		if (!(*token)->content)
 			return ;
 		++(*token);
