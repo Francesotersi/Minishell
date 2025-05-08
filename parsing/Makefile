@@ -40,7 +40,6 @@ clean:
 	rm -rf obj_parsing
 
 fclean: clean
-	rm -rf $(NAME).a
 
 re: fclean all
 

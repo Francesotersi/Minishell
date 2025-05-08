@@ -6,6 +6,7 @@ LDFLAGS  = -lreadline -lhistory -lncurses
 #–– Library
 LIBFT_DIR = Ssj_libft
 LIBFT     = $(LIBFT_DIR)/libft.a
+PARS_DIR  = parsing
 
 #–– Top‑level target
 NAME     = minishell
