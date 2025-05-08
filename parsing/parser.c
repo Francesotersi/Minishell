@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 11:48:14 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 10:07:52 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:40:24 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,20 @@ int	redirection_heredoc_valid(t_token *token, t_data *gen)
 	(void)gen;
 	while (token[id].content != NULL)
 	{
-		if ((token[id].type == RED_IN || token[id].type == RED_OUT ||
-		token[id].type == RED_O_APPEND || token[id].type == HERE_DOC)
-		&& token[id].content)
+		if ((token[id].type == RED_IN || token[id].type == RED_OUT)
+			&& token[id + 1].content)
+		{
+			if (token[id + 1].type != FILES && token[id + 1].type != PARENTHESIS)
+				return (ft_error("syntax error near unexpected token ", 2, gen,
+				token[id].content) ,1);
+		}
+		if ((token[id].type == RED_O_APPEND || token[id].type == HERE_DOC)
+			&& token[id + 1].content)
 		{
 			if (token[id + 1].type != FILES)
 				return (ft_error("syntax error near unexpected token ", 2, gen,
 				token[id].content) ,1);
-		}	
+		}
 		id++;
 	}
 	return (0);
