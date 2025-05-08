@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:13:21 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/06 11:17:21 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:25:32 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,11 @@ void	free_token(t_token *token, t_data *gen)
 {
 	int	i;
 
-	i = -1;
-	while (++i <= gen->token_num)
+	i = 0;
+	while (i <= gen->token_num)
 	{
 		free(token[i].content);
+		i++;
 	}
 }
 

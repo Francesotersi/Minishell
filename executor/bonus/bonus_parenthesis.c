@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_parenthesis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:52:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/07 15:54:27 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/08 10:55:50 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	manage_parenthesis(t_exec *exec, t_token **token, int getfd)
 		++(*token);
 	temp_fd = exec->stdout_fd;
 	redir_to_pipe = detect_pipe(*token, getfd, (*token)->prior - 1);
-	int	layer = exec->prior_layer;
 	prep_recursion(exec, fds, temp_fd, getfd || redir_to_pipe);
 	pid = fork();//
 	if (pid < 0)//
@@ -35,7 +34,6 @@ int	manage_parenthesis(t_exec *exec, t_token **token, int getfd)
 		execute_loop(*token, exec);
 	if (getfd == 0)//
 		exec->pid_list[(*token)->cmd_num] = pid;//
-	exec->prior_layer = layer;
 	exec->stdout_fd = temp_fd;
 	dup2(temp_fd, 1);
 	redir_output(exec, token, redir_to_pipe, fds);

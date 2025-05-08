@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/06 12:28:09 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 10:05:50 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,21 @@ void	free_struct(t_token *token);
 
 // utils_2.c
 void	skip_single_quotes(char *str, int *i);
+void	ft_error(char *str, int exit_c, t_data *gen, char *token);
 
 // struct_alloc.c
 int		alloc_str_token(t_token *token, t_data *gen);
-
 // remove_quotes.c
 void	remove_quotes_token(t_token *token, t_data *gen);
 
 // define_token.c
 int		define_token_and_parenthesis(t_token *token, t_data *gen);
+
+// define_token_2.c
+int		is_redirection(t_token *tok, t_data *gen, int *id);
+int		is_redirection_2(t_token *tok, int *id);
+int		is_cmd_2(t_token *tok, int *id);
+int		is_cmd(t_token *tok, t_data *gen);
 
 // expand_env.c
 void	expanding_variables(t_token *token, t_data *gen);
@@ -84,10 +90,10 @@ void	skip_env_var(t_token *token, int *i, char *temp);
 int		prior_of_token(t_token *token, t_data *gen);
 int		count_parenthesis(t_token *token, t_data *gen);
 
-// define_token_2.c
-int		is_redirection(t_token *tok, t_data *gen, int *id);
-int		is_redirection_2(t_token *tok, int *id);
-int		is_cmd(t_token *tok, t_data *gen);
-int		is_cmd_2(t_token *tok, int *id);
+// expand_wildcard.c
+int		expand_wildcard(t_token *token, t_data *gen);
+
+// parser.c
+int		actual_parser(t_token *token, t_data *gen);
 
 #endif

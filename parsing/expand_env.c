@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:55:30 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/05 15:19:54 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 09:50:46 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	insert_var_env(char *search, t_token *token, int *i, char *temp)
 	char	*dup;
 	int		k;
 	int		j;
-	
+
 	k = 0;
 	j = 0;
 	dup = ft_strdup(token->content);
 	free(token->content);
-	token->content = (char*)ft_calloc(ft_strlen(dup) + ft_strlen(temp) + \
+	token->content = (char *)ft_calloc(ft_strlen(dup) + ft_strlen(temp) + \
 		ft_strlen(search) + 1, sizeof(char));
 	if (!token->content)
-		return /* MALLOC ERROR */;
+		return ;
 	while (j < (*i))
 		token->content[k++] = dup[j++];
 	if (dup[j] == '$' && dup[j] != '\0')
@@ -40,10 +40,8 @@ void	insert_var_env(char *search, t_token *token, int *i, char *temp)
 	free(dup);
 }
 
-// CHIEDERE AL FHURER ALERUSSO SE LA GESTIONE DEI DELLARI SINGOLI DEVE ESSERE GESTITA
-
 // tok = token, norminette is a piece of shit
-void	expand_var(t_token *tok, int *i ,t_data *gen, char *search)
+void	expand_var(t_token *tok, int *i, t_data *gen, char *search)
 {
 	char	*temp;
 
@@ -62,7 +60,7 @@ void	expand_var(t_token *tok, int *i ,t_data *gen, char *search)
 				if (search)
 					insert_var_env(search, tok, i, temp);
 				else
-					skip_env_var(tok, i, temp); // caso dello spazio da gestire
+					skip_env_var(tok, i, temp);
 			}
 			else
 				(*i)++;
@@ -72,14 +70,13 @@ void	expand_var(t_token *tok, int *i ,t_data *gen, char *search)
 	free(temp);
 }
 
-void	expand_var_alone(t_token *tok, int *i ,t_data *gen, char *search)
+void	expand_var_alone(t_token *tok, int *i, t_data *gen, char *search)
 {
 	char	*temp;
 
 	temp = NULL;
-	if (tok->content[(*i)] == '$' && tok->content[(*i) + 1] && \
-	tok->content[(*i) + 1] != '\"' && tok->content[(*i) + 1] != '\'' // da levare questo controllo anche nelle altre funzioni per questo caso = echo $"HOE"
-	&& tok->content[(*i) + 1] != ' ')
+	if (tok->content[(*i)] == '$' && tok->content[(*i) + 1]
+		&& tok->content[(*i) + 1] != ' ')
 	{
 		temp = what_to_search(tok, i);
 		search = get_env(gen->env, temp);
@@ -90,9 +87,9 @@ void	expand_var_alone(t_token *tok, int *i ,t_data *gen, char *search)
 	}
 	else
 		(*i)++;
+	free(temp);
 }
 
-// gestisci il caso delle espansioni infinite se non ri ricordi chiedi a vale greg o ale
 void	expand_env(t_token *token, t_data *gen)
 {
 	int		id;
@@ -124,15 +121,7 @@ void	expand_env(t_token *token, t_data *gen)
 //	--serve per espandere le variabili di ambiente all`interno della struttura
 void	expanding_variables(t_token *token, t_data *gen)
 {
-	int	id;
-	int	i;
-	int var_id;
-
-	id = 0;
-	i = 0;
-	var_id = 1;
 	expand_exit_code(token, gen);
 	expand_env(token, gen);
-	// expand_wildcards(token, gen);
-
+	expand_wildcard(token, gen);
 }

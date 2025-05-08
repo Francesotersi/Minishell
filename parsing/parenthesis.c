@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:30:09 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/29 11:46:30 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:11:43 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	count_parenthesis(t_token *token, t_data *gen)
 {
 	int	id;
 	int	open_par_count;
-	int close_par_count;
+	int	close_par_count;
 
 	(void)gen;
 	open_par_count = 0;
@@ -43,7 +43,7 @@ int	count_parenthesis(t_token *token, t_data *gen)
 int	prior_of_token(t_token *token, t_data *gen)
 {
 	int	id;
-	int prior;
+	int	prior;
 
 	(void)gen;
 	id = 0;
@@ -57,5 +57,5 @@ int	prior_of_token(t_token *token, t_data *gen)
 		token[id].prior = prior;
 		id++;
 	}
-	return(0);
+	return (0);
 }

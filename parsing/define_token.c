@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/06 12:26:48 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 11:05:03 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,8 @@
 
 //			TO DEFINE IN TOKEN STRUCT
 //	1) tipo di token
-//	4) dare syntax error quando prima di una parentesi non e` presente un operatore
-//  5) i token dopo qualsiasi redirection sono nomi di file 
-//	6) il primo token e` sempre un comando tranne se c`e redirect output o parenesi tonda aperta
-//
+//	4) dare syntax error quando prima di una parentesi non e` 
+// presente un operatore
 
 int	and_or_pipe_parenthesis(t_token *tok, t_data *gen, int *id)
 {
@@ -50,34 +48,50 @@ int	and_or_pipe_parenthesis(t_token *tok, t_data *gen, int *id)
 	return (0);
 }
 
-int	is_operator(t_token *tok, t_data *gen, int *id)
+int	is_operator(t_token *t, t_data *gen, int *id, bool check)
 {
-	if ((*id) < gen->token_num && tok->content)
+	if ((*id) < gen->token_num && t->content)
 	{
-		if (!ft_strncmp(tok->content, "<", ft_strlen(tok->content)) ||
-		!ft_strncmp(tok->content, ">", ft_strlen(tok->content)) ||
-		!ft_strncmp(tok->content, "<<", ft_strlen(tok->content)) ||
-		!ft_strncmp(tok->content, ">>", ft_strlen(tok->content)))
-			return (is_redirection(tok, gen, id));
-		else if (!ft_strncmp(tok->content, "&&", ft_strlen(tok->content)) ||
-		!ft_strncmp(tok->content, "||", ft_strlen(tok->content)) ||
-		!ft_strncmp(tok->content, "|", ft_strlen(tok->content)) ||
-		!ft_strncmp(tok->content, "(", ft_strlen(tok->content)) ||
-		!ft_strncmp(tok->content, ")", ft_strlen(tok->content)))
-			return (and_or_pipe_parenthesis(tok, gen, id));
+		if (check == true)
+		{
+			if (!ft_strncmp(t->content, "<", ft_strlen(t->content)) || \
+			!ft_strncmp(t->content, ">", ft_strlen(t->content)) || \
+			!ft_strncmp(t->content, "<<", ft_strlen(t->content)) || \
+			!ft_strncmp(t->content, ">>", ft_strlen(t->content)))
+				return (is_redirection(t, gen, id));
+		}
+		else
+		{
+			if (!ft_strncmp(t->content, "&&", ft_strlen(t->content)) || \
+			!ft_strncmp(t->content, "||", ft_strlen(t->content)) || \
+			!ft_strncmp(t->content, "|", ft_strlen(t->content)) || \
+			!ft_strncmp(t->content, "(", ft_strlen(t->content)) || \
+			!ft_strncmp(t->content, ")", ft_strlen(t->content)))
+				return (and_or_pipe_parenthesis(t, gen, id));
+		}
 	}
 	return (0);
 }
 
-int define_token_arg(t_token *token, t_data *gen)
+int	define_token_arg(t_token *token, t_data *gen)
 {
 	int	id;
 
 	id = 0;
 	while (id < gen->token_num && token[id].content != NULL)
 	{
-		if (is_operator(&token[id], gen, &id) == 1)
-			return (/* syntax */1);
+		if (is_operator(&token[id], gen, &id, true) == 1)
+			return (ft_error("syntax error near unexpected token", 2, gen,
+					token[id].content), 1);
+		else
+			id++;
+	}
+	id = 0;
+	while (id < gen->token_num && token[id].content != NULL)
+	{
+		if (is_operator(&token[id], gen, &id, false) == 1)
+			return (ft_error("syntax error near unexpected token", 2, gen,
+					token[id].content), 1);
 		else
 			id++;
 	}
@@ -85,7 +99,6 @@ int define_token_arg(t_token *token, t_data *gen)
 	return (0);
 }
 
-// funzione richiamata nel file start_lexing.c
 int	define_token_and_parenthesis(t_token *token, t_data *gen)
 {
 	int	i;
@@ -95,13 +108,13 @@ int	define_token_and_parenthesis(t_token *token, t_data *gen)
 	id = 0;
 	while (token[id].content != NULL)
 	{
-		if (count_parenthesis(token, gen))
-			return (/* syntax error */ 1);
-		if (prior_of_token(token, gen))
+		if (count_parenthesis(token, gen) == 1)
+			return (ft_error("syntax error near parenthesis", 2, gen, ""), 1);
+		if (prior_of_token(token, gen) == 1)
 			return (1);
 		id++;
 	}
-	if	(define_token_arg(token, gen) == 1)
-		return (/* syntax error */1);
+	if (define_token_arg(token, gen) == 1)
+		return (ft_error("syntax error near parenthesis", 2, gen, ""), 1);
 	return (0);
 }

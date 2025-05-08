@@ -14,17 +14,6 @@ NAME     = minishell
 SRCS = \
   main.c \
   signals.c \
-  parsing/start_lexing.c \
-  parsing/fill_struct.c \
-  parsing/utils.c \
-  parsing/struct_alloc.c \
-  parsing/remove_quotes.c \
-  parsing/define_token.c \
-  parsing/define_token_2.c \
-  parsing/expand_env.c \
-  parsing/expand_env_2.c \
-  parsing/utils_2.c \
-  parsing/parenthesis.c \
   executor/bonus/bonus_parenthesis.c \
   executor/bonus/bonus_wildcards1.c \
   executor/bonus/bonus_wildcards2.c \
@@ -54,7 +43,20 @@ SRCS = \
   executor/utils/utils_parenthesis.c \
   executor/utils/utils_string2.c \
   executor/utils/utils_string.c \
-  executor/utils/utils_tokencheck.c
+  executor/utils/utils_tokencheck.c \
+  parsing/start_lexing.c \
+  parsing/fill_struct.c \
+  parsing/utils.c \
+  parsing/struct_alloc.c \
+  parsing/remove_quotes.c \
+  parsing/define_token.c \
+  parsing/define_token_2.c \
+  parsing/expand_env.c \
+  parsing/expand_env_2.c \
+  parsing/utils_2.c \
+  parsing/parenthesis.c \
+  parsing/parser.c \
+  parsing/expand_wildcard.c \
 
 #–– Object files go under obj/, mirroring the tree
 OBJ_DIR = obj

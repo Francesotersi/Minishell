@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/29 09:30:43 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 10:07:07 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ void	fix_gen_token_num(t_token *token, t_data *gen)
 	gen->token_num = i;
 }
 
-char *actual_removal_temp_alloc(t_token *token)
+char	*actual_removal_temp_alloc(t_token *token)
 {
-	char *temp;
+	char	*temp;
 
 	temp = ft_strdup(token->content);
 	free(token->content);
-	token->content = (char*)ft_calloc(ft_strlen(temp) - 2 + 1, sizeof(char));
+	token->content = (char *)ft_calloc(ft_strlen(temp) - 2 + 1, sizeof(char));
 	if (!token->content)
 	{
 		free_all(token, NULL);
@@ -79,7 +79,7 @@ void	remove_quotes_token(t_token *token, t_data *gen)
 	expanding_variables(token, gen);
 	while (token[id].content != NULL)
 	{
-		while(token[id].content[i] != '\0')
+		while (token[id].content[i] != '\0')
 		{
 			if (token[id].content[i] == '\'' || token[id].content[i] == '\"')
 			{
