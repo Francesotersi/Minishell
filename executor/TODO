@@ -13,8 +13,9 @@
 [X]	Salvare pid quando getfd == 0
 [ ]	Ricezione segnali con here_doc
 [ ]	Ricezione generica segnali
-[ ] Controllo overflow di exit e cd -
+[ ] Controllo overflow di exit
 [ ]	ls > file.txt | grep a
+[X]	cd executor/M messaggio errore
 [X]	forkare con le parentesi senza esplodere
 	[X]	Rimangono aperti fd 5, 6, 7, 8 con "cat < ( cat < ( ls ) )"
 	[X]	Ordine sbagliato comando demon, segfaulta un figlio

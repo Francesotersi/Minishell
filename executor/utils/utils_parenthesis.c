@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   general7.c                                         :+:      :+:    :+:   */
+/*   utils_parenthesis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:40:44 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/30 09:20:50 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:37:57 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	next_cmd_block(t_token **token, int layer, bool accept_deeper_token)
 		}
 		else
 		{
+			if (layer == (*token)->prior && (*token)->type == RED_SUBSHELL)
+				break ;
 			if (layer == (*token)->prior && is_exec_sep((*token)->type) == _NO)
 				++(*token);
 			else
@@ -35,6 +37,8 @@ void	next_cmd_block(t_token **token, int layer, bool accept_deeper_token)
 
 void	skip_deeper_layers(t_token **token, int layer)
 {
+	if ((*token)->type == RED_SUBSHELL)
+		(*token) += 1;
 	while ((*token)->content && (*token)->prior > layer)
 		++(*token);
 }

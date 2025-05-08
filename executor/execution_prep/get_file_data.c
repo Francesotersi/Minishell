@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_file_data.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/04 18:01:01 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:05:47 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,12 @@ int	get_file_data(t_exec *exec, t_token *token)
 	file_not_found = 0;
 	current_cmd = token->cmd_num;
 	find_last_file(exec, token);
-	while (token->type == RED_SUBSHELL || \
-		(token->prior == exec->prior_layer && !is_exec_sep(token->type)))
+	while (token->prior == exec->prior_layer && !is_exec_sep(token->type))
 	{
 		if (!file_not_found && is_red_sign(token->type))
 			file_not_found = add_one(exec, token, &token);
-		if (token->content)
-			++token;
+		if (token->type != RED_SUBSHELL && !is_exec_sep(token->type))
+			token += (token->content != NULL);
 	}
 	if (exec->last_out == -1 && \
 		!(token->type == PIPE && exec->prior_layer == token->prior))

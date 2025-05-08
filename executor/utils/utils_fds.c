@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_fds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 12:15:15 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/04 18:03:08 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:20:54 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ void	close_all(t_exec *exec)
 	i = 0;
 	while (exec->proc_sub_temp_fds[i])
 		close_and_reset(&exec->proc_sub_temp_fds[i++]);
+	i = 0;
+	while (exec->here_doc_fds[i])
+		close_and_reset(&exec->here_doc_fds[i++]);
 }
 
 void	save_process_substitution_fd(t_exec *exec, int proc_sub_fd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_parenthesis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:52:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/04 14:59:04 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:54:27 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,11 @@ int	manage_parenthesis(t_exec *exec, t_token **token, int getfd)
 		exec->pid_list[(*token)->cmd_num] = pid;//
 	exec->prior_layer = layer;
 	exec->stdout_fd = temp_fd;
-	return (dup2(temp_fd, 1), redir_output(exec, token, redir_to_pipe, fds));
+	dup2(temp_fd, 1);
+	redir_output(exec, token, redir_to_pipe, fds);
+	if ((*token)->content && !getfd)
+		++(*token);
+	return (fds[0]);
 }
 
 static void	prep_recursion(t_exec *exec, int fds[2], int std_out, int do_pipe)
@@ -71,9 +75,11 @@ static int	redir_output(t_exec *exec, t_token **token, bool pipe, int fds[2])
 	i = 0;
 	while (exec->proc_sub_temp_fds[i])
 		++i;
-	exec->proc_sub_temp_fds[--i] = 0;
-	exec->proc_sub_temp_fds[--i] = 0;
-	close(1);
+	if (i)
+		exec->proc_sub_temp_fds[--i] = 0;
+	if (i)
+		exec->proc_sub_temp_fds[--i] = 0;
+	dup2(exec->stdout_fd, 1);
 	close(fds[1]);
 	if (pipe == 1)
 	{
@@ -85,8 +91,6 @@ static int	redir_output(t_exec *exec, t_token **token, bool pipe, int fds[2])
 		goto_valid_block(exec, token);
 	if ((*token)->type == AND || (*token)->type == OR)
 		wait_everyone(exec);
-	if ((*token)->content)
-		++(*token);
 	return (fds[0]);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:47:51 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 15:25:15 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:21:12 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,10 @@ int	bash_message(int message, char *file)
 	{
 		_fd_printf(2, "bash: export: `%s': not a valid identifier\n", file);
 	}
+	else if (message == E_CD)
+	{
+		_fd_printf(2, "bash: cd: %s: No such file or directory\n", file);
+	}
 	else if (message == E_CD_ARGS)
 	{
 		_fd_printf(2, "bash: cd: too many arguments\n");
@@ -72,10 +76,6 @@ int	bash_message(int message, char *file)
 	{
 		_fd_printf(2, "bash: cd: HOME not set\n");
 	}
-	else if (message == E_CMD_NOTFOUND)
-	{
-		_fd_printf(2, "%s: command not found\n", file);
-	}
 	else
 		return (bash_message2(message, file));
 	return (1);
@@ -83,7 +83,11 @@ int	bash_message(int message, char *file)
 
 static int	bash_message2(int message, char *file)
 {
-	if (message == E_EXIT_NUMERIC)
+	if (message == E_CMD_NOTFOUND)
+	{
+		_fd_printf(2, "%s: command not found\n", file);
+	}
+	else if (message == E_EXIT_NUMERIC)
 	{
 		_fd_printf(2, "bash: exit: %s: numeric argument required\n", file);
 	}

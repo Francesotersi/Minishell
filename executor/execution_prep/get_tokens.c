@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 12:03:58 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:22:23 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:31:29 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
 static void	merge_one(t_token *token, int debug, int i, bool update_type);
+static void	manage_subshell(t_token *token);
 static void	sort_id(t_token *token);
+static void	switch_tokens(t_token *token, int i, int j);
 
 /*REVIEW - merge_tokens
 
@@ -79,7 +81,7 @@ void	merge_tokens(t_token *token, int debug)
 		else
 			++i;
 	}
-	sort_id(token);
+	return (manage_subshell(token), sort_id(token));
 }
 
 /*
@@ -121,8 +123,21 @@ static void	merge_one(t_token *token, int debug, int i, bool update_type)
 	i++;
 	j = i;
 	while (token[i].content && token[++j].content)
-		token[i++] = token[j];
-	token[i] = token[j];
+	{
+		switch_tokens(token, i, j);
+		++i;
+	}
+	switch_tokens(token, i, j);
+}
+
+static void	manage_subshell(t_token *token)
+{
+	while (token->content)
+	{
+		if (token->type == RED_SUBSHELL)
+			token->prior -= 1;
+		++token;
+	}
 }
 
 /*REVIEW - merge_one
@@ -157,4 +172,14 @@ static void	sort_id(t_token *token)
 	token->cmd_num = cmd_num;
 	token->prior = -1;
 	token->id = -1;
+}
+
+static void	switch_tokens(t_token *token, int i, int j)
+{
+	token[i].content = token[j].content;
+	token[i].id = token[j].id;
+	token[i].prior = token[j].prior;
+	token[i].space_on_right = token[j].prior;
+	token[i].t_quote = token[j].t_quote;
+	token[i].type = token[j].type;
 }

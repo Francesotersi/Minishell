@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 15:24:15 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:01:40 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,10 @@ int	ft_exit(char **args, t_exec *exec)
 	if (exec->debug)
 		free_debug_data((t_debug_data *)exec->main_struct_pointer);
 	else
-		(void)args;
-	// creare una funzione che faccia il free di tutto
+	{
+		free_all(exec->first_token, exec->main_struct_pointer);
+		_free_matrix(*exec->env);
+	}
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);
 	return (exit(exit_code), 0);
@@ -66,7 +68,11 @@ int	exit_process(t_exec *exec)
 	exit_code = *exec->exit_code;
 	if (exec->debug)
 		free_debug_data((t_debug_data *)exec->main_struct_pointer);
-	// creare una funzione che faccia il free di tutto
+	else
+	{
+		free_all(exec->first_token, exec->main_struct_pointer);
+		_free_matrix(*exec->env);
+	}
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);
 	return (exit(exit_code), 0);

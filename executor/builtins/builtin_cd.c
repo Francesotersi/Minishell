@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 15:24:05 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:19:56 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
 static int	up_env(char **update, char *old_pwd, char *pwd, t_exec *exec);
-static void	back_to_home(char **env, char **new_dir);
+static void	back_to_home(char **env, char **new);
 
 /*REVIEW - ft_cd
 
@@ -39,12 +39,13 @@ static void	back_to_home(char **env, char **new_dir);
 			to pass to ft_export (to update OLD_PWD and PWD);
 		4)	We call up_env. Go below.
 */
+//FIXME - Messaggio errore "cd executor/M"
 int	ft_cd(char **args, t_exec *exec)
 {
 	char	*old_pwd;
 	char	*pwd;
 	char	**pwd_update;
-	char	*new_dir;
+	char	*new;
 
 	*exec->exit_code = 0;
 	if (exec->at_least_one_pipe)
@@ -54,11 +55,11 @@ int	ft_cd(char **args, t_exec *exec)
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd)
 		error(E_MALLOC, exec);
-	new_dir = args[1];
+	new = args[1];
 	if (!args[1])
-		back_to_home(*exec->env, &new_dir);
-	if (chdir(new_dir) != 0)
-		return (free(old_pwd), set_exit_code(exec, 1));
+		back_to_home(*exec->env, &new);
+	if (chdir(new) != 0)
+		return (bash_message(E_CD, new), free(old_pwd), set_exit_code(exec, 1));
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		return (free(old_pwd), error(E_MALLOC, exec));
@@ -73,18 +74,18 @@ int	ft_cd(char **args, t_exec *exec)
 //	cd without arguments change current directory to $HOME (from env).		
 	If $HOME is unsetted, bash prints a unique message.
 */
-static void	back_to_home(char **env, char **new_dir)
+static void	back_to_home(char **env, char **new)
 {
-	*new_dir = ft_getenv(env, "HOME", NULL);
-	if (!*new_dir)
+	*new = ft_getenv(env, "HOME", NULL);
+	if (!*new)
 	{
 		bash_message(E_CD_NOHOME, NULL);
 		return ;
 	}
-	while (**new_dir && **new_dir != '=')
-		++(*new_dir);
-	if (**new_dir == '=')
-		++(*new_dir);
+	while (**new && **new != '=')
+		++(*new);
+	if (**new == '=')
+		++(*new);
 }
 
 /*REVIEW - update_environment

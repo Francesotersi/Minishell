@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 15:26:46 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:25:00 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,7 @@ valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
 struct s_exec
 {
 	t_builtin		*builtins;
+	t_token			*first_token;
 	int				*pid_list;
 	char			***commands;
 	char			***env;

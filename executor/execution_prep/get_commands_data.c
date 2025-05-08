@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 16:32:36 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/29 11:51:59 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/06 21:54:46 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	get_one(t_exec *exec, t_token *token, int cmd_num, int cmd_layer)
 	i = 0;
 	while ((i != cmd_argc))
 	{
-		if (token->type == RED_SUBSHELL)
+		while (token->type == RED_SUBSHELL && cmd_layer == token->prior)
 		{
 			skip_deeper_layers(&token, cmd_layer);
 			add_placeholder(exec, cmd_num, &i);
@@ -118,7 +118,7 @@ static int	count_arguments(t_token *token, int cmd_layer)
 	++token;
 	while ("LOOP: counts every argument, considering parenthesis")
 	{
-		if (token->type == RED_SUBSHELL)
+		while (token->type == RED_SUBSHELL && cmd_layer == token->prior)
 		{
 			counter++;
 			skip_deeper_layers(&token, cmd_layer);

@@ -1,64 +1,90 @@
-NAME = minishell
+#–– Compiler settings
+CC       = cc
+CFLAGS   = -g -Wall -Werror -Wextra -I./Ssj_libft
+LDFLAGS  = -lreadline -lhistory -lncurses
 
-SRC = main.c signals.c
+#–– Library
+LIBFT_DIR = Ssj_libft
+LIBFT     = $(LIBFT_DIR)/libft.a
 
-OBJ_DIR = obj_main
+#–– Top‑level target
+NAME     = minishell
 
-OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
+#–– All source files, with their relative paths
+SRCS = \
+  main.c \
+  signals.c \
+  parsing/start_lexing.c \
+  parsing/fill_struct.c \
+  parsing/utils.c \
+  parsing/struct_alloc.c \
+  parsing/remove_quotes.c \
+  parsing/define_token.c \
+  parsing/define_token_2.c \
+  parsing/expand_env.c \
+  parsing/expand_env_2.c \
+  parsing/utils_2.c \
+  parsing/parenthesis.c \
+  executor/bonus/bonus_parenthesis.c \
+  executor/bonus/bonus_wildcards1.c \
+  executor/bonus/bonus_wildcards2.c \
+  executor/builtins/builtin_cd.c \
+  executor/builtins/builtin_echo.c \
+  executor/builtins/builtin_env.c \
+  executor/builtins/builtin_exit.c \
+  executor/builtins/builtin_export.c \
+  executor/builtins/builtin_pwd.c \
+  executor/builtins/builtin_unset.c \
+  executor/env_management/environment.c \
+  executor/env_management/environment2.c \
+  executor/execution_main/error_message.c \
+  executor/execution_main/execute.c \
+  executor/execution_prep/get_commands_data.c \
+  executor/execution_prep/get_file_data.c \
+  executor/execution_prep/get_paths_data.c \
+  executor/execution_prep/get_tokens.c \
+  executor/memory_management/memory.c \
+  executor/utils/printf_fd.c \
+  executor/utils/utils_count.c \
+  executor/utils/utils_debug.c \
+  executor/utils/utils_fds.c \
+  executor/utils/utils_generic.c \
+  executor/utils/utils_matrix.c \
+  executor/utils/utils_parenthesis2.c \
+  executor/utils/utils_parenthesis.c \
+  executor/utils/utils_string2.c \
+  executor/utils/utils_string.c \
+  executor/utils/utils_tokencheck.c
 
-FLAGS = -g -Wall -Werror -Wextra -lreadline -lhistory -lncurses -ISsj_libft
+#–– Object files go under obj/, mirroring the tree
+OBJ_DIR = obj
+OBJS    = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRCS))
 
-LIBFT = Ssj_libft/libft.a
+#–– phony targets
+.PHONY: all clean fclean re libft
 
-PARSING = parsing/parsing.a
+all: $(NAME)
 
-EXECUTOR = executor/executor.a
+#–– Link the final minishell
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(OBJS) $(LIBFT) $(LDFLAGS) -o $@
 
-all : $(NAME)
+#–– Build libft (bonus) before anything else
+$(LIBFT): 
+	$(MAKE) bonus -C $(LIBFT_DIR)
 
+#–– Single pattern rule for every .c → .o
+#––   - mkdir -p $(dir $@) makes sure subdirs exist
 $(OBJ_DIR)/%.o: %.c
-	cc -g -Wall -Werror -Wextra -c $< -o $@
-
-$(NAME): $(OBJ_DIR) $(OBJ)
-	make bonus -C Ssj_libft
-	make -C parsing
-	make -C executor
-	cc $(OBJ) $(EXECUTOR) $(PARSING) $(LIBFT) $(FLAGS) -o $(NAME)
-	
-
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
-
-parsing:
-	make bonus -C Ssj_libft
-	make -C parsing
-	cc $(FLAGS) $(LIBFT) $(OBJ) -o $(NAME)
-
-executor:
-	make bonus -C Ssj_libft
-	make -C executor
-	cc $(FLAGS) $(LIBFT) $(OBJ) -o $(NAME)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@echo Cleaning...
-	make clean -C Ssj_libft
-	make clean -C parsing
-	make clean -C executor
 	rm -rf $(OBJ_DIR)
+	$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
-	@echo I SAID I AM CLEANING OK!!
-	make fclean -C Ssj_libft
-	make fclean -C parsing
-	make fclean -C executor
-	rm -f minishell
+	rm -f $(NAME)
+	$(MAKE) fclean -C $(LIBFT_DIR)
 
-re : fclean all
-
-libft:
-	@echo Compiling Ssj_Libft...
-	make bonus -C Ssj_libft
-
-.PHONY: parsing executor clean fclean re
-
-# .SILENT:
+re: fclean all
