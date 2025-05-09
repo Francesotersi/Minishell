@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/08 15:26:16 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:45:19 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,13 @@ int	execute_loop(t_token *token, t_exec *exec)
 		else
 			*exec->exit_code = 1;
 		close_temp_files(exec);
-		if (next_command(exec, &token))//FIXME - Togliere if!
-			break ;
-		exec->curr_cmd = token->cmd_num;
 		if (exec->pipe_fds[0])
 		{
 			dup_and_reset(&exec->pipe_fds[0], 0);
 		}
+		if (next_command(exec, &token))//FIXME - Togliere if!
+			break ;
+		exec->curr_cmd = token->cmd_num;
 	}
 	wait_everyone(exec);
 	if (exec->prior_layer != 0)
@@ -124,10 +124,10 @@ static int	next_command(t_exec *exec, t_token **token)
 		goto_valid_block(exec, token);
 		exec->at_least_one_pipe = detect_pipe(*token, _NO, (*token)->prior);
 	}
-	exec->curr_cmd = (*token)->cmd_num;
 	if (!(*token)->content || exec->prior_layer > (*token)->prior)
 		return (1);
 	++(*token);
+	exec->curr_cmd = (*token)->cmd_num;
 	if (exec->prior_layer < (*token)->prior)
 		manage_parenthesis(exec, token, 0);
 	return (0);

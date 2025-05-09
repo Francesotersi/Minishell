@@ -17,6 +17,8 @@
 [ ]	ls > file.txt | grep a
 [ ]	cd negro | echo ciao: FARE PRIMA PARSING cd
 [ ]	here doc e pipe
+[ ]	aumentare SHLVL quando inizi minishell
+[ ]	unset e cd
 [X]	cd executor/M messaggio errore
 [X]	forkare con le parentesi senza esplodere
 	[X]	Rimangono aperti fd 5, 6, 7, 8 con "cat < ( cat < ( ls ) )"

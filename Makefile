@@ -11,6 +11,8 @@ PARS_DIR  = parsing
 #–– Top‑level target
 NAME     = minishell
 
+VAL = valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s -q --suppressions=/nfs/homes/alerusso/Desktop/Minishell/suppression.supp ./minishell
+
 #–– All source files, with their relative paths
 SRCS = \
   main.c \
