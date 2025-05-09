@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:58:54 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 12:13:48 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/09 10:14:49 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_error(char *str, int exit_c, t_data *gen, char *token)
 {
-	printf("bash: %s %s\n", str, token);
+	printf("bash:minishell: %s '%s'\n", str, token);
 	gen->exit_code = exit_c;
 }
 
@@ -29,7 +29,8 @@ void	skip_single_quotes(char *str, int *i)
 
 int	heredoc_d_case(t_token *token, int *id)
 {
-	if (!ft_strncmp(token[(*id)].content, "<<", ft_strlen(token[(*id)].content) + 1)
+	if (!ft_strncmp(token[(*id)].content, "<<",
+		ft_strlen(token[(*id)].content) + 1)
 		&& find_char(&token[(*id) + 1], '$') == 1)
 	{
 		(*id)++;

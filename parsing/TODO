@@ -1,6 +1,3 @@
 # TODO Checklist
 
 - [ ]	parsing effettivo lungo e noioso con un miliardo di if 
-- [ ]	exit code e uscite su syntax error nuovi e vecchi
-- [ ]	attualmente se c`e` un syntax error durante il parsing la struttura viene COMUNQUE passata alla parte dell`esecuzione
-- [ ]	se var di ambiente usata come delimitatore di un << la var non viene espansa
