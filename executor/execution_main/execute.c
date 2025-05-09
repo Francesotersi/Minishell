@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/09 12:45:19 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:06:04 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,11 @@ int	execute_loop(t_token *token, t_exec *exec)
 			*exec->exit_code = 1;
 		close_temp_files(exec);
 		if (exec->pipe_fds[0])
-		{
 			dup_and_reset(&exec->pipe_fds[0], 0);
-		}
 		if (next_command(exec, &token))//FIXME - Togliere if!
 			break ;
+		if (exec->pipe_fds[0])
+			dup_and_reset(&exec->pipe_fds[0], 0);
 		exec->curr_cmd = token->cmd_num;
 	}
 	wait_everyone(exec);
@@ -180,8 +180,8 @@ static int	invoke_programs(t_exec *exec, int i)
 */
 int	wait_everyone(t_exec *exec)
 {
-	int	i;
-	int	exit_code;
+	int		i;
+	int		exit_code;
 
 	exit_code = 0;
 	dup2(exec->stdin_fd, 0);
