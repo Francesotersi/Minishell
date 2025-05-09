@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 11:05:03 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/09 11:29:39 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,6 @@ int	define_token_and_parenthesis(t_token *token, t_data *gen)
 		id++;
 	}
 	if (define_token_arg(token, gen) == 1)
-		return (ft_error("syntax error near parenthesis", 2, gen, ""), 1);
+		return (1);
 	return (0);
 }

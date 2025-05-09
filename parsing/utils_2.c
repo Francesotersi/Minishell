@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:58:54 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/09 10:14:49 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:06:33 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,17 @@
 
 void	ft_error(char *str, int exit_c, t_data *gen, char *token)
 {
-	printf("bash:minishell: %s '%s'\n", str, token);
+	int	i;
+
+	i = 0;
+	write(2, "bash:minishell: ", 17);
+	while (i < (int)ft_strlen(str))
+		write(2, &str[i++], 1);
+	i = 0;
+	write(2, " '", 2);
+	while (i < (int)ft_strlen(token))
+		write(2, &token[i++], 1);
+	write(2, "'\n", 2);
 	gen->exit_code = exit_c;
 }
 

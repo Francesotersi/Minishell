@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:04:20 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 15:26:11 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/09 11:57:03 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,11 @@ void	write_here_doc(char *line, t_exec *exec, int fd)
 		if (line[i] == '$')
 		{
 			end = i + 1;
-			while (line[end] && line[end] != ' ' && line[end] != '$')
+			while (line[end] && line[end] != ' ' && line[end] != '$' && line[end] != '\n')
 				++end;
 			temp = line[end];
 			line[end] = 0;
-			env_str = ft_getenv(*exec->env, line + i + 1, NULL);
+			env_str = get_env(*exec->env, line + i + 1);
 			if (env_str)
 				ft_putstr_fd(env_str, fd);
 			if (!temp)
