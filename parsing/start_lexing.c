@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 09:46:38 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/12 11:59:00 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ int	operator_token(char *str, int *i, int *len, t_data *gen)
 		|| str[*i] == '|' || str[*i] == '(' || str[*i] == ')') \
 		&& str[*i] != '\0')
 	{
+		if ((str[*i] == '<' && str[*i + 1] == '<' && str[*i + 2] == '<') ||
+			(str[*i] == '>' && str[*i + 1] == '>' && str[*i + 2] == '>'))
+			return (ft_error("syntax error near	operator", 2, gen, ""), 1);
 		if ((str[*i] == '<' && str[*i + 1] == '>') || \
-				(str[*i] == '>' && str[*i + 1] == '<') || \
+				(str[*i] == '>' && str[*i + 1] == '<' ) || \
 				(str[*i] == '&' && str[*i + 1] != '&') || \
 				(str[*i] == '|' && str[*i + 1] == '|' && str[*i + 2] == '|'))
 			return (ft_error("syntax error near	operator", 2, gen, ""), 1);

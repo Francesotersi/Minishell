@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 11:48:14 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/09 14:42:46 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/12 11:33:59 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 // to do checks
 // prima delle parentesi ci deve essere un AND OR o PIPE
+// echo "*redirection" sbagli a flaggare la redirection come ARGOMENTO
+// e non dai syntax quando piu rediredtion sono una dietro l`altrra perche
+// sbagli a flaggare probilmente 
 
 int	pipe_infront_or_back(t_token *token, t_data *gen)
 {
@@ -21,11 +24,11 @@ int	pipe_infront_or_back(t_token *token, t_data *gen)
 
 	last = gen->token_num - 1;
 	if (token[0].type == PIPE || token[0].type == AND || token[0].type == OR)
-		return (ft_error("syntax error near unexpected token", 2, gen,
+		return (ft_error("syntax error near unexpected token8", 2, gen,
 				token[0].content) ,1);
 	else if (token[last].type == PIPE || token[last].type == AND ||
 		token[last].type == OR)
-		return (ft_error("syntax error near unexpected token", 2, gen,
+		return (ft_error("syntax error near unexpected token9", 2, gen,
 				token[last].content) ,1);
 	return (0);
 }
@@ -42,14 +45,14 @@ int	redirection_heredoc_valid(t_token *token, t_data *gen)
 		{
 			if (token[id + 1].type != FILES
 				&& token[id + 1].type != PARENTHESIS)
-				return (ft_error("syntax error near unexpected token ", 2, gen,
+				return (ft_error("syntax error near unexpected token 6", 2, gen,
 				token[id].content), 1);
 		}
 		if ((token[id].type == RED_O_APPEND || token[id].type == HERE_DOC)
 			&& token[id + 1].content)
 		{
 			if (token[id + 1].type != FILES)
-				return (ft_error("syntax error near unexpected token ", 2, gen,
+				return (ft_error("syntax error near unexpected token 7", 2, gen,
 				token[id].content), 1);
 		}
 		id++;
@@ -60,14 +63,16 @@ int	redirection_heredoc_valid(t_token *token, t_data *gen)
 // dare syntax se il carattere dopo 
 int	more_cases(t_token *tok, int *id, t_data *gen)
 {
-	if (tok[(*id)].type == RED_IN || tok[(*id)].type == RED_OUT)
+	if ((tok[(*id)].type == RED_IN || tok[(*id)].type == RED_OUT)
+		&& tok[(*id) + 1].content)
 	{
 		if (!ft_strncmp(tok[(*id) + 1].content, ")",
 			ft_strlen(tok[(*id) + 1].content)))
 			return (ft_error("syntax error near unexpected token5", 2,
 				gen, tok[(*id) + 1].content), 1);
 	}
-	if (!ft_strncmp(tok[(*id)].content, "(", ft_strlen(tok[(*id)].content)))
+	if (!ft_strncmp(tok[(*id)].content, "(", ft_strlen(tok[(*id)].content))
+		&& tok[(*id) + 1].content)
 	{
 		if (tok[(*id) + 1].type != AND && tok[(*id) + 1].type != OR
 			&& tok[(*id) + 1].content[0] != '(' && \
@@ -75,11 +80,12 @@ int	more_cases(t_token *tok, int *id, t_data *gen)
 			return (ft_error("syntax error near unexpected token4", 2,
 				gen, tok[(*id) + 1].content), 1);
 	}
-	if (!ft_strncmp(tok[(*id)].content, ")", ft_strlen(tok[(*id)].content)))
+	if (!ft_strncmp(tok[(*id)].content, ")", ft_strlen(tok[(*id)].content))
+		&& tok[(*id) + 1].content)
 	{
 		// invalid read qua in questo if
 		if (tok[(*id) + 1].type != AND && tok[(*id) + 1].type != OR
-			&& tok[(*id) + 1].content[0] != ')')
+			&& tok[(*id) + 1].content[0] != ')' && tok[(*id) + 1].type != PIPE)
 			return (ft_error("syntax error near unexpected token3", 2,
 				gen, tok[(*id) + 1].content), 1);
 	}
@@ -96,12 +102,12 @@ int	valid_parenthesis_and_or(t_token *tok, t_data *gen)
 	while (tok[id].content != NULL)
 	{
 		if (!ft_strncmp(tok[id].content, "(", ft_strlen(tok[id].content))
-			&& tok[id].content)
+			&& tok[id + 1].content)
 			if (!ft_strncmp(tok[id + 1].content, ")",
 				ft_strlen(tok[id + 1].content)))
 				return (ft_error("syntax error near unexpected token1", 2,
 				gen, tok[id].content), 1);
-		if (tok[id].type == AND || tok[id].type == OR)
+		if ((tok[id].type == AND || tok[id].type == OR) && tok[id + 1].content)
 		{
 			if (tok[id + 1].content[0] != '(' && tok[id + 1].type != COMMAND
 				&& tok[id + 1].type != RED_OUT && tok[id + 1].type != RED_IN
