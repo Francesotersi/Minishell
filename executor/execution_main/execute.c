@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/09 16:06:04 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:44:23 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,28 @@ static int	invoke_programs(t_exec *exec, int i);
 /*REVIEW - execute
 
 //	1)	We declare the exec struct in stack, and assign it to {0}.
-	2)	We get various data from main struct:
+	2)	We get some data from main struct:
 		-	The address of the environment (char **);
 		-	The address of the environment size (int);
 		-	The address of the environment last element (int);
 		-	The address of the exit code.
-	3)	We open all the here docs, and store their fds in a int array;
-	4)	Get a 3D matrix, that stores the argv of each command.
+	3)	We change the token array, in the following cases:
+		CASE			OLD_TOKENS			NEW_TOKENS
+		<(...			<, (				-
+		(ls)			(, ls, )			ls
+		>file			>, file				file
+
+		Then, we index every command block (ls | cat: ls == 0, cat == 1);
+	4)	We alloc memory;
+	5)	We open all the here docs, and store their fds in a int array;
+	6)	Get a 3D matrix, that stores the argv of each command.
 		Example: echo Hello! | cat > file1.txt
 		matrix = {{"echo", "Hello!", NULL}, {"cat", "file1.txt", NULL}}
-	5)	We get the path of every command. Builtin are not converted.
+	7)	We get the path of every command. Builtin are not converted.
 		matrix = {{"echo", "Hello!", NULL}, {"/bin/cat", "file1.txt", NULL}}
-	6)	Now, we iterate every command in execute_loop;
-	7)	We free only the memory of execution.
+	8)	While there are command blocks in parenthesis, we execute them;
+	9)	Now, we iterate every command in execute_loop;
+	10)	We free only the memory of execution.
 */
 int	execute(t_token *token, void *data, int debug)
 {
@@ -73,14 +82,21 @@ int	execute(t_token *token, void *data, int debug)
 
 /*REVIEW - execute_loop
 
-//	1)	We iterate while there are token with a valid content;
-	2)	We set the exit status at 0;
-	3)	We alter STDIN and STDOUT, if we do not fail to get filedatas;
-	4)	We invoke the program in a child;
-	5)	If there is a here_doc opened, we close it;
-	6)	If there is a STDIN pipe opened, we dup it;
-	7)	We go to the next command block;
-	8)	We wait every children.
+//	1)	We update the layer, the current command, we check if in the
+		current command block there are at least one pipe;
+	2)	We iterate while there are token with a valid content;
+	3)	We set the exit status at 0, and we restore STDOUT;
+	4)	In get_filedata, we check for pipe/file, and we alter STDIN/OUT;
+	5)	If get_filedata does not fail (bad files given in prompt),
+		we invoke the program in a child.
+		Else, exit code is set to 1;
+	6)	We close temp files (here_doc and proc sub fds, like <(ls));
+	7)	If there is a STDIN pipe opened, we dup it;
+	8)	We go to the next command block;
+	9)	The same as 7. In next_command weird things happens :);
+	10)	We update the curr command index;
+	11)	We wait every children. If the layer is not 0, we exit from the
+		process.
 */
 int	execute_loop(t_token *token, t_exec *exec)
 {
@@ -90,14 +106,15 @@ int	execute_loop(t_token *token, t_exec *exec)
 	while (token->content)
 	{
 		*exec->exit_code = 0;
-		if (get_file_data(exec, token) == 0)
+		dup2(exec->stdout_fd, 1);
+		if (get_file_data(exec, token, _YES) == 0)
 			invoke_programs(exec, exec->curr_cmd);
 		else
 			*exec->exit_code = 1;
 		close_temp_files(exec);
 		if (exec->pipe_fds[0])
 			dup_and_reset(&exec->pipe_fds[0], 0);
-		if (next_command(exec, &token))//FIXME - Togliere if!
+		if (next_command(exec, &token))
 			break ;
 		if (exec->pipe_fds[0])
 			dup_and_reset(&exec->pipe_fds[0], 0);
@@ -124,12 +141,15 @@ static int	next_command(t_exec *exec, t_token **token)
 		goto_valid_block(exec, token);
 		exec->at_least_one_pipe = detect_pipe(*token, _NO, (*token)->prior);
 	}
+	exec->curr_cmd = (*token)->cmd_num;
 	if (!(*token)->content || exec->prior_layer > (*token)->prior)
 		return (1);
 	++(*token);
 	exec->curr_cmd = (*token)->cmd_num;
 	if (exec->prior_layer < (*token)->prior)
 		manage_parenthesis(exec, token, 0);
+	if (exec->prior_layer > (*token)->prior)
+		return (1);
 	return (0);
 }
 
@@ -164,7 +184,8 @@ static int	invoke_programs(t_exec *exec, int i)
 	{
 		close_all(exec);
 		execve(exec->commands[i][0], exec->commands[i], *exec->env);
-		return (set_exit_code(exec, 127), ft_exit(NULL, exec), 1);
+		bash_message(E_CMD_NOTFOUND, exec->commands[i][0]);
+		return (set_exit_code(exec, 127), exit_process(exec), 1);
 	}
 	exec->pid_list[i] = pid;
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_parenthesis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:40:44 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/06 16:37:57 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:56:11 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ void	next_cmd_block(t_token **token, int layer, bool accept_deeper_token)
 				break ;
 		}
 	}
+	while ((*token)->content && is_exec_sep((*token)->type) == _NO && \
+		(*token)->type != RED_SUBSHELL)
+		++(*token);
 }
 
 void	skip_deeper_layers(t_token **token, int layer)

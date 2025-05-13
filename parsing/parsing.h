@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 10:05:50 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:14:02 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	free_struct(t_token *token);
 // utils_2.c
 void	skip_single_quotes(char *str, int *i);
 void	ft_error(char *str, int exit_c, t_data *gen, char *token);
+int		heredoc_d_case(t_token *token, int *id);
 
 // struct_alloc.c
 int		alloc_str_token(t_token *token, t_data *gen);
@@ -92,6 +93,7 @@ int		count_parenthesis(t_token *token, t_data *gen);
 
 // expand_wildcard.c
 int		expand_wildcard(t_token *token, t_data *gen);
+int		find_char(t_token *token, char c);
 
 // parser.c
 int		actual_parser(t_token *token, t_data *gen);

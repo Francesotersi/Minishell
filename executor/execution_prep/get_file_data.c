@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_file_data.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/07 16:05:47 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:37:51 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	get_here_doc_file(char *limiter, t_exec *exec);
 	8)	If there are redirections on STDIN or STDOUT, add_one will manage
 		them.
 */
-int	get_file_data(t_exec *exec, t_token *token)
+int	get_file_data(t_exec *exec, t_token *token, bool do_pipe)
 {
 	int	file_not_found;
 	int	current_cmd;
@@ -51,16 +51,16 @@ int	get_file_data(t_exec *exec, t_token *token)
 		if (token->type != RED_SUBSHELL && !is_exec_sep(token->type))
 			token += (token->content != NULL);
 	}
-	if (exec->last_out == -1 && \
-		!(token->type == PIPE && exec->prior_layer == token->prior))
-		dup2(exec->stdout_fd, 1);
-	if (exec->last_out == -1 && token->type == PIPE \
-		&& exec->prior_layer == token->prior)
+	if (do_pipe && token->type == PIPE && exec->prior_layer == token->prior)
 	{
 		pipe(exec->pipe_fds);
-		dup_and_reset(&exec->pipe_fds[1], 1);
+		if (exec->last_out == -1 && !file_not_found)
+			dup_and_reset(&exec->pipe_fds[1], 1);
+		else
+			close_and_reset(&exec->pipe_fds[1]);
 	}
-	exec->curr_cmd = current_cmd;
+	if (do_pipe)
+		exec->curr_cmd = current_cmd;
 	return (file_not_found);
 }
 
@@ -121,19 +121,19 @@ static int	add_one(t_exec *exec, t_token *token, t_token **token_address)
 	else if (token->type == RED_O_APPEND)
 		fd = open(token->content, OUTFILE_APPEND, 0666);
 	else
-		return (get_subshell_filename(exec, token_address, exec->curr_cmd));
-	if (fd == -1 && (token->type == RED_OUT || token->type == RED_O_APPEND))
-		error(E_OPEN, exec);
-	if (fd == -1)
+		return (get_subshell_filename(exec, token_address, token->cmd_num));
+	if (fd == -1 && access(token->content, F_OK) == 0)
+		return (bash_message(E_PERMISSION_DENIED, token->content), 1);
+	else if (fd == -1)
 		return (bash_message(E_OPEN, token->content), 1);
 	if ((token->id == exec->last_in && is_red_input_sign(token->type)) || \
 		(token->id == exec->last_out && is_red_output_sign(token->type)))
 	{
 		dup2(fd, is_red_output_sign(token->type));
 	}
-	if (token->type == HERE_DOC)
-		return (0);
-	return (close(fd), 0);
+	if (token->type != HERE_DOC)
+		close(fd);
+	return (0);
 }
 
 /*REVIEW - get_here_doc_file
@@ -155,7 +155,7 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 	char	*line;
 	int		limiter_len;
 
-	fd = open("here_doc", INFILE_DOC, 0666);
+	fd = open(".here_doc", INFILE_DOC, 0666);
 	if (fd < 0)
 		error(E_OPEN, exec);
 	ft_putstr_fd("> ", 2);
@@ -169,12 +169,12 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 		line = get_next_line_bonus(0);
 	}
 	close(fd);
-	fd = open("here_doc", INFILE_DOC, 0666);
+	fd = open(".here_doc", INFILE_DOC, 0666);
 	if (fd < 0)
-		return (free(line), unlink("here_doc"), error(E_OPEN, exec));
+		return (free(line), unlink(".here_doc"), error(E_OPEN, exec));
 	if (!line)
-		return (close(fd), unlink("here_doc"), error(E_MALLOC, exec));
-	return (free(line), unlink("here_doc"), fd);
+		return (close(fd), unlink(".here_doc"), error(E_MALLOC, exec));
+	return (free(line), unlink(".here_doc"), fd);
 }
 
 /*REVIEW - prepare_here_docs

@@ -8,8 +8,11 @@ LIBFT_DIR = Ssj_libft
 LIBFT     = $(LIBFT_DIR)/libft.a
 PARS_DIR  = parsing
 
-#–– Top‑level target
+#–– Target
 NAME     = minishell
+
+#––	Suppression file
+SUPP_FILE = $(shell pwd)/supp.supp
 
 #–– All source files, with their relative paths
 SRCS = \
@@ -38,7 +41,9 @@ SRCS = \
   executor/utils/utils_count.c \
   executor/utils/utils_debug.c \
   executor/utils/utils_fds.c \
+  executor/utils/utils_fds2.c \
   executor/utils/utils_generic.c \
+  executor/utils/utils_heredoc.c \
   executor/utils/utils_matrix.c \
   executor/utils/utils_parenthesis2.c \
   executor/utils/utils_parenthesis.c \
@@ -64,7 +69,7 @@ OBJ_DIR = obj
 OBJS    = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 #–– phony targets
-.PHONY: all clean fclean re libft
+.PHONY: all clean fclean re
 
 all: $(NAME)
 
@@ -86,11 +91,26 @@ clean:
 	rm -rf $(OBJ_DIR)
 	$(MAKE) clean -C $(LIBFT_DIR)
 
-fclean: clean
+fclean: clean frm
 	rm -f $(NAME)
 	$(MAKE) fclean -C $(LIBFT_DIR)
 
 val: 
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s -q --suppressions=/nfs/homes/alerusso/Desktop/Minishell/suppression.supp ./minishell
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s -q --suppressions=$(SUPP_FILE) ./minishell
+
+supp: 
+	$(MAKE) val -C executor/
+	mv executor/v.supp .
+	mv v.supp $(SUPP_FILE)
+
+exec_deb:
+	$(MAKE) gdb -C executor/
+	mv executor/a.gdb .
+
+frm: 
+	rm -f *.txt *.gdb *.supp
+
+git: fclean 
+	git add . && git commit -m $(MSG) && git push origin $(BR)
 
 re: fclean all

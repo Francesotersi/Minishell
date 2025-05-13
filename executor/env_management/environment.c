@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:26:15 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:21:44 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/13 09:03:34 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,25 +37,25 @@ int	cpy_env(char **old_env, char ***new_env, int *env_size, int *last_env)
 	if (!old_env)
 		return (E_NOENV);
 	i = 0;
-	while (old_env[i])
-		++i;
-	*new_env = ft_calloc(i + *env_size + 1, sizeof(char *));
+	while (old_env[i++]);
+	*new_env = ft_calloc(i + *env_size + 3, sizeof(char *));
 	if (!*new_env)
 		return (E_MALLOC);
-	i = 0;
-	while (old_env[i])
+	i = -1;
+	while (old_env[++i])
 	{
 		(*new_env)[i] = ft_strdup(old_env[i]);
 		if (!(*new_env)[i])
-		{
 			*new_env = _free_matrix(*new_env);
+		if (!(*new_env)[i])
 			return (E_MALLOC);
-		}
-		++i;
 	}
-	if (*env_size == 0)
-		*env_size = i;
 	*last_env = i;
+	if (*env_size == 0)
+	{
+		*env_size = i;
+		return (increase_shell_level(*new_env), change_shell_name(*new_env));
+	}
 	return (0);
 }
 

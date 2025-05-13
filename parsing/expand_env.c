@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:55:30 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 09:50:46 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:13:28 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,9 @@ void	expand_env(t_token *token, t_data *gen)
 		i = 0;
 		while (token[id].content[i] != '\0')
 		{
-			if (token[id].content[i] == '\'')
+			if (heredoc_d_case(token, &id) == 1)
+				break ;
+			else if (token[id].content[i] == '\'')
 				skip_single_quotes(token[id].content, &i);
 			else if (token[id].content[i] == '\"')
 				expand_var(&token[id], &i, gen, search);

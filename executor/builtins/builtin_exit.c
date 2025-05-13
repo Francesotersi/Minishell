@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/07 09:01:40 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/13 09:07:38 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static int	check_args(char **args, t_exec *exec);
 
-//NOTE - Linea 36 SI LIBERA MEMORIA DI FRANCI
 /*
 //REVIEW - ft_exit
 
@@ -47,16 +46,19 @@ int	ft_exit(char **args, t_exec *exec)
 
 static int	check_args(char **args, t_exec *exec)
 {
-	int	len;
-
 	*exec->exit_code = 0;
 	if (!args[1])
 		return (0);
-	len = _sub_strlen(args[1], "0123456789", INCL);
-	if (args[1][len] != 0)
+	else if (overflow_check(args[1], LLONG_MAX, LLONG_MIN) == _YES)
+	{
+		set_exit_code(exec, 2);
 		return (bash_message(E_EXIT_NUMERIC, args[1]), 0);
-	if (args[2])
+	}
+	else if (args[2])
+	{
+		set_exit_code(exec, 1);
 		return (bash_message(E_EXIT_ARGS, NULL), 1);
+	}
 	*exec->exit_code = ft_atoi(args[1]);
 	return (0);
 }
