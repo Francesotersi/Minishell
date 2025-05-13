@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_file_data.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/13 09:46:08 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:05:47 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ static int	add_one(t_exec *exec, t_token *token, t_token **token_address)
 }
 
 /*REVIEW - get_here_doc_file
-//  PER IL CTRL D ESCE BENE E PASSA ALL`HERE DOC SUCCESSIVO MA SE FAI cat << a CATNON LEGGE NULLA
+
 //	1)	We open a file named "here_doc";
 	2)	We write "> ": a bash syntax string that means "Write here, user".
 		The write process goes line per line. If user gives a special
@@ -155,7 +155,7 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 	char	*line;
 	int		limiter_len;
 
-	fd = open(".here_doc", INFILE_DOC, 0666);
+	fd = open("here_doc", INFILE_DOC, 0666);
 	if (fd < 0)
 		error(E_OPEN, exec);
 	ft_putstr_fd("> ", 2);
@@ -169,12 +169,12 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 		line = get_next_line_bonus(0);
 	}
 	close(fd);
-	fd = open(".here_doc", INFILE_DOC, 0666);
+	fd = open("here_doc", INFILE_DOC, 0666);
 	if (fd < 0)
-		return (free(line), unlink(".here_doc"), error(E_OPEN, exec));
+		return (free(line), unlink("here_doc"), error(E_OPEN, exec));
 	if (!line)
-		return (unlink(".here_doc"), bash_message(E_PORCODIO, limiter));
-	return (free(line), unlink(".here_doc"), fd);
+		return (close(fd), unlink("here_doc"), error(E_MALLOC, exec));
+	return (free(line), unlink("here_doc"), fd);
 }
 
 /*REVIEW - prepare_here_docs

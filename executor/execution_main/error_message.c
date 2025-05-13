@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:47:51 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/13 09:39:17 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:21:12 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,6 @@ static int	bash_message2(int message, char *file)
 	else if (message == E_PERMISSION_DENIED)
 	{
 		_fd_printf(2, "bash: %s: Permission denied\n", file);
-	}
-	else if (message == E_PORCODIO)
-	{
-		_fd_printf(2, "bash: warning: here-document delimited by end-of-file (wanted %s)\n", file);
 	}
 	else
 		_fd_printf(2, "ERROR MESSAGE NOT REGISTERED.\n");

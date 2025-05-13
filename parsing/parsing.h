@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/12 12:36:50 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:47:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,8 @@ int		find_char(t_token *token, char c);
 
 // parser.c
 int		actual_parser(t_token *token, t_data *gen);
+
+// parser_2.
+int		even_more_cases(t_token *tok, int *id, t_data *gen);
 
 #endif

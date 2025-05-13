@@ -6,18 +6,15 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/13 10:33:57 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/13 15:01:22 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // readline ritorna una stringa da freeare ad ogni input
-int	start(t_data *gen)
+int	start(t_data *gen, int i)
 {
-	int	i;
-
-	i = 0;
 	while (1)
 	{
 		gen->input = readline("minishell$> ");
@@ -45,13 +42,15 @@ int	start(t_data *gen)
 int	main(int ac, char **av, char **env)
 {
 	t_data				gen;
+	int					i;
 
+	i = 0;
 	(void)ac, (void)av;
 	gen = (t_data){0};
 	if (cpy_env(env, &gen.env, &gen.env_size, &gen.last_env) != 0)
 		return (/* malloc error */1);
 	reset_standard_signal();
-	if (start(&gen) == 1)
+	if (start(&gen, i) == 1)
 		return (1);
 	_free_matrix(gen.env);
 	// ricordarsi di forse levare sta cosa
