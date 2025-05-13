@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:15:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/13 09:37:56 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:10:33 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,12 @@ enum e_bools
 	_STOP = 2,
 };
 
+enum e_ctrl
+{
+	CTRL_C,
+	CTRL_D,
+	CTRL_BACK,
+};
 
 
 #endif

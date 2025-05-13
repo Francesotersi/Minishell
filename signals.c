@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:40:55 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/13 10:49:45 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:12:28 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 // aggiungere exit code
 
-int	exit_code_sig_received = 1;
+int	exit_code_sig_received = 0;
 
 void	execve_signal(int signal, siginfo_t *info, void *s)
 {
@@ -27,6 +27,7 @@ void	execve_signal(int signal, siginfo_t *info, void *s)
 	(void)s;
 	if (signal == SIGINT)
 	{
+		exit_code_sig_received = CTRL_C;
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -34,7 +35,8 @@ void	execve_signal(int signal, siginfo_t *info, void *s)
 	}
 	else if (signal == SIGQUIT)
 	{
-		write(, "Quit (core dumped)\n", 20);
+		exit_code_sig_received = CTRL_BACK;
+		write(1, "Quit (core dumped)\n", 20);
 	}
 }
 
@@ -44,6 +46,7 @@ void	heredoc_signal(int signal, siginfo_t *info, void *s) // heredoc con ctrl D 
 	(void)s;
 	if (signal == SIGINT)
 	{
+		exit_code_sig_received = CTRL_C;
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -63,6 +66,7 @@ void	signals(int signal, siginfo_t *info, void *s)
 	(void)s;
 	if (signal == SIGINT)
 	{
+		exit_code_sig_received = CTRL_C;
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
