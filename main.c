@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/07 13:56:24 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:33:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,12 @@ int	start(t_data *gen)
 int	main(int ac, char **av, char **env)
 {
 	t_data				gen;
-	struct sigaction	sa;
 
 	(void)ac, (void)av;
 	gen = (t_data){0};
 	if (cpy_env(env, &gen.env, &gen.env_size, &gen.last_env) != 0)
 		return (/* malloc error */1);
-	sa.sa_flags = SA_SIGINFO;
-	sigemptyset(&sa.sa_mask);
-	sigaddset(&sa.sa_mask, SIGQUIT);
-	sa.sa_sigaction = signals;
-	signal(SIGQUIT, SIG_IGN);
-	sigaction(SIGINT, &sa, NULL);
+	reset_standard_signal();
 	if (start(&gen) == 1)
 		return (1);
 	_free_matrix(gen.env);

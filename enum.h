@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:15:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 10:46:17 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/13 09:37:56 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ enum e_exec_errors
 	E_CD_NOHOME,
 	E_EXIT_NUMERIC,
 	E_EXIT_ARGS,
+	E_PORCODIO,
 	E_CMD_NOTFOUND,
 	E_IS_DIRECTORY,
 	E_PERMISSION_DENIED,

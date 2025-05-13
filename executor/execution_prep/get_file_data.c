@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/09 11:42:14 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/13 09:46:08 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ static int	add_one(t_exec *exec, t_token *token, t_token **token_address)
 }
 
 /*REVIEW - get_here_doc_file
-
+//  PER IL CTRL D ESCE BENE E PASSA ALL`HERE DOC SUCCESSIVO MA SE FAI cat << a CATNON LEGGE NULLA
 //	1)	We open a file named "here_doc";
 	2)	We write "> ": a bash syntax string that means "Write here, user".
 		The write process goes line per line. If user gives a special
@@ -173,7 +173,7 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 	if (fd < 0)
 		return (free(line), unlink(".here_doc"), error(E_OPEN, exec));
 	if (!line)
-		return (close(fd), unlink(".here_doc"), error(E_MALLOC, exec));
+		return (unlink(".here_doc"), bash_message(E_PORCODIO, limiter));
 	return (free(line), unlink(".here_doc"), fd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 11:48:14 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/12 11:33:59 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/13 09:06:56 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,19 @@ int	redirection_heredoc_valid(t_token *token, t_data *gen)
 	return (0);
 }
 
-// dare syntax se il carattere dopo 
+int	even_more_cases(t_token *tok, int *id, t_data *gen)
+{
+	if (!ft_strncmp(tok[(*id)].content, ")", ft_strlen(tok[(*id)].content))
+		&& tok[(*id) + 1].content)
+	{
+		if (tok[(*id) + 1].type != AND && tok[(*id) + 1].type != OR
+			&& tok[(*id) + 1].content[0] != ')' && tok[(*id) + 1].type != PIPE)
+			return (ft_error("syntax error near unexpected token 3", 2,
+				gen, tok[(*id) + 1].content), 1);
+	}
+	return (0);
+}
+
 int	more_cases(t_token *tok, int *id, t_data *gen)
 {
 	if ((tok[(*id)].type == RED_IN || tok[(*id)].type == RED_OUT)
@@ -68,7 +80,7 @@ int	more_cases(t_token *tok, int *id, t_data *gen)
 	{
 		if (!ft_strncmp(tok[(*id) + 1].content, ")",
 			ft_strlen(tok[(*id) + 1].content)))
-			return (ft_error("syntax error near unexpected token5", 2,
+			return (ft_error("syntax error near unexpected token 5", 2,
 				gen, tok[(*id) + 1].content), 1);
 	}
 	if (!ft_strncmp(tok[(*id)].content, "(", ft_strlen(tok[(*id)].content))
@@ -77,18 +89,11 @@ int	more_cases(t_token *tok, int *id, t_data *gen)
 		if (tok[(*id) + 1].type != AND && tok[(*id) + 1].type != OR
 			&& tok[(*id) + 1].content[0] != '(' && \
 			tok[(*id) + 1].type != COMMAND)
-			return (ft_error("syntax error near unexpected token4", 2,
+			return (ft_error("syntax error near unexpected token 4", 2,
 				gen, tok[(*id) + 1].content), 1);
 	}
-	if (!ft_strncmp(tok[(*id)].content, ")", ft_strlen(tok[(*id)].content))
-		&& tok[(*id) + 1].content)
-	{
-		// invalid read qua in questo if
-		if (tok[(*id) + 1].type != AND && tok[(*id) + 1].type != OR
-			&& tok[(*id) + 1].content[0] != ')' && tok[(*id) + 1].type != PIPE)
-			return (ft_error("syntax error near unexpected token3", 2,
-				gen, tok[(*id) + 1].content), 1);
-	}
+	if (even_more_cases(tok, id, gen) == 1)
+		return (1);
 	return (0);
 }
 
@@ -105,14 +110,14 @@ int	valid_parenthesis_and_or(t_token *tok, t_data *gen)
 			&& tok[id + 1].content)
 			if (!ft_strncmp(tok[id + 1].content, ")",
 				ft_strlen(tok[id + 1].content)))
-				return (ft_error("syntax error near unexpected token1", 2,
+				return (ft_error("syntax error near unexpected token 1", 2,
 				gen, tok[id].content), 1);
 		if ((tok[id].type == AND || tok[id].type == OR) && tok[id + 1].content)
 		{
 			if (tok[id + 1].content[0] != '(' && tok[id + 1].type != COMMAND
 				&& tok[id + 1].type != RED_OUT && tok[id + 1].type != RED_IN
 				&& tok[id + 1].type != HERE_DOC && tok[id + 1].type != 5)
-				return (ft_error("syntax error near unexpected token2", 2,
+				return (ft_error("syntax error near unexpected token 2", 2,
 				gen, tok[id].content), 1);
 		}
 		if (more_cases(tok, &id, gen) == 1)
