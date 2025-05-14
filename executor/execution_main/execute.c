@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/08 10:58:35 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:31:46 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,14 @@ int	execute(t_token *token, void *data, int debug)
 {
 	t_exec	exec;
 
+	set_execve_signal();
 	p_tok(token);
 	exec = (t_exec){0};
 	get_main_struct_data(&exec, data, debug);
 	merge_tokens(token, debug);
 	alloc_memory(&exec, token, count_commands(&exec, token));
-	prepare_here_docs(&exec, token);
+	if (prepare_here_docs(&exec, token) == 1)
+		return (free_memory(&exec), 1);
 	get_commands_data(&exec, token);
 	get_paths_data(&exec, token);
 	while (token->prior > 0)

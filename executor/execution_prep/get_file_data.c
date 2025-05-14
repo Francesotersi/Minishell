@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_file_data.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/07 16:05:47 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:41:35 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,22 +158,24 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 	fd = open("here_doc", INFILE_DOC, 0666);
 	if (fd < 0)
 		error(E_OPEN, exec);
-	ft_putstr_fd("> ", 2);
-	line = get_next_line_bonus(0);
+	line = readline("> ");
+	if (!isatty(0))
+		return (close(fd), unlink("here_doc"), dup2(exec->stdin_fd, 0), 9999999);
+	if (!line)
+		return (close(fd), unlink("here_doc"), _fd_printf(1, "errore\n"));
 	limiter_len = ft_strlen(limiter);
 	while ((line) && (double_cmp(limiter, line, limiter_len, 1)) != 0)
 	{
 		write_here_doc(line, exec, fd);
-		ft_putstr_fd("> ", exec->stdout_fd);
 		free(line);
-		line = get_next_line_bonus(0);
+		line = readline("> ");
 	}
+	if (!line)
+		dup2(exec->stdin_fd, 0);
 	close(fd);
 	fd = open("here_doc", INFILE_DOC, 0666);
 	if (fd < 0)
 		return (free(line), unlink("here_doc"), error(E_OPEN, exec));
-	if (!line)
-		return (close(fd), unlink("here_doc"), error(E_MALLOC, exec));
 	return (free(line), unlink("here_doc"), fd);
 }
 
@@ -189,18 +191,24 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 		5)	If the current token here_doc is not the last STDIN redirector,
 			we close it instantly, and reset here_doc_fds[i] to zero.
 */
-void	prepare_here_docs(t_exec *exec, t_token *token)
+int	prepare_here_docs(t_exec *exec, t_token *token)
 {
 	int	i;
 
 	i = 0;
+	
 	while (token->content)
-	{
+	{	
+		set_here_doc_signal();
 		find_last_file(exec, token);
 		while (token->content && !is_exec_sep(token->type))
 		{
 			if (token->type == HERE_DOC)
+			{
 				exec->here_doc_fds[i] = get_here_doc_file(token->content, exec);
+				if (exec->here_doc_fds[i] == 9999999)
+					return (1);
+			}
 			if (token->id != exec->last_in && exec->here_doc_fds[i])
 				close_and_reset(&exec->here_doc_fds[i]);
 			++token;
@@ -209,4 +217,5 @@ void	prepare_here_docs(t_exec *exec, t_token *token)
 			++token;
 		++i;
 	}
+	return (0);
 }

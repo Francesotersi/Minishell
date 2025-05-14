@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:15:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/13 14:10:33 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 09:01:46 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,9 +149,9 @@ enum e_bools
 
 enum e_ctrl
 {
-	CTRL_C,
-	CTRL_D,
-	CTRL_BACK,
+	CTRL_C = 10,
+	CTRL_D = 20,
+	CTRL_BACK = 30,
 };
 
 

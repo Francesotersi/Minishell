@@ -6,13 +6,11 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 10:18:58 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/13 10:44:41 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 09:57:42 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 void	set_execve_signal(void)
 {
@@ -20,7 +18,7 @@ void	set_execve_signal(void)
 
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_sigaction = signals;
+	sa.sa_sigaction = execve_signal;
 	sigaction(SIGQUIT, &sa, NULL);
 	sigaction(SIGINT, &sa, NULL);
 }
@@ -31,8 +29,8 @@ void	set_here_doc_signal(void)
 
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_sigaction = signals;
-	signal(SIGQUIT, SIG_IGN);
+	sa.sa_sigaction = heredoc_signal;
+	sigaction(SIGQUIT, &sa, NULL);
 	sigaction(SIGINT, &sa, NULL);
 }
 

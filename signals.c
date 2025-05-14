@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:40:55 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/13 14:12:28 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:50:38 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,29 +28,38 @@ void	execve_signal(int signal, siginfo_t *info, void *s)
 	if (signal == SIGINT)
 	{
 		exit_code_sig_received = CTRL_C;
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		if (RL_ISSTATE(RL_STATE_READCMD))
+		{
+			write(1, "\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 0);	
+			rl_redisplay();
+		}
 	}
 	else if (signal == SIGQUIT)
 	{
 		exit_code_sig_received = CTRL_BACK;
 		write(1, "Quit (core dumped)\n", 20);
+		if (RL_ISSTATE(RL_STATE_READCMD))
+		{
+			rl_on_new_line();
+			rl_replace_line("", 0);	
+			rl_redisplay();
+		}
 	}
 }
 
-void	heredoc_signal(int signal, siginfo_t *info, void *s) // heredoc con ctrl D passa all`heredoc successivo
+void	heredoc_signal(int signal, siginfo_t *info, void *s)
 {
 	(void)info;
 	(void)s;
 	if (signal == SIGINT)
 	{
 		exit_code_sig_received = CTRL_C;
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		write(2, 
+		"bash: warning: here-document at line 2 delimited by end-of-file",
+		64);
+		close(0);
 	}
 	if (signal == SIGQUIT)
 	{
@@ -66,10 +75,23 @@ void	signals(int signal, siginfo_t *info, void *s)
 	(void)s;
 	if (signal == SIGINT)
 	{
-		exit_code_sig_received = CTRL_C;
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+	}
+}
+
+void	assign_signal_exit_code(t_data *gen)
+{
+	if (exit_code_sig_received == CTRL_C)
+	{
+		exit_code_sig_received = 0;
+		gen->exit_code = 130;
+	}
+	else if (exit_code_sig_received == CTRL_BACK)
+	{
+		exit_code_sig_received = 0;
+		gen->exit_code = 131;
 	}
 }

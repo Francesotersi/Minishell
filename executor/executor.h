@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/06 14:25:00 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:23:05 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,7 +288,7 @@ int		bash_message(int message, char *file);
 //SECTION -	Execution preparations
 
 void	merge_tokens(t_token *token, int debug);
-void	prepare_here_docs(t_exec *exec, t_token *token);
+int		prepare_here_docs(t_exec *exec, t_token *token);
 int		get_commands_data(t_exec *exec, t_token *token);
 int		get_paths_data(t_exec *exec, t_token *token);
 int		get_file_data(t_exec *exec, t_token *token);

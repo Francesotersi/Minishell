@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 14:00:35 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/13 14:43:11 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 09:36:22 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	find_char(t_token *token, char c)
 	int	i;
 
 	i = 0;
-	while (token->content[i])
+	while (token->content && token->content[i])
 	{
 		if (token->content[i] == c)
 			return (1);
