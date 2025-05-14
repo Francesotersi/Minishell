@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 09:17:14 by ftersill          #+#    #+#             */
-/*   Updated: 2025/04/29 09:21:37 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:50:16 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	insert_exit_code(t_token *token, int *i, int e_l, char *exit_code)
 	temp = ft_strdup(token->content);
 	free(token->content);
 	e_l = ft_strlen(exit_code);
-	token->content = (char*)ft_calloc(ft_strlen(temp) + e_l + 1, sizeof(char));
+	token->content = (char *)ft_calloc(ft_strlen(temp) + e_l + 1, \
+		sizeof(char));
 	if (!temp)
 		return ;
 	while (j < (*i))
@@ -68,8 +69,6 @@ void	expand_exit_code_2(t_token *token, t_data *gen, int *i,
 	}
 }
 
-
-
 void	expand_exit_code(t_token *token, t_data *gen)
 {
 	int		id;
@@ -88,7 +87,8 @@ void	expand_exit_code(t_token *token, t_data *gen)
 				skip_single_quotes(token[id].content, &i);
 			else if (token[id].content[i] == '\"')
 				expand_exit_code_2(&token[id], gen, &i, exit_code);
-			else if (token[id].content[i] == '$' && token[id].content[i + 1] == '?')
+			else if (token[id].content[i] == '$' && \
+					token[id].content[i + 1] == '?')
 				expand_exit_code_2(&token[id], gen, &i, exit_code);
 			else
 				i++;
@@ -111,7 +111,7 @@ char	*what_to_search(t_token *token, int *i)
 	token->content[k] != ' ' && token->content[k] != '\'' && \
 	token->content[k] != '\"')
 		k++;
-	to_search = (char*)ft_calloc(k, sizeof(char));
+	to_search = (char *)ft_calloc(k, sizeof(char));
 	if (!to_search)
 		return (NULL);
 	u = (*i) + 1;
@@ -130,12 +130,12 @@ void	skip_env_var(t_token *token, int *i, char *temp)
 	int		j;
 	int		temp_len;
 	char	*dup;
-	
+
 	dup = ft_strdup(token->content);
 	free(token->content);
-	token->content = (char*)ft_calloc(ft_strlen(dup) + 1, sizeof(char));
+	token->content = (char *)ft_calloc(ft_strlen(dup) + 1, sizeof(char));
 	if (!token->content)
-		return /* malloc error */;
+		return ;
 	temp_len = ft_strlen(temp);
 	j = 0;
 	k = 0;

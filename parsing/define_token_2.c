@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:04:29 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/12 12:05:31 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:39:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ int	is_redirection_2(t_token *tok, int *id)
 	return (0);
 }
 
-int is_redirection_3(t_token *tok, t_data *gen, int *id)
+int	is_redirection_3(t_token *tok, t_data *gen, int *id)
 {
 	(void)gen, (void)id;
 	if ((tok + 1)->content)
 	{
-		if (!ft_strncmp((tok + 1)->content, "<",
-		ft_strlen((tok + 1)->content)) && !ft_strncmp((tok + 1)->content,
-		">", ft_strlen((tok + 1)->content)) &&
-		!ft_strncmp((tok + 1)->content, "<<", ft_strlen((tok + 1)->content))
-		&& ft_strncmp((tok + 1)->content, ">>",
-		ft_strlen((tok + 1)->content)))
+		if (!ft_strncmp((tok + 1)->content, "<", \
+			ft_strlen((tok + 1)->content)) && !ft_strncmp((tok + 1)->content, \
+			">", ft_strlen((tok + 1)->content)) \
+			&& !ft_strncmp((tok + 1)->content, "<<", \
+			ft_strlen((tok + 1)->content)) && ft_strncmp((tok + 1)->content, \
+			">>", ft_strlen((tok + 1)->content)))
 			return (1);
 	}
 	return (0);
@@ -44,7 +44,7 @@ int is_redirection_3(t_token *tok, t_data *gen, int *id)
 int	is_redirection(t_token *tok, t_data *gen, int *id)
 {
 	(void)gen;
-	if	(is_redirection_3(tok, gen, id) == 1)
+	if (is_redirection_3(tok, gen, id) == 1)
 		return (1);
 	if (!ft_strncmp(tok->content, ">", ft_strlen(tok->content)))
 		tok->type = RED_OUT;

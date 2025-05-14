@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/12 14:41:51 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:40:12 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ int	is_operator(t_token *t, t_data *gen, int *id, bool check)
 			!ft_strncmp(t->content, ")", ft_strlen(t->content)))
 				return (and_or_pipe_parenthesis(t, gen, id));
 		}
-		
 	}
 	return (0);
 }
