@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:40:55 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/14 11:50:38 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 14:20:02 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ void	heredoc_signal(int signal, siginfo_t *info, void *s)
 	if (signal == SIGINT)
 	{
 		exit_code_sig_received = CTRL_C;
-		write(2, 
-		"bash: warning: here-document at line 2 delimited by end-of-file",
-		64);
+		write(1, "\n", 1);
+		// write(1, 
+		// "bash: warning: here-document delimited by end-of-file",
+		// 64);
 		close(0);
 	}
 	if (signal == SIGQUIT)

@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/14 10:41:35 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 14:28:46 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,16 +159,20 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 	if (fd < 0)
 		error(E_OPEN, exec);
 	line = readline("> ");
-	if (!isatty(0))
-		return (close(fd), unlink("here_doc"), dup2(exec->stdin_fd, 0), 9999999);
-	if (!line)
-		return (close(fd), unlink("here_doc"), _fd_printf(1, "errore\n"));
+	if (!isatty(0))																											// da mettere
+		return (close(fd), unlink("here_doc"), dup2(exec->stdin_fd, 0), 9999999);											// in una funzione
+	if (!line)																												// esterna
+		return (close(fd), unlink("here_doc"), _fd_printf(2, "bash: warning: here-document delimited by end-of-file\n"));   //
 	limiter_len = ft_strlen(limiter);
 	while ((line) && (double_cmp(limiter, line, limiter_len, 1)) != 0)
 	{
 		write_here_doc(line, exec, fd);
 		free(line);
 		line = readline("> ");
+		if (!isatty(0))																											// da mettere
+			return (close(fd), unlink("here_doc"), dup2(exec->stdin_fd, 0), 9999999);											// in una funzione
+		if (!line)																												// esterna
+			return (close(fd), unlink("here_doc"), _fd_printf(2, "bash: warning: here-document delimited by end-of-file\n"));   //
 	}
 	if (!line)
 		dup2(exec->stdin_fd, 0);
