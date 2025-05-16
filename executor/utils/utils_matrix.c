@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:32:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/04 11:21:39 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:26:54 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,25 @@ void	*_free_three_d_matrix(char ***matrix)
 	return (NULL);
 }
 
+/*
+//REVIEW - _reverse_split
+
+		Join a matrix of strings into a single string, 
+		separated by a given character.
+		The opposite of ft_split.
+
+//		1) Count the total size of the strings in the matrix.
+		2) Allocate memory for the resulting string.
+		3) Copy each string from the matrix into the resulting string, 
+		   separated by the given character.
+		4) Initialize a variable to keep track of the current index 
+			in the resulting string.
+		5) Iterate through each string in the matrix.
+		6) For each string, copy it into the resulting string at 
+		   the current index.
+		7) If it's not the first string, add the separator before copying.
+
+*/
 char	*_reverse_split(char **matrix, char separator)
 {
 	char	*string;
@@ -73,12 +92,11 @@ char	*_reverse_split(char **matrix, char separator)
 	int		size;
 	int		j;
 
-	i = 0;
+	i = -1;
 	size = 0;
-	while (matrix[i])
+	while (matrix[++i])
 	{
 		size += ft_strlen(matrix[i]) + 1;
-		++i;
 	}
 	string = (char *)ft_calloc(size + 1, sizeof(char));
 	if (!string)
@@ -96,6 +114,12 @@ char	*_reverse_split(char **matrix, char separator)
 	return (string);
 }
 
+/*
+//REVIEW - sort_matrix
+
+	A bubble sort algorithm to sort a matrix of strings in 
+	ASCII ascending order.
+*/
 void	sort_matrix(char **matrix)
 {
 	char	*temp;
@@ -122,6 +146,15 @@ void	sort_matrix(char **matrix)
 	}
 }
 
+/*
+//REVIEW - lowest_ascii_matrix
+
+	Takes as parameters a matrix of strings and a string (current).
+	Returns the string with the lowest ASCII value in the matrix,
+	that is bigger than the current string.
+	Returns NULL if the matrix is empty or if no valid string is found.
+	Used to sort the output of export without arguments.
+*/
 char	*lowest_ascii_matrix(char **matrix, char *current)
 {
 	char	*lowest;

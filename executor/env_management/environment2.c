@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 14:43:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/13 08:53:32 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:21:18 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	env_pars(char *item, int *no_eq_plus, int *name_size, int *cont_size)
 	return (0);
 }
 
-int		increase_shell_level(char **env)
+int	increase_shell_level(char **env)
 {
 	int		i;
 	int		shell_level;
@@ -133,7 +133,7 @@ int		increase_shell_level(char **env)
 	return (0);
 }
 
-int		change_shell_name(char **env)
+int	change_shell_name(char **env)
 {
 	int		i;
 	char	*shell_name;

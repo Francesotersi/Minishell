@@ -1,7 +1,7 @@
 //TODO
 
-[ ]	Norminette
-[ ]	Documentazione
+[X]	Norminette
+[X]	Documentazione
 [X]	Migliorare nomi utils
 [X]	Tok_next e next_token.. migliorare nomi
 [X] Preparare funzione che stampi il token
@@ -15,7 +15,7 @@
 [ ]	Ricezione generica segnali
 [X] Controllo overflow di exit
 [X]	ls > file.txt | grep a
-[Z]	cd negro | echo ciao: FARE PRIMA PARSING cd
+[X]	cd negro | echo ciao: FARE PRIMA PARSING cd
 [X]	here doc e pipe
 [X]	aumentare SHLVL quando inizi minishell
 [X]	unset e cd
@@ -26,7 +26,7 @@
 	[X]	Fixare detect pipe
 
 Chiedere a France:
-[ ]	Se non c'è una env, che si fa? Si ferma il programma?
+[X]	Se non c'è una env, che si fa? Si ferma il programma?
 [X]	Gestione fd aperti con <(cmd)
-[ ]	Gestione > file.txt (export)
+[X]	Gestione > file.txt (export)
 [X]	(echo test) > file.txt && (cat) file.txt

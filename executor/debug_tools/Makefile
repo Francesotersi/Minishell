@@ -49,6 +49,14 @@ gdb_file:
 	@echo "		set \$$z1 = \$$z1 + 1"          >> $(GDB_MACROS)
 	@echo "	end"                             >> $(GDB_MACROS)
 	@echo "end"                               >> $(GDB_MACROS)
+		@echo ""                                  >> $(GDB_MACROS)
+	@echo "define doc"                        >> $(GDB_MACROS)
+	@echo "	set \$$z = 0"                    >> $(GDB_MACROS)
+	@echo "	while (\$$z != exec->last_cmd)" >> $(GDB_MACROS)
+	@echo "		p exec->here_doc_fds[\$$z]"      >> $(GDB_MACROS)
+	@echo "		set \$$z = \$$z + 1"      >> $(GDB_MACROS)
+	@echo "	end"                             >> $(GDB_MACROS)
+	@echo "end"                               >> $(GDB_MACROS)
 
 valgrind_file:
 	@echo "{" > $(VALGRIND_SUPP)

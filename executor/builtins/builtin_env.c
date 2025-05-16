@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:57 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/06 17:19:25 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:19:44 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,20 +70,20 @@ static int	what_file_is(t_exec *exec, char *arg)
 	dir = opendir(arg);
 	if (dir)
 	{
-		_fd_printf(2, "env: %s: Is a directory\n", arg);
+		bash_message(E_ENV_DIRECTORY, arg);
 		closedir(dir);
 		return (set_exit_code(exec, 126));
 	}
 	else if (access(arg, F_OK) != 0)
 	{
-		_fd_printf(2, "env: %s: No such file or directory\n");
+		bash_message(E_ENV_NOTFOUND, arg);
 		return (set_exit_code(exec, 127));
 	}
 	else if (access(arg, F_OK | X_OK) != 0)
 	{
-		_fd_printf(2, "env: %s: Cannot execute for Minishell subject\n");
+		bash_message(E_ENV_EXE, arg);
 		return (set_exit_code(exec, 127));
 	}
-	_fd_printf(2, "env: %s: permission denied\n");
+	bash_message(E_ENV_PERMISSION, arg);
 	return (set_exit_code(exec, 126));
 }

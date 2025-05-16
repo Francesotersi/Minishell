@@ -3,32 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:26:15 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/13 09:03:34 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:01:21 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
-//NOTE -	TO USE THESE FUNCTION, YOU MUST USE cpy_env FIRST!!!
-//			We need to copy the environment to heap first, and saving the
-//			new environment, its size and its last element.
-//			Execution part needs these three variables to work properly.
-//
-//
-//NOTE - Usage: give the environment taken in main;
-//				the address of a char** variable, for the copied environment; 
-//				the address of an int variable, that will store the env size;
-//				the address of an int variable, that will store env last elem.
 /*
+//NOTE -	TO USE THESE FUNCTION, YOU MUST USE cpy_env FIRST!!!
+			We need to copy the environment to heap first, and saving the
+			new environment, its size and its last element.
+			Execution part needs these three variables to work properly.
+
+
+//NOTE - Usage: give the environment taken in main;
+				the address of a char** variable, for the copied environment; 
+				the address of an int variable, that will store the env size;
+				the address of an int variable, that will store env last elem.
+		if (cpy_env(env, &data->env, &data->env_size, &data_>last_env) != 0)
+			MALLOC ERROR
 //REVIEW - cpy_env
 
 //		Operations:
-		1)	Finds the search string in the environment matrix, skipping '=';
-		2)	Where, if not NULL, is set to i if env[i], otherwise to -1;
-		3)	Returns env[i], that MUST NOT BE FREED.
+		1)	Takes the environment from main, or realloc an old heap env;
+		2)	Allocates a new environment.
+			The new environment has old env size * 2 + 3;
+		3)	Copy the old environment to the new one;
+		4)	If env size is 0, we are copying the environment for the first time,
+			so we need to increase the shell level and change the shell name.
 */
 int	cpy_env(char **old_env, char ***new_env, int *env_size, int *last_env)
 {
@@ -36,8 +41,7 @@ int	cpy_env(char **old_env, char ***new_env, int *env_size, int *last_env)
 
 	if (!old_env)
 		return (E_NOENV);
-	i = 0;
-	while (old_env[i++]);
+	i = matrix_size(old_env);
 	*new_env = ft_calloc(i + *env_size + 3, sizeof(char *));
 	if (!*new_env)
 		return (E_MALLOC);
@@ -59,14 +63,23 @@ int	cpy_env(char **old_env, char ***new_env, int *env_size, int *last_env)
 	return (0);
 }
 
+/*
 //NOTE - Returns the content of an item in the environment, if exist. 
-//				give **environment (NOT ADDRESS);
-//				the string to search; 
-//				an optional int ptr. If not NULL, it will be given the
-//				index of the env element, or -1 if not found.
-//				You can safely pass it to NULL.
+				give **environment (NOT ADDRESS);
+				the string to search; 
+				an optional int ptr. If not NULL, it will be given the
+				index of the env element, or -1 if not found.
+				You can safely pass it to NULL.
 //NOTE - YOU MUST NOT FREE THE RETURNED STRING! It's env memory!!!
+//REVIEW - get_env
 
+//		Operations:
+		1)	Search the string in the environment.
+			If the string is not found, return NULL;
+		2)	If the string is found, return the content of the item.
+			Example: if the string is "HOME", and the env item is
+			"HOME=/user/homes/...", return "/user/homes/...";
+*/
 char	*get_env(char **env, char *search)
 {
 	char	*item;

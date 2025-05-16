@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/13 10:44:23 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/14 22:36:29 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	execute(t_token *token, void *data, int debug)
 	exec = (t_exec){0};
 	get_main_struct_data(&exec, data, debug);
 	merge_tokens(token, debug);
-	alloc_memory(&exec, token, count_commands(&exec, token));
+	alloc_memory(&exec, token, count_commands(token));
 	prepare_here_docs(&exec, token);
 	get_commands_data(&exec, token);
 	get_paths_data(&exec, token);
@@ -126,7 +126,23 @@ int	execute_loop(t_token *token, t_exec *exec)
 	return (0);
 }
 
-/*REVIEW - execute
+/*REVIEW - next_command
+
+//	1)	We iterate until we find an execution separator in the right layer,
+		and the token exists;
+	2)	If the token is a AND/OR, we wait every process, and go to the
+		next valid command block (we skip OR if exit code is == 0,
+		AND if exit code is != 0). We detect if there are pipes;
+	3)	We set the current command index;
+	4)	If the token is empty, or if the layer is higher than the token
+		layer, (for example in --> (ls) | cat, when we hit '|') 
+		we return 1, breaking from execute_loop while;
+	5)	We go to the next token;
+	6)	If the layer is lower than the token layer, we manage the
+		parenthesis block with manage_parenthesis.
+		manage_parenthesis moves the token pointer to the end of the
+		parenthesis block;
+	7)	We do 4) again, and we return 0.
 
 */
 static int	next_command(t_exec *exec, t_token **token)
@@ -146,7 +162,7 @@ static int	next_command(t_exec *exec, t_token **token)
 		return (1);
 	++(*token);
 	exec->curr_cmd = (*token)->cmd_num;
-	if (exec->prior_layer < (*token)->prior)
+	while (exec->prior_layer < (*token)->prior)
 		manage_parenthesis(exec, token, 0);
 	if (exec->prior_layer > (*token)->prior)
 		return (1);
@@ -155,22 +171,23 @@ static int	next_command(t_exec *exec, t_token **token)
 
 /*REVIEW - invoke_programs
 
-//	1)	If the executable is not a builtin and is invalid, we stop;
-	2)	If it is a builtin, we do it without fork.
+//	1)	If there are no commands in the command block, 0 is returned;
+	2)	If the executable is not a builtin and is invalid, we stop;
+	3)	If it is a builtin, we do it without fork.
 		exec->builtins is an array of functions;
-	3)	We fork.
-	3.1)If pid is invalid, we kill the process;
-	3.2)If pid == 0, we are in the child. We launch execve. If fails, we
+	4)	We fork.
+	5.1)If pid is invalid, we kill the process;
+	5.2)If pid == 0, we are in the child. We launch execve. If fails, we
 		clean the memory;
-	3.3)Else, we are in main process, and we continue;
-	4)	We save the pid in a array of pids;
-	5)	If we have printed on a pipe STDOUT, we dup the pipe STDIN.
+	5.3)Else, we are in main process, and we continue;
+	6)	We save the pid in a array of pids;
+	7)	If we have printed on a pipe STDOUT, we dup the pipe STDIN.
 */
 static int	invoke_programs(t_exec *exec, int i)
 {
 	pid_t	pid;
 
-	if (!exec->commands[i] || !exec->commands[i][0])
+	if (!exec->commands || !exec->commands[i] || !exec->commands[i][0])
 		return (0);
 	if (is_a_valid_executable(exec, i) == _NO)
 		return (0);
@@ -194,10 +211,11 @@ static int	invoke_programs(t_exec *exec, int i)
 /*REVIEW - wait_everyone
 
 //	1)	We reset STDIN and STDOUT;
-	2)	We set an index to the last command done index;
-	3)	We wait all pids until last cmd done;
-	4)	If a pid exist and it's the last command, update the exit status;
-	5)	We set last_command_done to i.
+	2)	We loop until we reach the last command;
+		-	We wait for every pid in the list;
+		-	If the pid is not 0, we wait for it;
+		-	If the pid is the last command done, we set the exit code;
+		-	If the pid is 0, we skip it.
 */
 int	wait_everyone(t_exec *exec)
 {

@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:22:21 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/14 22:59:42 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	_add_sign_left(char **string, char sign);
 			everything is fine.
 			Live like bash. You'll live better;
 		3)	We split the PATH with ft_split, using ':' as parameter;
-		4)	We iterate throught every command stored in the matrix of argv;
+		4)	We iterate through every command stored in the matrix of argv;
 		5)	If the file is NOT a builtin and is not already a valid executable
 			(/bin/grep is already a valid executable), get it. 
 */

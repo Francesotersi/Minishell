@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/12 15:37:51 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:11:12 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,33 @@ static int	get_here_doc_file(char *limiter, t_exec *exec);
 
 /*REVIEW - get_file_data
 
+	This function is called both in execution main and in manage_parenthesis.
+	do_pipe is a bool that enables or disables the pipe creation.
+	If called from execution main, do_pipe is set to 1.
+	If called from manage_parenthesis, do_pipe is set to 0.
+
 //	1)	We find the last file in the command block.
 		Example: (cat < file1.txt <file2.txt >file3.txt >file4.txt)
 		STDIN: 	file2.txt;
 		STDOUT: file4.txt.
 		See find_last_file below for more information.
 	2)	We iterate for all token contents;
-	3)	If we find a execution separator (|, &&, ||), we stop;
-	4)	If the token is a redictor sign (>, >>, <, <<), we
+	3)	If we find a execution separator (|, &&, ||) in the same
+		parenthesis layer as the execution layer, we stop;
+	4)	If the token is a redictor sign (>, >>, <, <<, <()), we
 		manage that file (see add_one below);
-	5)	If something goes wrong (non existing files), we return error.
+	5)	If something goes wrong (non existing files, perms.), we return error.
 		This error will abort the command block, preventing execution;
 	6)	If find_last_file does not find any OUTPUT redirections, and if
 		there are NO pipes, dup the regular STDOUT;
 	7)	If find_last_file does not find any OUTPUT redirections, and if
-		there are pipes, dup the STDOUT side of the pipe;
+		there are pipes, dup the STDOUT side of the pipe.
+		If there are both pipes and redirections, make an empty pipe,
+		to avoid let cat stay appended;
 	8)	If there are redirections on STDIN or STDOUT, add_one will manage
 		them.
+	9)	We update the current command number: in add_one weird things
+		happen when redir_subshells are present.
 */
 int	get_file_data(t_exec *exec, t_token *token, bool do_pipe)
 {
@@ -85,7 +95,8 @@ static void	find_last_file(t_exec *exec, t_token *token)
 			exec->last_out = token->id;
 		if (token->type == RED_SUBSHELL)
 		{
-			skip_deeper_layers(&token, layer);
+			while (token->type == RED_SUBSHELL)
+				skip_deeper_layers(&token, layer);
 		}
 		else if (token->content)
 			++token;
@@ -106,7 +117,9 @@ static void	find_last_file(t_exec *exec, t_token *token)
 	3)	If fd is invalid, and the token is an infile: stop the cmd block;
 	4)	If the token is the last STDIN/STDOUT redirector:
 		dup the fd on STDOUT if is a redirect output sign, else in STDIN;
-	5)	If fd is not a here_doc fd, close it.
+	5)	Close the fd.
+		If the fd is a here_doc, we do not close it, unless is the last
+		STDIN redirector.
 */
 static int	add_one(t_exec *exec, t_token *token, t_token **token_address)
 {
@@ -137,6 +150,8 @@ static int	add_one(t_exec *exec, t_token *token, t_token **token_address)
 }
 
 /*REVIEW - get_here_doc_file
+
+//FIXME - Signals management is not implemented yet!
 
 //	1)	We open a file named "here_doc";
 	2)	We write "> ": a bash syntax string that means "Write here, user".
@@ -179,34 +194,28 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 
 /*REVIEW - prepare_here_docs
 
+//FIXME - Signals management is not implemented yet!
+
 //		For every command block, we open all here_docs.
 		However, we need to keep the fd only if the here_doc is 
 		the last STDIN redirector.
-		1)	We iterate through every command line content;
-		2)	We find the last file for the current command block;
-		3)	We iterate through every token of the command block;
-		4)	We gain the fd of the here doc;
-		5)	If the current token here_doc is not the last STDIN redirector,
-			we close it instantly, and reset here_doc_fds[i] to zero.
+		1)	We iterate through every token of the command block;
+		2)	We gain the fd of the here doc. If a here doc already exists
+			in the current command block, we close it.
 */
 void	prepare_here_docs(t_exec *exec, t_token *token)
 {
 	int	i;
 
-	i = 0;
 	while (token->content)
 	{
-		find_last_file(exec, token);
-		while (token->content && !is_exec_sep(token->type))
+		i = token->cmd_num;
+		if (token->type == HERE_DOC)
 		{
-			if (token->type == HERE_DOC)
-				exec->here_doc_fds[i] = get_here_doc_file(token->content, exec);
-			if (token->id != exec->last_in && exec->here_doc_fds[i])
+			if (exec->here_doc_fds[i])
 				close_and_reset(&exec->here_doc_fds[i]);
-			++token;
+			exec->here_doc_fds[i] = get_here_doc_file(token->content, exec);
 		}
-		if (token->content)
-			++token;
-		++i;
+		++token;
 	}
 }

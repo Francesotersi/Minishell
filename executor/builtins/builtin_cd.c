@@ -6,14 +6,14 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/11 12:41:36 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:41:24 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
 static int	up_env(char **update, char *old_pwd, char *pwd, t_exec *exec);
-static void	back_to_home(char **env, char **new);
+static int	back_to_home(char **env, char **new);
 static int	dir_is_invalid(char *dir, t_exec *exec);
 
 /*REVIEW - ft_cd
@@ -57,8 +57,8 @@ int	ft_cd(char **args, t_exec *exec)
 	if (!old_pwd)
 		error(E_MALLOC, exec);
 	new = args[1];
-	if (!args[1])
-		back_to_home(*exec->env, &new);
+	if (!args[1] && back_to_home(*exec->env, &new) == 1)
+		return (free(old_pwd), set_exit_code(exec, 1));
 	if (chdir(new) != 0)
 		return (bash_message(E_CD, new), free(old_pwd), set_exit_code(exec, 1));
 	pwd = getcwd(NULL, 0);
@@ -72,6 +72,8 @@ int	ft_cd(char **args, t_exec *exec)
 
 static int	dir_is_invalid(char *dir, t_exec *exec)
 {
+	if (!dir)
+		return (_NO);
 	if (access(dir, F_OK) == -1)
 	{
 		bash_message(E_CD, dir);
@@ -86,18 +88,15 @@ static int	dir_is_invalid(char *dir, t_exec *exec)
 //	cd without arguments change current directory to $HOME (from env).		
 	If $HOME is unsetted, bash prints a unique message.
 */
-static void	back_to_home(char **env, char **new)
+static int	back_to_home(char **env, char **new)
 {
-	*new = ft_getenv(env, "HOME", NULL);
+	*new = get_env(env, "HOME");
 	if (!*new)
 	{
 		bash_message(E_CD_NOHOME, NULL);
-		return ;
+		return (1);
 	}
-	while (**new && **new != '=')
-		++(*new);
-	if (**new == '=')
-		++(*new);
+	return (0);
 }
 
 /*REVIEW - update_environment

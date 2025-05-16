@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:46 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/06 21:21:45 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:47:59 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	get_main_struct_data(t_exec *exec, void *data, int debug)
 		*exec->exit_code = 0;
 		return ;
 	}
-	gen = (t_data*)data;
+	gen = (t_data *)data;
 	exec->env = &gen->env;
 	exec->env_size = &gen->env_size;
 	exec->last_env = &gen->last_env;
@@ -87,8 +87,8 @@ void	alloc_memory(t_exec *exec, t_token *token, int cmd_num)
 	exec->proc_sub_fds = (int *)ft_calloc(proc_sub_num(token) + 1, sizeof(int));
 	if (!exec->proc_sub_fds)
 		error(E_MALLOC, exec);
-	exec->proc_sub_temp_fds = (int *)ft_calloc\
-	((deepest(token) + proc_sub_num(token)) * 2, sizeof(int));
+	exec->proc_sub_temp_fds = (int *)ft_calloc((deepest(token) \
+	+ proc_sub_num(token)) * 2, sizeof(int));
 	if (!exec->proc_sub_temp_fds)
 		error(E_MALLOC, exec);
 }
@@ -113,14 +113,14 @@ void	free_memory(t_exec *exec)
 	free_memory2(exec);
 }
 
-//REVIEW - 	This part is near to useless. It is put just to be sure all junk 
+//REVIEW - 	This part is put just to be sure all junk 
 //			has been trashed.
 static void	free_memory2(t_exec *exec)
 {
 	int	i;
 
 	i = -1;
-	while (++i != exec->curr_cmd)
+	while (++i != exec->last_cmd)
 	{
 		close_and_reset(&exec->here_doc_fds[i]);
 	}

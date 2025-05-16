@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 16:32:36 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/10 21:54:59 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:44:10 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ static void	add_placeholder(t_exec *exec, int cmd_num, int *i);
 		If it is not a builtin, 0 (_NO) will be saved.
 		See enum e_builtin for every builtin value;
 	5)	If the token is not a COMMAND, we just go to next token.
-		In add_one, we go to next token that is not a COMMAND or ARGUMENT.
 */
 int	get_commands_data(t_exec *exec, t_token *token)
 {
@@ -48,7 +47,8 @@ int	get_commands_data(t_exec *exec, t_token *token)
 			exec->which_cmd[cmd_num] = \
 			is_a_builtin_cmd(exec->commands[cmd_num][0]);
 			++cmd_num;
-			while ((++token)->type != COMMAND);
+			while ((++token)->type != COMMAND)
+				;
 		}
 		else
 			++token;
@@ -58,18 +58,12 @@ int	get_commands_data(t_exec *exec, t_token *token)
 
 /*REVIEW - get_one
 
-//	1)	Stores data in exec->builtins, an array of functions.
-		See get_builtin_functions below;
-	2)	Iterate for all commands line. When finding a command,
-		increase the cmd_num index;
-	3)	If a token is a COMMAND, we alloc and set a matrix (an argv)
-		for it (see get_one);
-	4)	We check if it is a builtin. If it is, we store the value of
-		the builtin in the exec->which_cmd array, in position [cmd_num].
-		If it is not a builtin, 0 (_NO) will be saved.
-		See enum e_builtin for every builtin value;
-	5)	If the token is not a COMMAND, we just go to next token.
-		In add_one, we go to next token that is not a COMMAND or ARGUMENT.
+//	1)	We count the number of arguments (including the command itself);
+	2)	We alloc a matrix for the command;
+	3)	We iterate for all arguments, and we set them in the matrix;
+	4)	If we find a RED_SUBSHELL token, we add a placeholder
+		in the matrix (see add_placeholder);
+	5)	If we find a COMMAND or ARGUMENT token, we set it in the matrix.
 */
 static void	get_one(t_exec *exec, t_token *token, int cmd_num, int cmd_layer)
 {
@@ -103,12 +97,11 @@ static void	get_one(t_exec *exec, t_token *token, int cmd_num, int cmd_layer)
 /*REVIEW - count_arguments
 
 //	1)	Counter starts from 1, because elements starts from 0 (argv[0]);
-	2)	We counts every argument, considering parenthesis;
-	3)	If the token is a execution separator (|, &&, ||) or not exists,
-		stop the counting;
-	4)	If token priority is different than its previous,
-		stop the counting;
-	5)	If token is a COMMAND or ARGUMENT, increase counter.
+	2)	If we find a RED_SUBSHELL token, we increase the counter (it will
+		be a placeholder in the matrix, see add_placeholder);
+	3)	If we find a COMMAND or ARGUMENT token, we increase the counter;
+	4)	If there is a execution separator (&&, ||, |), or a difference in
+		parenthesis layer, we break.
 */
 static int	count_arguments(t_token *token, int cmd_layer)
 {
@@ -149,6 +142,21 @@ static void	get_builtin_functions(t_exec *exec)
 	exec->builtins[B_EXIT] = ft_exit;
 }
 
+/*REVIEW - add_placeholder
+
+//	redirect_Subshell are not counted in the matrix, but they are
+		needed to be there for the redirection to work.
+		We add a placeholder in the matrix, so we can use it
+		in the get_subshell_filename function.
+
+	Example:
+		/bin/cat <(ls -a) infile <(ls -R)
+		argv[0] = /bin/cat
+		argv[1] = ""
+		argv[2] = infile
+		argv[3] = ""
+		argv[4] = NULL
+*/
 static void	add_placeholder(t_exec *exec, int cmd_num, int *i)
 {
 	exec->commands[cmd_num][*i] = ft_strdup("");
