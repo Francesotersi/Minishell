@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 09:46:38 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:54:24 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ int	operator_token(char *str, int *i, int *len, t_data *gen)
 		|| str[*i] == '|' || str[*i] == '(' || str[*i] == ')') \
 		&& str[*i] != '\0')
 	{
+		if ((str[*i] == '<' && str[*i + 1] == '<' && str[*i + 2] == '<') || \
+			(str[*i] == '>' && str[*i + 1] == '>' && str[*i + 2] == '>'))
+			return (ft_error("syntax error near	operator", 2, gen, ""), 1);
 		if ((str[*i] == '<' && str[*i + 1] == '>') || \
-				(str[*i] == '>' && str[*i + 1] == '<') || \
+				(str[*i] == '>' && str[*i + 1] == '<' ) || \
 				(str[*i] == '&' && str[*i + 1] != '&') || \
 				(str[*i] == '|' && str[*i + 1] == '|' && str[*i + 2] == '|'))
 			return (ft_error("syntax error near	operator", 2, gen, ""), 1);
@@ -45,7 +48,8 @@ int	quotes_token(char *str, int *i, int *len, int *temp)
 	if (str[(*i)] == '\"' && str[(*i)] != '\0')
 	{
 		(*len)++;
-		while (str[++(*i)] != '\"' && str[(*i)] != '\0');
+		while (str[++(*i)] != '\"' && str[(*i)] != '\0')
+			;
 		if (str[(*i)] == '\0')
 			return (2);
 		if (str[(*i)] == '\"')
@@ -54,8 +58,9 @@ int	quotes_token(char *str, int *i, int *len, int *temp)
 	}
 	if (str[(*i)] == '\'' && str[(*i)] != '\0')
 	{
-			(*len)++;
-		while (str[++(*i)] != '\'' && str[(*i)] != '\0');
+		(*len)++;
+		while (str[++(*i)] != '\'' && str[(*i)] != '\0')
+			;
 		if (str[(*i)] == '\0')
 			return (2);
 		if (str[(*i)] == '\'')
@@ -67,7 +72,7 @@ int	quotes_token(char *str, int *i, int *len, int *temp)
 
 int	count_char_token(char *str, int *i, int *len, t_data *gen)
 {
-	int temp;
+	int	temp;
 	int	temp2;
 
 	temp = 0;
@@ -78,7 +83,7 @@ int	count_char_token(char *str, int *i, int *len, t_data *gen)
 	{
 		temp2 = quotes_token(str, i, len, &temp);
 		if (temp2 == 2)
-			return (ft_error("syntax error near	quote", 2, gen, "") ,1);
+			return (ft_error("syntax error near	quote", 2, gen, ""), 1);
 		else if (temp2 == 1)
 			continue ;
 		else if (temp == 0 && str[*i])
@@ -101,10 +106,9 @@ int	num_token(char *str, t_data *gen)
 	i = 0;
 	len = 0;
 	while (str[i] != '\0')
-	{ 
+	{
 		while (str[i] == ' ' && str[i] != '\0')
 			i++;
-		// aggiungere token per il dollaro
 		if (count_char_token(str, &i, &len, gen) == 1)
 			return (0);
 		if (operator_token(str, &i, &len, gen) == 1)
@@ -120,8 +124,6 @@ int	num_token(char *str, t_data *gen)
 //
 //		casi limite
 //
-
-
 // 		RICORDA!
 // 	RITORNA 2 PER DARE SYNTAX ERROR (exit_code = 2)
 //	
@@ -132,7 +134,7 @@ int	start_lexing(t_data *gen)
 	gen->token_num = num_token(gen->input, gen);
 	if (gen->token_num == 0)
 		return (2);
-	token = (t_token*)ft_calloc(sizeof(t_token),  gen->token_num + 1);
+	token = (t_token *)ft_calloc(sizeof(t_token), gen->token_num + 1);
 	if (!token)
 		return (write(2, "bash: malloc error\n", 14), 1);
 	(*token) = (t_token){0};
@@ -145,6 +147,5 @@ int	start_lexing(t_data *gen)
 	if (actual_parser(token, gen) == 1)
 		return (free_all(token, gen), 2);
 	gen->token = token;
-	// printf_struct(token, gen);
 	return (0);
 }

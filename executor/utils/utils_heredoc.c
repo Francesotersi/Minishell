@@ -3,14 +3,101 @@
 /*                                                        :::      ::::::::   */
 /*   utils_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:41:56 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 12:20:19 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:21:36 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
+
+static int	signals_check(char *line, int *fd, t_exec *exec);
+static int	get_here_doc_file(char *limiter, t_exec *exec);
+
+/*REVIEW - prepare_here_docs
+
+//FIXME - Signals management is not implemented yet!
+
+//		For every command block, we open all here_docs.
+		However, we need to keep the fd only if the here_doc is 
+		the last STDIN redirector.
+		1)	We iterate through every token of the command block;
+		2)	We gain the fd of the here doc. If a here doc already exists
+			in the current command block, we close it.
+*/
+int	prepare_here_docs(t_exec *exec, t_token *token)
+{
+	int	i;
+
+	while (token->content)
+	{
+		i = token->cmd_num;
+		if (token->type == HERE_DOC)
+		{
+			if (exec->here_doc_fds[i])
+				close_and_reset(&exec->here_doc_fds[i]);
+			exec->here_doc_fds[i] = get_here_doc_file(token->content, exec);
+			if (exit_code_sig_received == CTRL_C)
+				return (CTRL_C);
+		}
+		++token;
+	}
+	return (0);
+}
+
+/*REVIEW - get_here_doc_file
+
+//FIXME - Signals management is not implemented yet!
+
+//	1)	We open a file named "here_doc";
+	2)	We write "> ": a bash syntax string that means "Write here, user".
+		The write process goes line per line. If user gives a special
+		character, called LIMITER, the write process stops.
+		Limiter is not written in here doc file.
+	3)	We close and open here_doc file to move the cursor to the start
+		of the line;
+	4)	We return the new fd, if there are no errors.
+		It will be saved in a here_doc_fds array, and closed at the end
+		of its own command block.
+*/
+// if (!isatty(0) || exit_code_sig_received == CTRL_C)																										// da mettere
+// 		return (close(fd), unlink("here_doc"), dup2(exec->stdin_fd, 0), 9999999);											// in una funzione
+// if (!line)																												// esterna
+// 		return (close(fd), unlink("here_doc"), _fd_printf(2, "bash: warning: here-document delimited by end-of-file"));
+
+static int	get_here_doc_file(char *limiter, t_exec *exec)
+{
+	int		fd;
+	char	*line;
+	int		limiter_len;
+
+	
+	fd = open(DOC_NAME, INFILE_DOC, 0666);
+	if (fd < 0)
+		error(E_OPEN, exec);
+	ft_putstr_fd("> ", 2);
+	set_here_doc_signal();
+	line = get_next_line_bonus(0);
+	if (signals_check(line, &fd, exec) == 1)
+		return (fd);
+	limiter_len = ft_strlen(limiter);
+	while ((line) && (double_cmp(limiter, line, limiter_len, 1)) != 0)
+	{
+		write_here_doc(line, exec, fd);
+		ft_putstr_fd("> ", exec->stdout_fd);
+		free(line);
+		line = get_next_line_bonus(0);
+		set_here_doc_signal();
+		if (signals_check(line, &fd, exec) == 1)
+			return (fd);
+	}
+	close(fd);
+	fd = open(DOC_NAME, INFILE_DOC, 0666);
+	if (fd < 0)
+		return (free(line), unlink(DOC_NAME), error(E_OPEN, exec));
+	return (free(line), unlink(DOC_NAME), fd);
+}
 
 /*
 //REVIEW - write_here_doc
@@ -54,4 +141,28 @@ void	write_here_doc(char *line, t_exec *exec, int fd)
 		else
 			write(fd, &line[i], 1);
 	}
+}
+
+static int	signals_check(char *line, int *fd, t_exec *exec)
+{
+	if (!isatty(0) || exit_code_sig_received == CTRL_C)
+	{
+		write(1, "\n", 1);
+		close_and_reset(fd);
+		unlink(DOC_NAME);
+		dup2(exec->stdin_fd, 0);
+		return (1);
+	}
+	if (!line || exit_code_sig_received == CTRL_D)
+	{
+		dup2(exec->stdin_fd, 0);
+		bash_message(E_HEREDOC_CTRL_D, NULL);
+		close_and_reset(fd);
+		*fd = open(DOC_NAME, INFILE_DOC, 0666);
+		unlink(DOC_NAME);
+		if (*fd < 0)
+			return (free(line), error(E_OPEN, exec));
+		return (1);
+	}
+	return (0);
 }

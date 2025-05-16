@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_file_data.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:06:55 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 16:11:12 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:28:44 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	find_last_file(t_exec *exec, t_token *token);
 static int	add_one(t_exec *exec, t_token *token, t_token **token_address);
-static int	get_here_doc_file(char *limiter, t_exec *exec);
 
 /*REVIEW - get_file_data
 
@@ -147,75 +146,4 @@ static int	add_one(t_exec *exec, t_token *token, t_token **token_address)
 	if (token->type != HERE_DOC)
 		close(fd);
 	return (0);
-}
-
-/*REVIEW - get_here_doc_file
-
-//FIXME - Signals management is not implemented yet!
-
-//	1)	We open a file named "here_doc";
-	2)	We write "> ": a bash syntax string that means "Write here, user".
-		The write process goes line per line. If user gives a special
-		character, called LIMITER, the write process stops.
-		Limiter is not written in here doc file.
-	3)	We close and open here_doc file to move the cursor to the start
-		of the line;
-	4)	We return the new fd, if there are no errors.
-		It will be saved in a here_doc_fds array, and closed at the end
-		of its own command block.
-*/
-static int	get_here_doc_file(char *limiter, t_exec *exec)
-{
-	int		fd;
-	char	*line;
-	int		limiter_len;
-
-	fd = open(".here_doc", INFILE_DOC, 0666);
-	if (fd < 0)
-		error(E_OPEN, exec);
-	ft_putstr_fd("> ", 2);
-	line = get_next_line_bonus(0);
-	limiter_len = ft_strlen(limiter);
-	while ((line) && (double_cmp(limiter, line, limiter_len, 1)) != 0)
-	{
-		write_here_doc(line, exec, fd);
-		ft_putstr_fd("> ", exec->stdout_fd);
-		free(line);
-		line = get_next_line_bonus(0);
-	}
-	close(fd);
-	fd = open(".here_doc", INFILE_DOC, 0666);
-	if (fd < 0)
-		return (free(line), unlink(".here_doc"), error(E_OPEN, exec));
-	if (!line)
-		return (close(fd), unlink(".here_doc"), error(E_MALLOC, exec));
-	return (free(line), unlink(".here_doc"), fd);
-}
-
-/*REVIEW - prepare_here_docs
-
-//FIXME - Signals management is not implemented yet!
-
-//		For every command block, we open all here_docs.
-		However, we need to keep the fd only if the here_doc is 
-		the last STDIN redirector.
-		1)	We iterate through every token of the command block;
-		2)	We gain the fd of the here doc. If a here doc already exists
-			in the current command block, we close it.
-*/
-void	prepare_here_docs(t_exec *exec, t_token *token)
-{
-	int	i;
-
-	while (token->content)
-	{
-		i = token->cmd_num;
-		if (token->type == HERE_DOC)
-		{
-			if (exec->here_doc_fds[i])
-				close_and_reset(&exec->here_doc_fds[i]);
-			exec->here_doc_fds[i] = get_here_doc_file(token->content, exec);
-		}
-		++token;
-	}
 }

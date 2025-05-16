@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_count.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 20:24:35 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 17:00:23 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 15:47:06 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ int	find_command_argument_index(t_exec *exec, t_token *token)
 				++token;
 			++cmd_argc;
 		}
-		cmd_argc += token->type == ARGUMENT;
+		else
+			cmd_argc += token->type == ARGUMENT;
 		++token;
 	}
 	return (cmd_argc);

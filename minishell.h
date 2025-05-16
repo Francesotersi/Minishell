@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/13 08:33:53 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:49:54 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include "Ssj_libft/libft.h"
 # include "parsing/parsing.h"
 # include "executor/executor.h"
+
+extern int	exit_code_sig_received;
 
 typedef struct s_data
 {
@@ -49,6 +51,14 @@ typedef struct s_token
 
 //signals
 void	signals(int signal, siginfo_t *info, void *s);
-int		which_signal_received(void);
+void	heredoc_signal(int signal, siginfo_t *info, void *s);
+void	assign_signal_exit_code(t_data *gen);
+void	execve_signal(int signal, siginfo_t *info, void *s);
+void	heredoc_signal2(int signal);
+
+//set_signals.c
+void	reset_standard_signal(void);
+void	set_here_doc_signal(void);
+void	set_execve_signal(void);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   define_token.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/09 18:41:06 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:26:03 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	and_or_pipe_parenthesis(t_token *tok, t_data *gen, int *id)
 
 int	is_operator(t_token *t, t_data *gen, int *id, bool check)
 {
-	if ((*id) < gen->token_num && t->content)
+	if ((*id) < gen->token_num && t->content && t->t_quote != 1)
 	{
 		if (check == true)
 		{
@@ -81,7 +81,7 @@ int	define_token_arg(t_token *token, t_data *gen)
 	while (id < gen->token_num && token[id].content != NULL)
 	{
 		if (is_operator(&token[id], gen, &id, true) == 1)
-			return (ft_error("syntax error near unexpected token", 2, gen,
+			return (printf ("cazzo = %s\n", token[id].content), ft_error("syntax error near unexpected token 10", 2, gen,
 					token[id].content), 1);
 		else
 			id++;
@@ -90,7 +90,7 @@ int	define_token_arg(t_token *token, t_data *gen)
 	while (id < gen->token_num && token[id].content != NULL)
 	{
 		if (is_operator(&token[id], gen, &id, false) == 1)
-			return (ft_error("syntax error near unexpected token", 2, gen,
+			return (ft_error("syntax error near unexpected token11", 2, gen,
 					token[id].content), 1);
 		else
 			id++;
@@ -101,13 +101,16 @@ int	define_token_arg(t_token *token, t_data *gen)
 
 int	define_token_and_parenthesis(t_token *token, t_data *gen)
 {
+	int	i;
 	int	id;
 
+	i = 0;
 	id = 0;
 	while (token[id].content != NULL)
 	{
 		if (count_parenthesis(token, gen) == 1)
-			return (ft_error("syntax error near parenthesis", 2, gen, ""), 1);
+			return (ft_error("syntax error near parenthesis12", 2, \
+			gen, ""), 1);
 		if (prior_of_token(token, gen) == 1)
 			return (1);
 		id++;

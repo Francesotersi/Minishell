@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   enum.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:15:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/12 10:55:33 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:48:26 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,15 @@ enum e_exec_errors
 	E_MALLOC,
 	E_OPEN,
 	E_FORK,
+	E_HEREDOC_CTRL_D,
 	E_NOENV,
+	E_EXPORT_PARSING,
+	E_UNSET_PARSING,
 	E_ENV_PARSING,
+	E_ENV_DIRECTORY,
+	E_ENV_NOTFOUND,
+	E_ENV_EXE,
+	E_ENV_PERMISSION,
 	E_CD,
 	E_CD_ARGS,
 	E_CD_PATH,
@@ -146,6 +153,11 @@ enum e_bools
 	_STOP = 2,
 };
 
-
+enum e_signal
+{
+	CTRL_C = 10,
+	CTRL_D = 20,
+	CTRL_BACK = 30,
+};
 
 #endif

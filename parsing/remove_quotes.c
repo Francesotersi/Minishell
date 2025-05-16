@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 10:07:07 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:23:48 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void	remove_quotes_token(t_token *token, t_data *gen)
 	id = 0;
 	temp = NULL;
 	expanding_variables(token, gen);
+	if_inside_quote(token, gen);
 	while (token[id].content != NULL)
 	{
 		while (token[id].content[i] != '\0')

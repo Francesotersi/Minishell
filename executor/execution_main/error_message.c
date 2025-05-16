@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:47:51 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 17:28:46 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:02:19 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static int	bash_message2(int message, char *file);
 static int	bash_message3(int message, char *file);
+static int	bash_message4(int message);
 
 /*
 //REVIEW - error
@@ -130,6 +131,17 @@ static int	bash_message3(int message, char *file)
 	else if (message == E_PERMISSION_DENIED)
 	{
 		_fd_printf(2, "bash: %s: Permission denied\n", file);
+	}
+	else
+		return (bash_message4(message));
+	return (1);
+}
+
+static int	bash_message4(int message)
+{
+	if (message == E_HEREDOC_CTRL_D)
+	{
+		_fd_printf(2, "bash: warning: here-doc delimited by end-of-file\n");
 	}
 	else
 		_fd_printf(2, "ERROR MESSAGE NOT REGISTERED.\n");

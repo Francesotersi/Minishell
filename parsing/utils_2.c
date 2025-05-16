@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:58:54 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/09 12:06:33 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:38:15 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,35 @@ void	skip_single_quotes(char *str, int *i)
 
 int	heredoc_d_case(t_token *token, int *id)
 {
-	if (!ft_strncmp(token[(*id)].content, "<<",
-		ft_strlen(token[(*id)].content) + 1)
+	if (!ft_strncmp(token[(*id)].content, "<<", \
+		ft_strlen(token[(*id)].content) + 1) \
 		&& find_char(&token[(*id) + 1], '$') == 1)
 	{
 		(*id)++;
 		return (1);
 	}
 	return (0);
+}
+
+void	if_inside_quote(t_token *token, t_data *gen)
+{
+	int	id;
+	int	i;
+
+	(void)gen;
+	id = 0;
+	while (token[id].content)
+	{
+		i = 0;
+		while (token[id].content[i])
+		{
+			if (token[id].content[i] == '\"' || token[id].content[i] == '\'')
+			{
+				token[id].t_quote = 1;
+				break ;
+			}
+			i++;
+		}
+		id++;
+	}
 }

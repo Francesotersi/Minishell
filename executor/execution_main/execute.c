@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/14 22:36:29 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:20:21 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ static int	invoke_programs(t_exec *exec, int i);
 
 		Then, we index every command block (ls | cat: ls == 0, cat == 1);
 	4)	We alloc memory;
-	5)	We open all the here docs, and store their fds in a int array;
+	5)	We open all the here docs, and store their fds in a int array.
+		If CTRL_C is pressed, returns to main;
 	6)	Get a 3D matrix, that stores the argv of each command.
 		Example: echo Hello! | cat > file1.txt
 		matrix = {{"echo", "Hello!", NULL}, {"cat", "file1.txt", NULL}}
@@ -61,7 +62,9 @@ int	execute(t_token *token, void *data, int debug)
 	get_main_struct_data(&exec, data, debug);
 	merge_tokens(token, debug);
 	alloc_memory(&exec, token, count_commands(token));
-	prepare_here_docs(&exec, token);
+	if (prepare_here_docs(&exec, token) == CTRL_C)
+		return (free_memory(&exec), 0);
+	set_execve_signal();
 	get_commands_data(&exec, token);
 	get_paths_data(&exec, token);
 	while (token->prior > 0)
