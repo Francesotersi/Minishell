@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 10:18:58 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/14 09:57:42 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:49:19 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	set_here_doc_signal(void)
 	sa.sa_flags = SA_SIGINFO;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_sigaction = heredoc_signal;
-	sigaction(SIGQUIT, &sa, NULL);
+	signal(SIGQUIT, heredoc_signal2);
 	sigaction(SIGINT, &sa, NULL);
 }
 

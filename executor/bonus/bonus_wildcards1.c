@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_wildcards1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 16:24:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/06 13:56:12 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:09:47 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int	convert_wildcard(char *old_str, char **new_str)
 		If it does not find any '/', return "./" = CURRENT_DIRECTORY
 
 		Else, dir_path copy old str (/bin/g*e*p) till last /.
+		So, in this case, dir_path = /bin/
+		Then, old_str is moved to the string after the last '/'.
 */
 static int	find_directory(char **dir_path, char **old_str)
 {
@@ -92,7 +94,9 @@ static int	find_directory(char **dir_path, char **old_str)
 
 //		Counts all files in directory.
 
-		*dir functions uses two structs
+		*dir functions uses two structs:
+		- dir: contains the directory stream;
+		- dirent: contains the name of the current file and other info.
 */
 static int	dir_size(int *size, char *dir_path)
 {

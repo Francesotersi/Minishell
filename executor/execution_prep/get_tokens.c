@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 12:03:58 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/07 09:31:29 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:44:37 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ static void	switch_tokens(t_token *token, int i, int j);
 		3)	Else, if is a regular redirector sign (<, <<, >, >>), merge it with
 			its file;
 		4)	We restart the loop, to merge '(' and ')';
-		5)	Lastly, sort the id of every token.
+		5)	Lastly, sort the id of every token, and decrease in subshell the
+			layer of the <() token.
 */
 void	merge_tokens(t_token *token, int debug)
 {
@@ -83,22 +84,6 @@ void	merge_tokens(t_token *token, int debug)
 	}
 	return (manage_subshell(token), sort_id(token));
 }
-
-/*
-void	p_tok(t_token *token)
-{
-	int i = 0;
-	while (token[i].content)
-	{
-		_fd_printf(1, "\n^^\n%d:", i);
-		_fd_printf(1, "\ncont:\t%s", token[i].content);
-		_fd_printf(1, "\ntype:\t%d", token[i].type);
-		_fd_printf(1, "\nid:\t%d", token[i].id);
-		_fd_printf(1, "\nprior:\t%d", token[i].prior);
-		++i;
-	}
-}
-*/
 
 /*REVIEW - merge_one
 
@@ -142,8 +127,37 @@ static void	manage_subshell(t_token *token)
 
 /*REVIEW - merge_one
 
-//		Every token is indexed with its position in the token array.
+		Every token is indexed with its position in the token array.
 		This index is its ID.
+
+//		We set:
+		-	The ID of every token;
+		-	The command number of every token.
+
+		Doing this is tough because we have to manage subshells:
+
+		cat <(ls) <(ls) -a -a file1.txt file2.txt && grep -v <(./a.out) string
+		Content		type				cmd_num		prior
+		//cat		command (0)			0			0
+		//<(		RED_SUBSHELL(10)	0			0
+		//ls		command (0)			1			1
+		//<(		RED_SUBSHELL(10)	0			0
+		//ls		command (0)			2			1
+		//-a		argument (1)		0			0
+		//-a		argument (1)		0			0
+		//file1.txt	argument (1)		0			0
+		//file2.txt	argument (1)		0			0
+		//&&		operator (3)		0			0
+		//grep		command (0)			3			0
+		//-v		argument (1)		3			0
+		...
+
+		In short, to do this we start from 'cat' and we go on until
+		the current layer is equal or lower than the current token's layer.
+		So, we reach end of prompt.
+		Then we do the same for the next command (ls), but it stop 
+		immeadiately after the first token, because the layer is
+		0, and the current token's layer is 1.
 */
 static void	sort_id(t_token *token)
 {

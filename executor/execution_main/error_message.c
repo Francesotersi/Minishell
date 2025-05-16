@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:47:51 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/07 17:21:12 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:02:19 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
 static int	bash_message2(int message, char *file);
+static int	bash_message3(int message, char *file);
+static int	bash_message4(int message);
 
 /*
 //REVIEW - error
@@ -21,18 +23,18 @@ static int	bash_message2(int message, char *file);
 	part memory, and exit the whole program.
 	It is called for serious problem, like malloc errors.
 */
-int		error(int err, t_exec *memory)
+int	error(int err, t_exec *memory)
 {
 	*memory->exit_code = 1;
 	if (err == NONE)
 	{
 		ft_putstr_fd("Please insert an error.\n", 2);
 	}
-	else if (err == E_ARGS)
+	else if (err == E_MALLOC)
 	{
-		ft_putstr_fd("France non mi hai passato nulla lol\n", 2);
+		ft_putstr_fd("bash: Cannot allocate memory\n", 2);
 	}
-	else if (err == E_MALLOC || err == E_FORK)
+	else if (err == E_FORK)
 	{
 		ft_putstr_fd("bash: fork: Cannot allocate memory\n", 2);
 	}
@@ -60,9 +62,13 @@ int	bash_message(int message, char *file)
 	{
 		_fd_printf(2, "bash: %s: No such file or directory\n", file);
 	}
-	else if (message == E_ENV_PARSING)
+	else if (message == E_EXPORT_PARSING)
 	{
 		_fd_printf(2, "bash: export: `%s': not a valid identifier\n", file);
+	}
+	else if (message == E_UNSET_PARSING)
+	{
+		_fd_printf(2, "bash: unset: `%s': not a valid identifier\n", file);
 	}
 	else if (message == E_CD)
 	{
@@ -72,10 +78,6 @@ int	bash_message(int message, char *file)
 	{
 		_fd_printf(2, "bash: cd: too many arguments\n");
 	}
-	else if (message == E_CD_NOHOME)
-	{
-		_fd_printf(2, "bash: cd: HOME not set\n");
-	}
 	else
 		return (bash_message2(message, file));
 	return (1);
@@ -83,17 +85,44 @@ int	bash_message(int message, char *file)
 
 static int	bash_message2(int message, char *file)
 {
-	if (message == E_CMD_NOTFOUND)
+	if (message == E_CD_NOHOME)
 	{
-		_fd_printf(2, "%s: command not found\n", file);
+		_fd_printf(2, "bash: cd: HOME not set\n");
 	}
 	else if (message == E_EXIT_NUMERIC)
 	{
 		_fd_printf(2, "bash: exit: %s: numeric argument required\n", file);
 	}
-	else if (message == E_EXIT_NUMERIC)
+	else if (message == E_EXIT_ARGS)
 	{
 		_fd_printf(2, "bash: exit: too many arguments\n", file);
+	}
+	else if (message == E_ENV_DIRECTORY)
+	{
+		_fd_printf(2, "bash: %s: Is a directory\n", file);
+	}
+	else if (message == E_ENV_NOTFOUND)
+	{
+		_fd_printf(2, "bash: %s: No such file or directory\n", file);
+	}
+	else
+		return (bash_message3(message, file));
+	return (1);
+}
+
+static int	bash_message3(int message, char *file)
+{
+	if (message == E_ENV_EXE)
+	{
+		_fd_printf(2, "bash: %s: It's a file with execute perm.\n", file);
+	}
+	else if (message == E_ENV_PERMISSION)
+	{
+		_fd_printf(2, "bash: %s: Permission denied\n", file);
+	}
+	else if (message == E_CMD_NOTFOUND)
+	{
+		_fd_printf(2, "%s: command not found\n", file);
 	}
 	else if (message == E_IS_DIRECTORY)
 	{
@@ -102,6 +131,17 @@ static int	bash_message2(int message, char *file)
 	else if (message == E_PERMISSION_DENIED)
 	{
 		_fd_printf(2, "bash: %s: Permission denied\n", file);
+	}
+	else
+		return (bash_message4(message));
+	return (1);
+}
+
+static int	bash_message4(int message)
+{
+	if (message == E_HEREDOC_CTRL_D)
+	{
+		_fd_printf(2, "bash: warning: here-doc delimited by end-of-file\n");
 	}
 	else
 		_fd_printf(2, "ERROR MESSAGE NOT REGISTERED.\n");

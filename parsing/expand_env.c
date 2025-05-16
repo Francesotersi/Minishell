@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:55:30 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 12:13:28 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/16 09:13:27 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	expand_var(t_token *tok, int *i, t_data *gen, char *search)
 		{
 			if (tok->content[(*i)] && tok->content[(*i)] == '$' && \
 			tok->content[(*i) + 1] != '\"' && tok->content[(*i) + 1] != '\'' \
-			&& tok->content[(*i) + 1] != ' ')
+			&& tok->content[(*i) + 1] != ' ' && tok->content[(*i) + 1] != '?')
 			{
 				temp = what_to_search(tok, i);
 				search = get_env(gen->env, temp);

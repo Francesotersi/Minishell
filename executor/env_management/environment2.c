@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 14:43:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 15:21:36 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:21:18 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,49 @@ int	env_pars(char *item, int *no_eq_plus, int *name_size, int *cont_size)
 	while (item[i])
 		++i;
 	*cont_size = i - *no_eq_plus - *name_size;
+	return (0);
+}
+
+int	increase_shell_level(char **env)
+{
+	int		i;
+	int		shell_level;
+	char	*shell_level_str;
+	char	*temp;
+
+	shell_level_str = get_env(env, "SHLVL");
+	if (!shell_level_str)
+		shell_level = 1;
+	else
+		shell_level = ft_atoi(shell_level_str) + 1;
+	ft_getenv(env, "SHLVL", &i);
+	temp = ft_itoa(shell_level);
+	if (!temp)
+		return (E_MALLOC);
+	shell_level_str = ft_strjoin("SHLVL=", temp);
+	free(temp);
+	if (!shell_level_str)
+		return (E_MALLOC);
+	free(env[i]);
+	env[i] = shell_level_str;
+	return (0);
+}
+
+int	change_shell_name(char **env)
+{
+	int		i;
+	char	*shell_name;
+	char	*pwd;
+
+	ft_getenv(env, "SHELL", &i);
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		return (E_MALLOC);
+	shell_name = ft_strjoin("SHELL=", pwd);
+	free(pwd);
+	if (!shell_name)
+		return (E_MALLOC);
+	free(env[i]);
+	env[i] = shell_name;
 	return (0);
 }

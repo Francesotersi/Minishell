@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:40:55 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/14 14:20:02 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:49:32 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,26 @@ void	execve_signal(int signal, siginfo_t *info, void *s)
 	if (signal == SIGINT)
 	{
 		exit_code_sig_received = CTRL_C;
-		if (RL_ISSTATE(RL_STATE_READCMD))
-		{
-			write(1, "\n", 1);
-			rl_on_new_line();
-			rl_replace_line("", 0);	
-			rl_redisplay();
-		}
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);	
 	}
 	else if (signal == SIGQUIT)
 	{
 		exit_code_sig_received = CTRL_BACK;
-		write(1, "Quit (core dumped)\n", 20);
-		if (RL_ISSTATE(RL_STATE_READCMD))
-		{
-			rl_on_new_line();
-			rl_replace_line("", 0);	
-			rl_redisplay();
-		}
+		write(2, "Quit (core dumped)\n", 20);
+		rl_on_new_line();
+		rl_replace_line("", 0);	
+	}
+}
+
+void	heredoc_signal2(int signal)
+{
+	if (signal == SIGQUIT)
+	{
+		write(1, "\b\b", 2);
+		write(1, "  ", 2);
+		write(1, "\b\b", 2);
 	}
 }
 
@@ -56,17 +58,7 @@ void	heredoc_signal(int signal, siginfo_t *info, void *s)
 	if (signal == SIGINT)
 	{
 		exit_code_sig_received = CTRL_C;
-		write(1, "\n", 1);
-		// write(1, 
-		// "bash: warning: here-document delimited by end-of-file",
-		// 64);
 		close(0);
-	}
-	if (signal == SIGQUIT)
-	{
-		write(1, "\b\b", 2);
-		write(1, "  ", 2);
-		write(1, "\b\b", 2);
 	}
 }
 
@@ -76,7 +68,7 @@ void	signals(int signal, siginfo_t *info, void *s)
 	(void)s;
 	if (signal == SIGINT)
 	{
-		printf("\n");
+		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();

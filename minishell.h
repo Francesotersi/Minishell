@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/14 09:15:52 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/16 11:49:54 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	signals(int signal, siginfo_t *info, void *s);
 void	heredoc_signal(int signal, siginfo_t *info, void *s);
 void	assign_signal_exit_code(t_data *gen);
 void	execve_signal(int signal, siginfo_t *info, void *s);
+void	heredoc_signal2(int signal);
 
 //set_signals.c
 void	reset_standard_signal(void);

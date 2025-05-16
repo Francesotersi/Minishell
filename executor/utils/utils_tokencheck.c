@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   general2.c                                         :+:      :+:    :+:   */
+/*   utils_tokencheck.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 15:10:30 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:22:46 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 13:41:26 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,8 @@ int	is_exec_sep(int sign)
 }
 
 /*REVIEW - is_a_builtin_cmd
-//
-		1)	Takes the command len;
-		2)	Searches for every builtin command.
+
+		Returns the builtin enum index, or zero if it is not a builtin.
 */
 int	is_a_builtin_cmd(char *cmd)
 {

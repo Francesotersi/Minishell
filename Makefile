@@ -11,6 +11,9 @@ PARS_DIR  = parsing
 #–– Top‑level target
 NAME     = minishell
 
+#––	Suppression file
+SUPP_FILE = $(shell pwd)/supp.supp
+
 #–– All source files, with their relative paths
 SRCS = \
   main.c \
@@ -39,7 +42,9 @@ SRCS = \
   executor/utils/utils_count.c \
   executor/utils/utils_debug.c \
   executor/utils/utils_fds.c \
+  executor/utils/utils_fds2.c \
   executor/utils/utils_generic.c \
+  executor/utils/utils_heredoc.c \
   executor/utils/utils_matrix.c \
   executor/utils/utils_parenthesis2.c \
   executor/utils/utils_parenthesis.c \
@@ -83,6 +88,18 @@ $(LIBFT):
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+supp: 
+	$(MAKE) val -C executor/
+	mv executor/v.supp .
+	mv v.supp $(SUPP_FILE)
+
+deb:
+	$(MAKE) gdb -C executor/
+	mv executor/a.gdb .
+
+val: 
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s -q --suppressions=$(SUPP_FILE) ./minishell
 
 clean:
 	rm -rf $(OBJ_DIR)

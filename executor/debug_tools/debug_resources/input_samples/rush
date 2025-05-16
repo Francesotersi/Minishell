@@ -230,7 +230,7 @@ Token = status.log,         2, 1,
 Token = ),                  2, 0,
 [END]
 
-case: cat <<EOF | (grep "warn" && sort <(cut -d: -f2 <<< "$(cat file.txt)") || echo "no warnings") >> log.txt
+case: cat <<EOF | (grep "warn" && sort <(cut -d: -f2 << (cat file.txt)) || echo "no warnings") >> log.txt
 [Test12, 33 token]
 Token = cat,                  0, 0,
 Token = <<,                   6, 0,
