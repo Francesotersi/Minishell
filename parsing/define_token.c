@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/16 12:26:03 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/19 08:40:52 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	define_token_arg(t_token *token, t_data *gen)
 	while (id < gen->token_num && token[id].content != NULL)
 	{
 		if (is_operator(&token[id], gen, &id, true) == 1)
-			return (printf ("cazzo = %s\n", token[id].content), ft_error("syntax error near unexpected token 10", 2, gen,
+			return (ft_error("syntax error near unexpected token 10", 2, gen,
 					token[id].content), 1);
 		else
 			id++;

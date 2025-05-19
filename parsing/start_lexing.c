@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/14 12:54:24 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/19 15:48:12 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ int	num_token(char *str, t_data *gen)
 //
 // 		RICORDA!
 // 	RITORNA 2 PER DARE SYNTAX ERROR (exit_code = 2)
-//	
 int	start_lexing(t_data *gen)
 {
 	t_token			*token;
@@ -140,8 +139,12 @@ int	start_lexing(t_data *gen)
 	(*token) = (t_token){0};
 	if (alloc_str_token(token, gen) == 1)
 		return (1);
-	fill_struct(token, gen);
-	token_struct_init(token, gen);
+	if (intersection(token, gen) == 1)
+	{
+		token = reallocation_and_all(gen, token);
+		if (!token)
+			return (free_all(token, gen), 2);
+	}
 	if (define_token_and_parenthesis(token, gen) == 1)
 		return (free_all(token, gen), 2);
 	if (actual_parser(token, gen) == 1)

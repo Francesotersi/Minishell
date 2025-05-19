@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:58:54 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/14 12:38:15 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/19 12:09:34 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	if_inside_quote(t_token *token, t_data *gen)
 	while (token[id].content)
 	{
 		i = 0;
-		while (token[id].content[i])
+		while (token[id].content && token[id].content[i])
 		{
 			if (token[id].content[i] == '\"' || token[id].content[i] == '\'')
 			{

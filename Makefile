@@ -64,6 +64,7 @@ SRCS = \
   parsing/parenthesis.c \
   parsing/parser.c \
   parsing/expand_wildcard.c \
+  parsing/expand_wildcard_2.c \
   parsing/parser_2.c \
 
 #–– Object files go under obj/, mirroring the tree

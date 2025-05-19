@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:55:30 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/16 09:13:27 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/19 09:11:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,11 @@ void	expand_env(t_token *token, t_data *gen)
 //	funzione chiamata all`interno della funzione remove_quotes_token()
 //	nel file remove_quotes.c
 //	--serve per espandere le variabili di ambiente all`interno della struttura
-void	expanding_variables(t_token *token, t_data *gen)
+int	expanding_variables(t_token *token, t_data *gen)
 {
 	expand_exit_code(token, gen);
 	expand_env(token, gen);
-	expand_wildcard(token, gen);
+	if (expand_wildcard(token, gen) == 1)
+		return (1);
+	return (0);
 }

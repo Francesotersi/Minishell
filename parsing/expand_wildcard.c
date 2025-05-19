@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 14:00:35 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/14 09:36:22 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/19 09:07:46 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ int	expand_wildcard(t_token *token, t_data *gen)
 {
 	int		id;
 	char	*temp;
+	int		if_expanded;
 
 	id = 0;
 	temp = NULL;
-	(void)gen;
+	if_expanded = 0;
 	while (token[id].content)
 	{
 		if (wildcard_d_case(token, gen, &id) == 1)
@@ -60,9 +61,10 @@ int	expand_wildcard(t_token *token, t_data *gen)
 				free(temp);
 				return (ft_error("alloc error", 2, gen, ""), 1);
 			}
+			if_expanded = 1;
 			free(temp);
 		}
 		id++;
 	}
-	return (0);
+	return (if_expanded);
 }
