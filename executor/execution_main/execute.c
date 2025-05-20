@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/16 16:20:21 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/19 17:05:12 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,25 @@ static int	invoke_programs(t_exec *exec, int i);
 
 		Then, we index every command block (ls | cat: ls == 0, cat == 1);
 	4)	We alloc memory;
-	5)	We open all the here docs, and store their fds in a int array.
+	5)	We checks for invalid process substitutions.
+		process substitution must be: 
+		1)      with a command;
+		2)      in the same layer of command;
+		3)      after command.
+		Wrong example are:
+		1)      <(ls);
+		2)      (cat) <(ls);
+		3)      <(ls) echo.
+	6)	We open all the here docs, and store their fds in a int array.
 		If CTRL_C is pressed, returns to main;
-	6)	Get a 3D matrix, that stores the argv of each command.
+	7)	Get a 3D matrix, that stores the argv of each command.
 		Example: echo Hello! | cat > file1.txt
 		matrix = {{"echo", "Hello!", NULL}, {"cat", "file1.txt", NULL}}
-	7)	We get the path of every command. Builtin are not converted.
+	8)	We get the path of every command. Builtin are not converted.
 		matrix = {{"echo", "Hello!", NULL}, {"/bin/cat", "file1.txt", NULL}}
-	8)	While there are command blocks in parenthesis, we execute them;
-	9)	Now, we iterate every command in execute_loop;
-	10)	We free only the memory of execution.
+	9)	While there are command blocks in parenthesis, we execute them;
+	10)	Now, we iterate every command in execute_loop;
+	11)	We free only the memory of execution.
 */
 int	execute(t_token *token, void *data, int debug)
 {
@@ -62,6 +71,8 @@ int	execute(t_token *token, void *data, int debug)
 	get_main_struct_data(&exec, data, debug);
 	merge_tokens(token, debug);
 	alloc_memory(&exec, token, count_commands(token));
+	if (check_proc_sub(&exec, token) == 1)
+		return (free_memory(&exec), bash_message(E_PROC_SUB, NULL), 0);
 	if (prepare_here_docs(&exec, token) == CTRL_C)
 		return (free_memory(&exec), 0);
 	set_execve_signal();
@@ -79,8 +90,7 @@ int	execute(t_token *token, void *data, int debug)
 		execute_loop(token, &exec);
 	wait_everyone(&exec);
 	p_end(&exec);
-	free_memory(&exec);
-	return (0);
+	return (free_memory(&exec), 0);
 }
 
 /*REVIEW - execute_loop

@@ -1,0 +1,59 @@
+types:
+
+ COMMAND = 0;
+ ARGUMENT = 1;
+ FILE = 2;
+ > = 3;
+ < = 4;
+ >> = 5;
+ << = 6;
+ | = 7;
+ && = 8;
+ || = 9;
+ *  = 10;
+
+Row are: token_content // type // priority
+
+Complete bash test: 
+make frm ; \
+>file1.txt >file3.txt <<EOF >file4.txt /bin/echo non sovrascrivere... ; \
+/bin/echo verrò stampato su file2.txt! >file1.txt ; \
+cat file1.txt >> file2.txt | grep "error" < file3.txt >> file2.txt
+
+case: make frm
+[Test0, 2 Token]
+T = make, 	0, 0,
+T = frm,	1, 0,
+
+case: >file1.txt >file3.txt <<EOF >file4.txt /bin/echo non sovrascrivere... 
+[Test1, 7 token]
+Token0 = file1.txt, 		3, 0,
+Token1 = file3.txt, 		3, 0,
+Token2 = EOF,				6, 0,
+Token3 = file4.txt, 		3, 0,
+Token4 = /bin/echo,			0, 0,
+Token5 = non,				1, 0,
+Token6 = sovrascrivere...,	1, 0,
+[END]
+
+case: /bin/echo verrò stampato su file2.txt! >file1.txt
+[Test2, 6 token]
+Token0 = /bin/echo,			0, 0,
+Token1 = verrò,		 		1, 0,
+Token2 = stampato,			1, 0,
+Token3 = su,		 		1, 0,
+Token4 = file2.txt!,		1, 0,
+Token5 = file1.txt,			3, 0, 
+[END]
+
+case: cat file1.txt >> file2.txt | grep "error" < file3.txt >> file2.txt
+[Test3, 9 token]
+Token0 = cat, 0, 0,
+Token1 = file1.txt, 1, 0,
+Token3 = file2.txt, 5, 0,
+Token4 = |, 7, 0,
+Token5 = grep, 0, 0,
+Token6 = "error", 1, 0,
+Token7 = file3.txt, 4, 0,
+Token8 = file4.txt, 5, 0,
+[END]

@@ -11,8 +11,8 @@
 [X]	aggiungere deepest_layer
 [X]	aggiornare at_least_one_pipe inizio execute_loop
 [X]	Salvare pid quando getfd == 0
-[ ]	Ricezione segnali con here_doc
-[ ]	Ricezione generica segnali
+[X]	Ricezione segnali con here_doc
+[X]	Ricezione generica segnali
 [X] Controllo overflow di exit
 [X]	ls > file.txt | grep a
 [X]	cd negro | echo ciao: FARE PRIMA PARSING cd

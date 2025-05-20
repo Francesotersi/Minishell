@@ -1,0 +1,93 @@
+You are given a series of shell commands and are required to break them down into tokens, each with a corresponding type and priority. Please format your output in the following way:
+
+Types:
+
+COMMAND = 0;
+
+ARGUMENT = 1;
+
+FILE = 2;
+
+> = 3;
+
+< = 4;
+
+>> = 5;
+
+<< = 6;
+
+| = 7;
+
+&& = 8;
+
+|| = 9;
+
+( = 10;
+
+) = 10.
+
+Output Format:
+
+For each case, output the following:
+
+case: <command>
+[TestX, <number_of_tokens> token]
+Token = <token_content>, <type>, <priority>,
+[END]
+Example Input:
+
+make frm
+
+Expected output:
+
+case: make frm
+[Test0, 2 token]
+Token = make, 0, 0,
+Token = frm, 1, 0,
+[END]
+
+Example input: 
+
+ls file1.txt | grep "error" > output.txt
+
+Expected output:
+
+case: ls file1.txt | grep "error" > output.txt
+[Test1, 7 token]
+Token = ls, 		0, 0,
+Token = file1.txt, 	1, 0,
+Token = |, 			7, 0,
+Token = grep, 		0, 0,
+Token = "error", 	1, 0,
+Token = >,			3, 0,
+Token = output.txt, 2, 0,
+[END]
+
+Example input:
+
+(cat <(ls))
+
+Expected output:
+
+case: (cat <(ls)) && echo done!
+[Test2, 9 token]
+Token = (, 			10, 1,
+Token = cat,		0, 	1,
+Token = <,		 	4, 	1,
+Token = (,			10,	2,
+Token = ls, 		0, 	2,
+Token = ),		 	10,	1,
+Token = ),			10,	0,
+Token = &&,			8,	0,
+Token = done,		1,	0,
+[END]
+
+Instructions for Processing:
+
+Tokens should be identified and categorized according to the rules provided.
+
+Tokens number must be equal or bigger the number of tokens.
+
+Both redirection signs (e.g., >, <, >>, <<) and the content of the redirection (e.g., file names) should be included as tokens.
+
+The token order should match the sequence in the command line input.

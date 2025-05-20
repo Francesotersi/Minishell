@@ -8,7 +8,7 @@ LIBFT_DIR = Ssj_libft
 LIBFT     = $(LIBFT_DIR)/libft.a
 PARS_DIR  = parsing
 
-#–– Target
+#–– Top‑level target
 NAME     = minishell
 
 #––	Suppression file
@@ -18,6 +18,7 @@ SUPP_FILE = $(shell pwd)/supp.supp
 SRCS = \
   main.c \
   signals.c \
+  set_signal.c \
   executor/bonus/bonus_parenthesis.c \
   executor/bonus/bonus_wildcards1.c \
   executor/bonus/bonus_wildcards2.c \
@@ -70,7 +71,7 @@ OBJ_DIR = obj
 OBJS    = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 #–– phony targets
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re libft
 
 all: $(NAME)
 
@@ -88,30 +89,28 @@ $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	rm -rf $(OBJ_DIR)
-	$(MAKE) clean -C $(LIBFT_DIR)
-
-fclean: clean frm
-	rm -f $(NAME)
-	$(MAKE) fclean -C $(LIBFT_DIR)
-
-val: 
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s -q --suppressions=$(SUPP_FILE) ./minishell
-
 supp: 
 	$(MAKE) val -C executor/
 	mv executor/v.supp .
 	mv v.supp $(SUPP_FILE)
 
-exec_deb:
+deb:
 	$(MAKE) gdb -C executor/
 	mv executor/a.gdb .
 
+#–– frm = file remove
 frm: 
 	rm -f *.txt *.gdb *.supp
 
-git: fclean 
-	git add . && git commit -m $(MSG) && git push origin $(BR)
+val: 
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s -q --suppressions=$(SUPP_FILE) ./minishell
+
+clean:
+	rm -rf $(OBJ_DIR)
+	$(MAKE) clean -C $(LIBFT_DIR)
+
+fclean: clean
+	rm -f $(NAME)
+	$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean all

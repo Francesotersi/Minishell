@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:40:44 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 12:44:36 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/19 17:59:23 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,38 @@ void	next_cmd_block(t_token **token, int layer, bool accept_deeper_token)
 	while ((*token)->content && is_exec_sep((*token)->type) == _NO && \
 		(*token)->type != RED_SUBSHELL)
 		++(*token);
+}
+
+/*
+//REVIEW - tok_next
+
+	Go to the next token of type chr in the token list.
+	
+	If accept_deeper_token is true, we go on until the token has less priority
+	that the execution layer (when we exit from a parenthesis: (ls) && echo ok
+	when we hit &&).
+	If accept_deeper_token is false, we go on until the token has the same
+	priority as the execution layer or is a execution separator.
+*/
+void	tok_next(t_token **token, int chr, int layer, bool accept_deeper_tok)
+{
+	while ((*token)->content)
+	{
+		if (accept_deeper_tok)
+		{
+			if (layer <= (*token)->prior && (*token)->type != chr)
+				++(*token);
+			else
+				break ;
+		}
+		else
+		{
+			if (layer == (*token)->prior && (*token)->type != chr)
+				++(*token);
+			else
+				break ;
+		}
+	}
 }
 
 /*

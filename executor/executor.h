@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/16 11:55:01 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:34:54 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,6 +360,7 @@ void	goto_valid_block(t_exec *exec, t_token **token);
 void	tok_next(t_token **token, int chr, int layer, bool accept_deeper_tok);
 void	token_out_parenthesis(t_exec *exec, t_token **token, bool process_sub);
 bool	detect_pipe(t_token *token, int getfd, int layer);
+bool	check_proc_sub(t_exec *exec, t_token *token);
 
 //	NOTE -	string:		String utilities
 
@@ -370,6 +371,7 @@ char	*_cat_string(char *src, char *catstr, size_t start, int which_free);
 char	*_ft_strjoin_free(char *s1, char *s2);
 int		_reverse_strncmp(char *s1, char *s2, int len);
 int		double_cmp(char *s1, char *s2, int s1_len, int ignore_n_char);
+char	*remove_plus(char *str);
 
 //	NOTE -	tokencheck:	is_alpha for token types (is redirection sign? ecc.)
 
