@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:40:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 12:51:57 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:00:22 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,38 +32,6 @@ void	goto_valid_block(t_exec *exec, t_token **token)
 		if (!(*token)->content)
 			return ;
 		++(*token);
-	}
-}
-
-/*
-//REVIEW - tok_next
-
-	Go to the next token of type chr in the token list.
-	
-	If accept_deeper_token is true, we go on until the token has less priority
-	that the execution layer (when we exit from a parenthesis: (ls) && echo ok
-	when we hit &&).
-	If accept_deeper_token is false, we go on until the token has the same
-	priority as the execution layer or is a execution separator.
-*/
-void	tok_next(t_token **token, int chr, int layer, bool accept_deeper_tok)
-{
-	while ((*token)->content)
-	{
-		if (accept_deeper_tok)
-		{
-			if (layer <= (*token)->prior && (*token)->type != chr)
-				++(*token);
-			else
-				break ;
-		}
-		else
-		{
-			if (layer == (*token)->prior && (*token)->type != chr)
-				++(*token);
-			else
-				break ;
-		}
 	}
 }
 
@@ -123,5 +91,45 @@ bool	detect_pipe(t_token *token, int getfd, int layer)
 	}
 	if (token->type == PIPE)
 		return (1);
+	return (0);
+}
+
+/*REVIEW - check_proc_sub
+
+	Checks if there are process substitution token without commands.
+	Example of wrong prompts are:
+
+	- <(ls)
+	- cat | <(ls)
+	- (cat) <(ls)
+
+	Process substitution must be inside command block with commands,
+	and in the same layer as the commmand block.
+*/
+bool	check_proc_sub(t_exec *exec, t_token *token)
+{
+	int		cmd;
+	int		cmd_layer;
+
+	cmd = 0;
+	while (cmd != exec->last_cmd)
+	{
+		cmd_layer = -1;
+		while (token->content)
+		{
+			if (token->type == COMMAND && token->cmd_num == cmd)
+			{
+				cmd_layer = token->prior;
+			}
+			if (token->type == RED_SUBSHELL && token->cmd_num == cmd)
+			{
+				if (token->prior != cmd_layer)
+					return (set_exit_code(exec, 126), 1);
+			}
+			++token;
+		}
+		token = exec->first_token;
+		++cmd;
+	}
 	return (0);
 }

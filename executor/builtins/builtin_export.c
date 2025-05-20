@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:04 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 17:21:29 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:57:15 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	add_one(char *item, char ***env, t_exec *exec, int pars_data[4]);
 static void	insert(char *item, char ***env, t_exec *exec, int pars_data[4]);
-static char	*remove_plus(char *str);
+static int	malloc_quote_check(t_exec *exec, char **env_str);
 static void	print_export(char **env);
 
 /*
@@ -155,8 +155,7 @@ static void	insert(char *item, char ***env, t_exec *exec, int pars_data[4])
 	if (!(*env)[where])
 	{
 		(*env)[where] = remove_plus(ft_strdup(item));
-		if (!(*env)[where])
-			error(E_MALLOC, exec);
+		malloc_quote_check(exec, &(*env)[where]);
 		*exec->last_env += 1;
 		return ;
 	}
@@ -170,22 +169,28 @@ static void	insert(char *item, char ***env, t_exec *exec, int pars_data[4])
 		(*env)[where][skip_until_content] = 0;
 	}
 	(*env)[where] = _ft_strjoin_free((*env)[where], cont);
-	if (!(*env)[where])
-		error(E_MALLOC, exec);
+	malloc_quote_check(exec, &(*env)[where]);
 }
 
-static char	*remove_plus(char *str)
+static int	malloc_quote_check(t_exec *exec, char **env_str)
 {
 	int	i;
 
-	if (!str)
-		return (NULL);
+	if (*env_str == NULL)
+		error(E_MALLOC, exec);
 	i = 0;
-	while (str[i] && str[i] != '+' && str[i] != '=')
+	while ((*env_str)[i])
+	{
+		if ((*env_str)[i] == '\"' || (*env_str)[i] == '\'')
+		{
+			if (i != 0 && (*env_str)[i - 1] != '\\')
+				*env_str = _cat_string(*env_str, "\\", i, 1);
+			if (*env_str == NULL)
+				error(E_MALLOC, exec);
+		}
 		++i;
-	if (str[i] == '+')
-		_cut_string(str + i, 0, 0);
-	return (str);
+	}
+	return (0);
 }
 
 /*

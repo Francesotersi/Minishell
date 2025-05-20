@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/16 11:49:54 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 13:45:44 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_token
 	int		prior;	// priorita`
 	int		t_quote; //tipo di quote contenuta nel token
 	int		cmd_num;
+	int		is_expanded;	//
 	bool	space_on_right;
 } t_token;
 

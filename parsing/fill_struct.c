@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 09:38:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/19 15:17:59 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:16:04 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ void	fill_struct(t_token *token, t_data *gen)
 			if (gen->input[i] && gen->input[i] == ' ')
 				token[token_id].space_on_right = true;
 			token[token_id].id = token_id;
-			printf("\n\nstringa %d == |%s|\n\n", token_id,token[token_id].content);
 			token_id++;
 		}
 		if (!copy_char_fill(&token[token_id], gen, &i))
@@ -109,9 +108,7 @@ void	fill_struct(t_token *token, t_data *gen)
 			if (gen->input[i] && gen->input[i] == ' ')
 				token[token_id].space_on_right = true;
 			token[token_id].id = token_id;
-			printf("\n\nstringa %d == |%s|\n\n", token_id,token[token_id].content);
 			token_id++;
 		}
-		
 	}
 }

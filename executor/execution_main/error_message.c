@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:47:51 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/16 11:02:19 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:14:21 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,13 @@ static int	bash_message4(int message)
 	if (message == E_HEREDOC_CTRL_D)
 	{
 		_fd_printf(2, "bash: warning: here-doc delimited by end-of-file\n");
+	}
+	else if (message == E_PROC_SUB)
+	{
+		_fd_printf(2, "process substitution must be: \n1)\twith a command;\n2");
+		_fd_printf(2, ")\tin the same layer of command;\n3)\tafter command.\n");
+		_fd_printf(2, "\nWrong example are:\n1)\t<(ls);\n2)\t(cat) <(ls);");
+		_fd_printf(2, "\n3)\t<(ls) echo.\n");
 	}
 	else
 		_fd_printf(2, "ERROR MESSAGE NOT REGISTERED.\n");

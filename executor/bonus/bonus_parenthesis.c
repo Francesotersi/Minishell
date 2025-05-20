@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_parenthesis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:52:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 14:20:27 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:29:30 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ static int	redir_output(t_exec *exec, t_token **token, bool _pipe, int fds[2])
 */
 int	get_subshell_filename(t_exec *exec, t_token **token, int cmd_num)
 {
+	int		filedata[2];
 	int		pipe_fd;
 	int		argv_index;
 	char	*filename;
@@ -204,10 +205,9 @@ int	get_subshell_filename(t_exec *exec, t_token **token, int cmd_num)
 
 	argv_index = find_command_argument_index(exec, *token);
 	if (argv_index <= 0)
-	{
-		bash_message(E_PERMISSION_DENIED, "Process substitution before cmd");
-		return (1);
-	}
+		return (skip_deeper_layers(token, (*token)->prior), 1);
+	filedata[0] = exec->last_in;
+	filedata[1] = exec->last_out;
 	pipe_fd = manage_parenthesis(exec, token, _YES);
 	if (pipe_fd <= 0)
 		error(E_OPEN, exec);
@@ -219,5 +219,7 @@ int	get_subshell_filename(t_exec *exec, t_token **token, int cmd_num)
 		return (close(pipe_fd), free(temp), error(E_MALLOC, exec));
 	free(exec->commands[cmd_num][argv_index]);
 	exec->commands[cmd_num][argv_index] = filename;
+	exec->last_in = filedata[0];
+	exec->last_out = filedata[1];
 	return (save_process_substitution_fd(exec, pipe_fd), free(temp), 0);
 }

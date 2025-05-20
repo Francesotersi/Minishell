@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/19 15:48:12 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:33:37 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,26 +97,6 @@ int	count_char_token(char *str, int *i, int *len, t_data *gen)
 	return (0);
 }
 
-// conta il numero di token nella stringa per poter allocare al struttura
-int	num_token(char *str, t_data *gen)
-{
-	int	i;
-	int	len;
-
-	i = 0;
-	len = 0;
-	while (str[i] != '\0')
-	{
-		while (str[i] == ' ' && str[i] != '\0')
-			i++;
-		if (count_char_token(str, &i, &len, gen) == 1)
-			return (0);
-		if (operator_token(str, &i, &len, gen) == 1)
-			return (0);
-	}
-	return (len);
-}
-
 //		to-do list:
 //	X) Allocare la stringa
 //	X) riempire la struttura con le stringhe
@@ -126,7 +106,25 @@ int	num_token(char *str, t_data *gen)
 //
 // 		RICORDA!
 // 	RITORNA 2 PER DARE SYNTAX ERROR (exit_code = 2)
-int	start_lexing(t_data *gen)
+int	start_lexing_2(t_data *gen, int j, t_token **token)
+{
+	j = intersection(*token, gen);
+	if (j == 1)
+	{
+		*token = reallocation_and_all(gen, *token);
+		if (!*token)
+			return (free_all(*token, gen), 2);
+	}
+	else if (j == 2)
+		return (free_all(*token, gen), 2);
+	if (define_token_and_parenthesis(*token, gen) == 1)
+		return (free_all(*token, gen), 2);
+	if (actual_parser(*token, gen) == 1)
+		return (free_all(*token, gen), 2);
+	return (0);
+}
+
+int	start_lexing(t_data *gen, int j)
 {
 	t_token			*token;
 
@@ -139,16 +137,9 @@ int	start_lexing(t_data *gen)
 	(*token) = (t_token){0};
 	if (alloc_str_token(token, gen) == 1)
 		return (1);
-	if (intersection(token, gen) == 1)
-	{
-		token = reallocation_and_all(gen, token);
-		if (!token)
-			return (free_all(token, gen), 2);
-	}
-	if (define_token_and_parenthesis(token, gen) == 1)
-		return (free_all(token, gen), 2);
-	if (actual_parser(token, gen) == 1)
-		return (free_all(token, gen), 2);
+	if (start_lexing_2(gen, j, &token) == 2)
+		return (2);
 	gen->token = token;
+	printf("\n\n%s\n\n", token[0].content);
 	return (0);
 }

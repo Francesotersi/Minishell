@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:08:56 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/19 15:48:21 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:17:05 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,35 +68,32 @@ void	make_it_string(t_data *gen, t_token *token)
 t_token	*reallocation_and_all(t_data *gen, t_token *token)
 {
 	make_it_string(gen, token);
-	free_all(token, gen);
 	gen->token_num = num_token(gen->input, gen);
 	if (gen->token_num == 0)
 		return (NULL);
+	free_all(token, gen);
 	token = (t_token *)ft_calloc(sizeof(t_token), gen->token_num + 1);
 	if (!token)
 		return (write(2, "bash: malloc error\n", 14), NULL);
 	alloc_str_token(token, gen);
+	token_struct_init(token, gen);
 	fill_struct(token, gen);
 	if_inside_quote(token, gen);
 	expanding_variables(token, gen);
 	remove_quotes_token(token, gen);
 	fix_gen_token_num(token, gen);
-	token_struct_init(token, gen);
 	return (token);
 }
 
 int	intersection(t_token *token, t_data *gen)
 {
-	int	i;
-
-	i = 0;
 	fill_struct(token, gen);
 	if_inside_quote(token, gen);
-	i = expanding_variables(token, gen);
-	remove_quotes_token(token, gen);
+	if (expanding_variables(token, gen) == 1)
+		return (1);
+	if (remove_quotes_token(token, gen) == 1)
+		return (2);
 	fix_gen_token_num(token, gen);
 	token_struct_init(token, gen);
-	if (i == 1)
-		return (1);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_wildcards1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 16:24:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/14 20:09:47 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:27:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	convert_wildcard(char *old_str, char **new_str)
 
 	wdata = (t_wildcard){0};
 	wdata.old_str = old_str;
+	free(*new_str);
 	*new_str = NULL;
 	if (find_directory(&wdata.dir_path, &old_str) == E_MALLOC)
 		return (E_MALLOC);

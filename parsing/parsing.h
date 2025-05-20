@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/19 15:45:03 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:25:05 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,11 @@ typedef struct s_data	t_data;
 typedef struct s_token	t_token;
 
 //  start_lexing.c
-int		start_lexing(t_data *gen);
+int		start_lexing(t_data *gen, int j);
 int		num_token(char *str, t_data *gen);
+int		count_char_token(char *str, int *i, int *len, t_data *gen);
+int		operator_token(char *str, int *i, int *len, t_data *gen);
+int		quotes_token(char *str, int *i, int *len, int *temp);
 
 //  fill_struct.c
 void	fill_struct(t_token *token, t_data *gen);
@@ -63,12 +66,13 @@ void	skip_single_quotes(char *str, int *i);
 void	ft_error(char *str, int exit_c, t_data *gen, char *token);
 int		heredoc_d_case(t_token *token, int *id);
 void	if_inside_quote(t_token *token, t_data *gen);
+int		num_token(char *str, t_data *gen);
 
 // struct_alloc.c
 int		alloc_str_token(t_token *token, t_data *gen);
 
 // remove_quotes.c
-void	remove_quotes_token(t_token *token, t_data *gen);
+int		remove_quotes_token(t_token *token, t_data *gen);
 void	fix_gen_token_num(t_token *token, t_data *gen);
 
 // define_token.c

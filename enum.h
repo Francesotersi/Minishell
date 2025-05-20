@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:15:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/16 10:48:26 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:03:15 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ enum e_exec_errors
 	E_CMD_NOTFOUND,
 	E_IS_DIRECTORY,
 	E_PERMISSION_DENIED,
+	E_PROC_SUB,
 };
 
 /*REVIEW - sub_strlen enum 

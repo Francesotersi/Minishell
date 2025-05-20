@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:58:54 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/19 12:09:34 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:23:06 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,24 @@ void	if_inside_quote(t_token *token, t_data *gen)
 		}
 		id++;
 	}
+}
+
+// conta il numero di token nella stringa per poter allocare al struttura
+int	num_token(char *str, t_data *gen)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = 0;
+	while (str[i] != '\0')
+	{
+		while (str[i] == ' ' && str[i] != '\0')
+			i++;
+		if (count_char_token(str, &i, &len, gen) == 1)
+			return (0);
+		if (operator_token(str, &i, &len, gen) == 1)
+			return (0);
+	}
+	return (len);
 }

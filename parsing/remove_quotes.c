@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/19 09:11:49 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:26:51 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*actual_removal_temp_alloc(t_token *token)
 
 	temp = ft_strdup(token->content);
 	free(token->content);
-	token->content = (char *)ft_calloc(ft_strlen(temp) - 2 + 1, sizeof(char));
+	token->content = (char *)ft_calloc(ft_strlen(temp) + 1, sizeof(char));
 	if (!token->content)
 	{
 		free_all(token, NULL);
@@ -39,7 +39,20 @@ char	*actual_removal_temp_alloc(t_token *token)
 	return (temp);
 }
 
-void	actual_removal(t_token *token, char *temp)
+int	check_before_escape(t_token *token, int *j, char *temp, int *i)
+{
+	if (temp[(*i)] && temp[(*i)] == '\\')
+	{
+		(*i)++;
+		if (temp[(*i)] && (temp[(*i)] == '\"' || \
+			temp[(*i)] == '\''))
+			token->content[(*j)++] = temp[(*i)++];
+		return (1);
+	}
+	return (0);
+}
+
+int	actual_removal(t_token *token, char *temp, t_data *gen)
 {
 	int		j;
 	char	quote;
@@ -50,24 +63,27 @@ void	actual_removal(t_token *token, char *temp)
 	while (temp[i] != '\0')
 	{
 		quote = temp[i];
+		if (check_before_escape(token, &j, temp, &i) == 1)
+				continue ;
 		if (quote == '\"' || quote == '\'')
 		{
 			i++;
 			while (temp[i] != '\0' && temp[i] != quote)
-			{
 				token->content[j++] = temp[i++];
-			}
+			if (temp[i] == '\0')
+				return (ft_error("syntax error near quote", 2, gen, ""), 1);
 			i++;
 			continue ;
 		}
 		token->content[j++] = temp[i++];
 	}
 	free(temp);
+	return (0);
 }
 
 // funzione chiamata nel file fill_struct.c in fondo 
 // all`ultima funzione del file
-void	remove_quotes_token(t_token *token, t_data *gen)
+int	remove_quotes_token(t_token *token, t_data *gen)
 {
 	int		id;
 	int		i;
@@ -76,15 +92,15 @@ void	remove_quotes_token(t_token *token, t_data *gen)
 	i = 0;
 	id = 0;
 	temp = NULL;
-	(void)gen;
 	while (token[id].content != NULL)
 	{
 		while (token[id].content[i] != '\0')
 		{
-			if (token[id].content[i] == '\'' || token[id].content[i] == '\"')
+			if ((token[id].content[i] == '\'' || token[id].content[i] == '\"' ))
 			{
 				temp = actual_removal_temp_alloc(&token[id]);
-				actual_removal(&token[id], temp);
+				if (actual_removal(&token[id], temp, gen) == 1)
+					return (free(temp), 1);
 				break ;
 			}
 			i++;
@@ -92,4 +108,5 @@ void	remove_quotes_token(t_token *token, t_data *gen)
 		i = 0;
 		id++;
 	}
+	return (0);
 }
