@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:46 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 16:47:59 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:52:38 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ void	alloc_memory(t_exec *exec, t_token *token, int cmd_num)
 	exec->proc_sub_fds = (int *)ft_calloc(proc_sub_num(token) + 1, sizeof(int));
 	if (!exec->proc_sub_fds)
 		error(E_MALLOC, exec);
-	exec->proc_sub_temp_fds = (int *)ft_calloc((deepest(token) \
-	+ proc_sub_num(token)) * 2, sizeof(int));
+	exec->proc_sub_temp_fds = (int *)ft_calloc(proc_sub_num(token) + \
+	deepest(token) * 2, sizeof(int));
 	if (!exec->proc_sub_temp_fds)
 		error(E_MALLOC, exec);
 }

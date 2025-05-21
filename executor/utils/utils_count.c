@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_count.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 20:24:35 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/21 10:34:32 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:36:37 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,44 +82,20 @@ int	find_command_argument_index(t_exec *exec, t_token *token)
 
 /*REVIEW - proc_sub_num
 
-	Returns the command block with the most redir_subshells.
-	Used to allocate the right size for 
-	the proc_sub_fds and proc_sub_temp_fds array.
-
-//	1)	We start from the first token and go to the end of the command line;
-	2)	We count the number of red_subshells in the current command block;
-	3)	If we find a red_subshell token, we increment the red_subshell count;
-	4)	If we find a command token, we increment the command argument
-		count;
-	5)	The biggest red_subshell count is returned in the record variable.
+	Returns the process substitution token, <() == RED_SUBSHELL
+	Used to allocate memory for temp files.
 */
 int	proc_sub_num(t_token *token)
 {
-	int		record;
-	int		curr_score;
-	int		curr_layer;
-	t_token	*curr_token;
+	int		proc_n;
 
-	record = 0;
+	proc_n = 0;
 	while (token->content)
 	{
-		curr_token = token;
-		curr_layer = token->prior;
-		curr_score = 0;
-		while (token->prior >= curr_layer)
-		{
-			curr_score += (token->type == RED_SUBSHELL);
-			if (token->type == RED_SUBSHELL)
-				skip_deeper_layers(&token, curr_layer);
-			else
-				++token;
-		}
-		record = bigger(record, curr_score);
-		token = curr_token;
-		next_cmd_block(&token, curr_layer, _NO);
-		token += (token->content != NULL);
+		proc_n += (token->type == RED_SUBSHELL);
+		++token;
 	}
-	return (record);
+	return (proc_n + 2);
 }
 
 /*REVIEW - deepest

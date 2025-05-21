@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 16:35:03 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:05:01 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ int	ft_exit(char **args, t_exec *exec)
 	}
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);
+	close(0);
+	close(1);
+	close(2);
 	return (exit(exit_code), 0);
 }
 
@@ -99,5 +102,8 @@ int	exit_process(t_exec *exec)
 	}
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);
+	close(0);
+	close(1);
+	close(2);
 	return (exit(exit_code), 0);
 }
