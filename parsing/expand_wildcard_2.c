@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:08:56 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/20 15:17:05 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:01:24 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	make_it_string(t_data *gen, t_token *token)
 		ft_error("alloc error", 2, gen, "");
 		return ;
 	}
-	fill_input(gen,token);
+	fill_input(gen, token);
 }
 
 t_token	*reallocation_and_all(t_data *gen, t_token *token)
@@ -85,12 +85,19 @@ t_token	*reallocation_and_all(t_data *gen, t_token *token)
 	return (token);
 }
 
+//return 2 per syntax error
 int	intersection(t_token *token, t_data *gen)
 {
+	int	i;
+
+	i = 0;
 	fill_struct(token, gen);
 	if_inside_quote(token, gen);
-	if (expanding_variables(token, gen) == 1)
+	i = expanding_variables(token, gen);
+	if (i == 1)
 		return (1);
+	else if (i == 2)
+		return (2);
 	if (remove_quotes_token(token, gen) == 1)
 		return (2);
 	fix_gen_token_num(token, gen);

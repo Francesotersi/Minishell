@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/20 15:25:05 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:50:15 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		expanding_variables(t_token *token, t_data *gen);
 
 // expand_env_2.c
 char	*what_to_search(t_token *token, int *i);
-void	expand_exit_code(t_token *token, t_data *gen);
+void	expand_exit_code(t_token *token, t_data *gen, int *id, int *i);
 void	expand_exit_code_2(t_token *token, t_data *gen, int *i,
 			char *exit_code);
 void	insert_exit_code(t_token *token, int *i, int e_l, char *exit_code);
@@ -112,5 +112,8 @@ int		actual_parser(t_token *token, t_data *gen);
 
 // parser_2.
 int		even_more_cases(t_token *tok, int *id, t_data *gen);
+
+// ambiguous_redir.c
+int		ambiguous_redir(t_token *token, t_data *gen);
 
 #endif

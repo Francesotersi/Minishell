@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/19 17:05:12 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:36:07 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	execute(t_token *token, void *data, int debug)
 {
 	t_exec	exec;
 
-	p_tok(token);
+	// p_tok(token);
 	exec = (t_exec){0};
 	get_main_struct_data(&exec, data, debug);
 	merge_tokens(token, debug);
@@ -75,7 +75,7 @@ int	execute(t_token *token, void *data, int debug)
 		return (free_memory(&exec), bash_message(E_PROC_SUB, NULL), 0);
 	if (prepare_here_docs(&exec, token) == CTRL_C)
 		return (free_memory(&exec), 0);
-	set_execve_signal();
+	set_last_signal();
 	get_commands_data(&exec, token);
 	get_paths_data(&exec, token);
 	while (token->prior > 0)
@@ -89,7 +89,7 @@ int	execute(t_token *token, void *data, int debug)
 	if (token->content)
 		execute_loop(token, &exec);
 	wait_everyone(&exec);
-	p_end(&exec);
+	// p_end(&exec);
 	return (free_memory(&exec), 0);
 }
 
@@ -243,6 +243,8 @@ int	wait_everyone(t_exec *exec)
 	{
 		if (exec->pid_list[i])
 		{
+			if (i == exec->curr_cmd - 1)
+				set_execve_signal();
 			waitpid(exec->pid_list[i], &exit_code, 0);
 			if (i == exec->curr_cmd - 1)
 				*exec->exit_code = exit_code / 256;

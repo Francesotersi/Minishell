@@ -6,13 +6,14 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 18:41:56 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/16 16:21:36 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 11:26:36 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
 static int	signals_check(char *line, int *fd, t_exec *exec);
+static void	here_doc_loop(char **line, t_exec *exec);
 static int	get_here_doc_file(char *limiter, t_exec *exec);
 
 /*REVIEW - prepare_here_docs
@@ -38,7 +39,7 @@ int	prepare_here_docs(t_exec *exec, t_token *token)
 			if (exec->here_doc_fds[i])
 				close_and_reset(&exec->here_doc_fds[i]);
 			exec->here_doc_fds[i] = get_here_doc_file(token->content, exec);
-			if (exit_code_sig_received == CTRL_C)
+			if (g_exit_code_sig_received == CTRL_C)
 				return (CTRL_C);
 		}
 		++token;
@@ -61,34 +62,24 @@ int	prepare_here_docs(t_exec *exec, t_token *token)
 		It will be saved in a here_doc_fds array, and closed at the end
 		of its own command block.
 */
-// if (!isatty(0) || exit_code_sig_received == CTRL_C)																										// da mettere
-// 		return (close(fd), unlink("here_doc"), dup2(exec->stdin_fd, 0), 9999999);											// in una funzione
-// if (!line)																												// esterna
-// 		return (close(fd), unlink("here_doc"), _fd_printf(2, "bash: warning: here-document delimited by end-of-file"));
-
 static int	get_here_doc_file(char *limiter, t_exec *exec)
 {
 	int		fd;
 	char	*line;
 	int		limiter_len;
 
-	
+	line = NULL;
 	fd = open(DOC_NAME, INFILE_DOC, 0666);
 	if (fd < 0)
 		error(E_OPEN, exec);
-	ft_putstr_fd("> ", 2);
-	set_here_doc_signal();
-	line = get_next_line_bonus(0);
+	here_doc_loop(&line, exec);
 	if (signals_check(line, &fd, exec) == 1)
 		return (fd);
 	limiter_len = ft_strlen(limiter);
 	while ((line) && (double_cmp(limiter, line, limiter_len, 1)) != 0)
 	{
 		write_here_doc(line, exec, fd);
-		ft_putstr_fd("> ", exec->stdout_fd);
-		free(line);
-		line = get_next_line_bonus(0);
-		set_here_doc_signal();
+		here_doc_loop(&line, exec);
 		if (signals_check(line, &fd, exec) == 1)
 			return (fd);
 	}
@@ -97,6 +88,14 @@ static int	get_here_doc_file(char *limiter, t_exec *exec)
 	if (fd < 0)
 		return (free(line), unlink(DOC_NAME), error(E_OPEN, exec));
 	return (free(line), unlink(DOC_NAME), fd);
+}
+
+static void	here_doc_loop(char **line, t_exec *exec)
+{
+	set_here_doc_signal();
+	ft_putstr_fd("> ", exec->stdout_fd);
+	free(*line);
+	*line = get_next_line_bonus(0);
 }
 
 /*
@@ -145,7 +144,7 @@ void	write_here_doc(char *line, t_exec *exec, int fd)
 
 static int	signals_check(char *line, int *fd, t_exec *exec)
 {
-	if (!isatty(0) || exit_code_sig_received == CTRL_C)
+	if (!isatty(0) || g_exit_code_sig_received == CTRL_C)
 	{
 		write(1, "\n", 1);
 		close_and_reset(fd);
@@ -153,7 +152,7 @@ static int	signals_check(char *line, int *fd, t_exec *exec)
 		dup2(exec->stdin_fd, 0);
 		return (1);
 	}
-	if (!line || exit_code_sig_received == CTRL_D)
+	if (!line || g_exit_code_sig_received == CTRL_D)
 	{
 		dup2(exec->stdin_fd, 0);
 		bash_message(E_HEREDOC_CTRL_D, NULL);

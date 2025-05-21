@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 09:17:14 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/16 09:09:52 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:58:24 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,31 +69,18 @@ void	expand_exit_code_2(t_token *token, t_data *gen, int *i,
 	}
 }
 
-void	expand_exit_code(t_token *token, t_data *gen)
+void	expand_exit_code(t_token *token, t_data *gen, int *id, int *i)
 {
-	int		id;
-	int		i;
 	char	*exit_code;
 
-	id = -1;
-	i = 0;
 	exit_code = NULL;
-	while (token[++id].content != NULL)
-	{
-		i = 0;
-		while (token[id].content[i] != '\0')
-		{
-			if (token[id].content[i] == '\'')
-				skip_single_quotes(token[id].content, &i);
-			else if (token[id].content[i] == '\"')
-				expand_exit_code_2(&token[id], gen, &i, exit_code);
-			else if (token[id].content[i] == '$' && \
-					token[id].content[i + 1] == '?')
-				expand_exit_code_2(&token[id], gen, &i, exit_code);
-			else
-				i++;
-		}
-	}
+	if (token[(*id)].content[(*i)] == '\"')
+		expand_exit_code_2(&token[(*id)], gen, i, exit_code);
+	else if (token[(*id)].content[(*i)] == '$' && \
+		token[(*id)].content[(*i) + 1] == '?')
+		expand_exit_code_2(&token[(*id)], gen, i, exit_code);
+	else
+		(*i)++;
 }
 
 // returns the string that has to be searched inside the env

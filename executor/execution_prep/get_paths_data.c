@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_paths_data.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/14 22:59:42 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:23:18 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ static int	get_one(t_exec *exec, char **command, char **path)
 	char	*temp;
 	int		i;
 
+	if (!command || !command[0])
+		return (0);
 	i = 0;
 	if (_add_sign_left(command, '/') != 0)
 		error(E_MALLOC, exec);

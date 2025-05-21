@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_commands_data.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 16:32:36 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 16:44:10 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:15:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,24 @@ int	get_commands_data(t_exec *exec, t_token *token)
 	int	cmd_layer;
 
 	get_builtin_functions(exec);
-	cmd_num = 0;
 	while (token->content)
 	{
 		if (token->type == COMMAND)
 		{
 			cmd_layer = token->prior;
+			cmd_num = token->cmd_num;
 			get_one(exec, token, cmd_num, cmd_layer);
 			exec->which_cmd[cmd_num] = \
 			is_a_builtin_cmd(exec->commands[cmd_num][0]);
-			++cmd_num;
-			while ((++token)->type != COMMAND)
-				;
+			++token;
 		}
 		else
 			++token;
 	}
+	cmd_num = -1;
+	while (++cmd_num != exec->last_cmd)
+		if (!exec->commands[cmd_num])
+			create_empty_matrix(exec, cmd_num);
 	return (0);
 }
 

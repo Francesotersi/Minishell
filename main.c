@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/20 15:23:40 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:33:33 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	start(t_data *gen, int i, int j)
 				return (1);
 			else if (i != 2)
 			{
-				execute(gen->token, (void*)gen, 0);
+				execute(gen->token, (void *)gen, 0);
 				assign_signal_exit_code(gen);
 				free_all(gen->token, gen);
 			}
@@ -52,7 +52,7 @@ int	main(int ac, char **av, char **env)
 	(void)ac, (void)av;
 	gen = (t_data){0};
 	if (cpy_env(env, &gen.env, &gen.env_size, &gen.last_env) != 0)
-		return (/* malloc error */1);
+		return (ft_error("env error", -1, &gen, ""), 1);
 	if (start(&gen, i, j) == 1)
 		return (1);
 	_free_matrix(gen.env);

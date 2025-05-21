@@ -38,6 +38,7 @@ SRCS = \
   executor/execution_prep/get_paths_data.c \
   executor/execution_prep/get_tokens.c \
   executor/memory_management/memory.c \
+  executor/memory_management/memory2.c \
   executor/utils/printf_fd.c \
   executor/utils/utils_count.c \
   executor/utils/utils_debug.c \
@@ -66,6 +67,7 @@ SRCS = \
   parsing/expand_wildcard.c \
   parsing/expand_wildcard_2.c \
   parsing/parser_2.c \
+  parsing/ambiguous_redir.c \
 
 #–– Object files go under obj/, mirroring the tree
 OBJ_DIR = obj

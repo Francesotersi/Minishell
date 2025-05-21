@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/20 15:26:51 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:01:32 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	actual_removal(t_token *token, char *temp, t_data *gen)
 	{
 		quote = temp[i];
 		if (check_before_escape(token, &j, temp, &i) == 1)
-				continue ;
+			continue ;
 		if (quote == '\"' || quote == '\'')
 		{
 			i++;

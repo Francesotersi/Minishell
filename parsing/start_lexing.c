@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/20 15:33:37 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 08:24:45 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,5 @@ int	start_lexing(t_data *gen, int j)
 	if (start_lexing_2(gen, j, &token) == 2)
 		return (2);
 	gen->token = token;
-	printf("\n\n%s\n\n", token[0].content);
 	return (0);
 }

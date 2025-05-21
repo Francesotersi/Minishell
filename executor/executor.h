@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/20 14:34:54 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:17:08 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,6 +303,7 @@ void	alloc_memory(t_exec *exec, t_token *token, int cmd_num);
 void	free_memory(t_exec *memory);
 void	*free_debug_data(t_debug_data *data);
 void	get_main_struct_data(t_exec *exec, void *data, int debug);
+void	create_empty_matrix(t_exec *exec, int cmd_num);
 
 //SECTION -	Utils
 
