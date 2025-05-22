@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:56:23 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/21 14:29:54 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 11:10:20 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ extern int	g_exit_code_sig_received;
 
 typedef struct s_data
 {
-	char	*input;
-	int		exit_code;
-	int		token_num;
-	char	**env;
-	int		last_env;
-	int		env_size;
-	t_token	*token;
+	char				*input;
+	unsigned char		exit_code;
+	int					token_num;
+	char				**env;
+	int					last_env;
+	int					env_size;
+	t_token				*token;
 }	t_data;
 
 typedef struct s_token
@@ -46,8 +46,8 @@ typedef struct s_token
 	int		prior;	// priorita`
 	int		t_quote; //tipo di quote contenuta nel token
 	int		cmd_num;
-	int		is_expanded;	//
-	bool	space_on_right;
+	int		is_expanded; //se il tok e` stato espanso o meno
+	bool	space_on_right; //se e` presente uno spazio alla dx del tok
 }	t_token;
 
 //signals

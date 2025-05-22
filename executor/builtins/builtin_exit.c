@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 09:42:59 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 11:11:13 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	check_args(char **args, t_exec *exec);
 */
 int	ft_exit(char **args, t_exec *exec)
 {
-	int	exit_code;
+	unsigned char	exit_code;
 
 	set_exit_code(exec, 0);
 	if (check_args(args, exec) || exec->at_least_one_pipe)

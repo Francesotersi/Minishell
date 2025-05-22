@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/21 10:01:32 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:26:22 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,15 @@ int	check_before_escape(t_token *token, int *j, char *temp, int *i)
 {
 	if (temp[(*i)] && temp[(*i)] == '\\')
 	{
-		(*i)++;
-		if (temp[(*i)] && (temp[(*i)] == '\"' || \
+		if (temp[++(*i)] && (temp[(*i)] == '\"' || \
 			temp[(*i)] == '\''))
-			token->content[(*j)++] = temp[(*i)++];
+			token->content[(*j)++] = temp[(*i)];
 		return (1);
 	}
 	return (0);
 }
 
-int	actual_removal(t_token *token, char *temp, t_data *gen)
+int	actual_removal(t_token *token, char *temp)
 {
 	int		j;
 	char	quote;
@@ -69,9 +68,8 @@ int	actual_removal(t_token *token, char *temp, t_data *gen)
 		{
 			i++;
 			while (temp[i] != '\0' && temp[i] != quote)
-				token->content[j++] = temp[i++];
-			if (temp[i] == '\0')
-				return (ft_error("syntax error near quote", 2, gen, ""), 1);
+				if (actual_removal_2(token, temp, &i, &j) == 1)
+					break ;
 			i++;
 			continue ;
 		}
@@ -83,7 +81,7 @@ int	actual_removal(t_token *token, char *temp, t_data *gen)
 
 // funzione chiamata nel file fill_struct.c in fondo 
 // all`ultima funzione del file
-int	remove_quotes_token(t_token *token, t_data *gen)
+int	remove_quotes_token(t_token *token)
 {
 	int		id;
 	int		i;
@@ -99,7 +97,7 @@ int	remove_quotes_token(t_token *token, t_data *gen)
 			if ((token[id].content[i] == '\'' || token[id].content[i] == '\"' ))
 			{
 				temp = actual_removal_temp_alloc(&token[id]);
-				if (actual_removal(&token[id], temp, gen) == 1)
+				if (actual_removal(&token[id], temp) == 1)
 					return (free(temp), 1);
 				break ;
 			}

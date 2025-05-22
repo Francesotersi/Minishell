@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 20:24:35 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 09:21:14 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 10:55:27 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	find_command_argument_index(t_exec *exec, t_token *token)
 			if (cmd_argc == 0)
 				return (-1);
 			skip_deeper_layers(&token, exec->prior_layer);
+			--token;
 			++cmd_argc;
 		}
 		else

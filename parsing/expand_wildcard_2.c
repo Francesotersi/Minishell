@@ -6,11 +6,24 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:08:56 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/21 10:01:24 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:25:11 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int	actual_removal_2(t_token *token, char *temp, int *i, int *j)
+{
+	if (temp[(*i)] && temp [(*i)] == '\\' && temp[(*i) + 1] && \
+		(temp[(*i) + 1] == '\"' || temp[(*i) + 1] == '\''))
+	{
+		(*i)++;
+		token->content[(*j)++] = temp[(*i)];
+		return (1);
+	}
+	token->content[(*j)++] = temp[(*i)++];
+	return (0);
+}
 
 void	fill_input(t_data *gen, t_token *token)
 {
@@ -80,7 +93,7 @@ t_token	*reallocation_and_all(t_data *gen, t_token *token)
 	fill_struct(token, gen);
 	if_inside_quote(token, gen);
 	expanding_variables(token, gen);
-	remove_quotes_token(token, gen);
+	remove_quotes_token(token);
 	fix_gen_token_num(token, gen);
 	return (token);
 }
@@ -98,7 +111,7 @@ int	intersection(t_token *token, t_data *gen)
 		return (1);
 	else if (i == 2)
 		return (2);
-	if (remove_quotes_token(token, gen) == 1)
+	if (remove_quotes_token(token) == 1)
 		return (2);
 	fix_gen_token_num(token, gen);
 	token_struct_init(token, gen);

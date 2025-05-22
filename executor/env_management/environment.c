@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:26:15 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 17:01:21 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/22 10:46:37 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,8 @@ char	*get_pwd_address(char **env)
 		home_len = ft_strlen(home);
 		if (ft_strncmp(pwd + 4, home + 5, home_len - 5))
 			return (ft_strdup(pwd + 4));
-		return (_ft_strjoin_free(ft_strdup("~/"), ft_strdup(pwd + home_len)));
+		return (_ft_strjoin_free(ft_strdup("~"), \
+				ft_strdup(pwd + home_len - 1)));
 	}
 	return (NULL);
 }

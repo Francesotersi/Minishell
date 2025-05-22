@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/22 09:50:00 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 11:35:32 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	start(t_data *gen, int i, int j)
 	while (1)
 	{
 		reset_standard_signal();
-		gen->input = readline("minishell$> ");
+		gen->input = readline("Minishell$> ");
 		if (!gen->input)
 			break ;
 		if (gen->input[0] != '\0')

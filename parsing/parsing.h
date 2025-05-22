@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/21 12:50:15 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:24:35 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int		num_token(char *str, t_data *gen);
 int		alloc_str_token(t_token *token, t_data *gen);
 
 // remove_quotes.c
-int		remove_quotes_token(t_token *token, t_data *gen);
+int		remove_quotes_token(t_token *token);
 void	fix_gen_token_num(t_token *token, t_data *gen);
 
 // define_token.c
@@ -106,6 +106,7 @@ int		find_char(t_token *token, char c);
 // expand_wildcard_2.c
 t_token	*reallocation_and_all(t_data *gen, t_token *token);
 int		intersection(t_token *token, t_data *gen);
+int		actual_removal_2(t_token *token, char *temp, int *i, int *j);
 
 // parser.c
 int		actual_parser(t_token *token, t_data *gen);

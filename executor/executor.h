@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 09:43:26 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 11:10:49 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ struct s_exec
 	int				*here_doc_fds;
 	int				*proc_sub_fds;
 	int				*proc_sub_temp_fds;
-	int				*exit_code;
+	unsigned char	*exit_code;
 	int				pipe_fds[2];
 	int				last_in;
 	int				last_out;
