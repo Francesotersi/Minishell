@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:04 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/05 15:24:17 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:57:15 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	add_one(char *item, char ***env, t_exec *exec, int pars_data[4]);
 static void	insert(char *item, char ***env, t_exec *exec, int pars_data[4]);
-static char	*remove_plus(char *str);
+static int	malloc_quote_check(t_exec *exec, char **env_str);
 static void	print_export(char **env);
 
 /*
@@ -41,7 +41,9 @@ static void	print_export(char **env);
 			no initialized data;
 		2)	For every argument in args, we loop using index i;
 		3)	If the parsing succeds, and if there are no pipe, we add the new
-			value in the environment (see below add_one).
+			value in the environment (see below add_one)
+			The add is skipped if the arg has no '=' 
+			and is already on the environment.
 			Else if the parsing fails, we print an error message and set ES to
 			1, and we go to the next argument.
 */
@@ -58,12 +60,14 @@ int	ft_export(char **args, t_exec *exec)
 	{
 		if (!env_pars(args[i], &pars_data[0], &pars_data[1], &pars_data[2]))
 		{
-			if (exec->at_least_one_pipe == _NO)
+			if (exec->at_least_one_pipe == _NO \
+				&& (ft_strchr(args[i], '=') || \
+				!ft_getenv(*exec->env, args[i], NULL)))
 				add_one(args[i], exec->env, exec, pars_data);
 		}
 		else
 		{
-			bash_message(E_ENV_PARSING, args[i]);
+			bash_message(E_EXPORT_PARSING, args[i]);
 			*exec->exit_code = 1;
 		}
 		++i;
@@ -114,7 +118,8 @@ static void	add_one(char *item, char ***env, t_exec *exec, int pars_data[4])
 	if (!name)
 		error(E_MALLOC, exec);
 	_sub_strcpy(name, item, "+=", EXCL);
-	if (ft_getenv(*env, name, &where) && pars_data[ENV_NO_EQ_PLUS] != 2)
+	if (ft_getenv(*env, name, &where)
+		&& (pars_data[ENV_NO_EQ_PLUS] != 2 || !ft_strchr((*env)[where], '=')))
 	{
 		free((*env)[where]);
 		(*env)[where] = NULL;
@@ -150,8 +155,7 @@ static void	insert(char *item, char ***env, t_exec *exec, int pars_data[4])
 	if (!(*env)[where])
 	{
 		(*env)[where] = remove_plus(ft_strdup(item));
-		if (!(*env)[where])
-			error(E_MALLOC, exec);
+		malloc_quote_check(exec, &(*env)[where]);
 		*exec->last_env += 1;
 		return ;
 	}
@@ -165,22 +169,28 @@ static void	insert(char *item, char ***env, t_exec *exec, int pars_data[4])
 		(*env)[where][skip_until_content] = 0;
 	}
 	(*env)[where] = _ft_strjoin_free((*env)[where], cont);
-	if (!(*env)[where])
-		error(E_MALLOC, exec);
+	malloc_quote_check(exec, &(*env)[where]);
 }
 
-static char	*remove_plus(char *str)
+static int	malloc_quote_check(t_exec *exec, char **env_str)
 {
 	int	i;
 
-	if (!str)
-		return (NULL);
+	if (*env_str == NULL)
+		error(E_MALLOC, exec);
 	i = 0;
-	while (str[i] && str[i] != '+' && str[i] != '=')
+	while ((*env_str)[i])
+	{
+		if ((*env_str)[i] == '\"' || (*env_str)[i] == '\'')
+		{
+			if (i != 0 && (*env_str)[i - 1] != '\\')
+				*env_str = _cat_string(*env_str, "\\", i, 1);
+			if (*env_str == NULL)
+				error(E_MALLOC, exec);
+		}
 		++i;
-	if (str[i] == '+')
-		_cut_string(str + i, 0, 0);
-	return (str);
+	}
+	return (0);
 }
 
 /*
@@ -190,6 +200,11 @@ static char	*remove_plus(char *str)
 		declare -x ___M_A_N
 		declare -x MAN="Carlo Conti"
 		...
+		lowest ascii first, then the others.
+		lowest_ascii_matrix is a function that returns the lowest ascii
+		character in the matrix, and NULL if there are no more elements.
+		The second parameter is the current lowest element, so we can
+		loop through the matrix and find the next lowest element.
 
 //		Operations:
 		1)	If the environment is NULL, we return;

@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:40 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 10:05:50 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:50:15 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@ typedef struct s_data	t_data;
 typedef struct s_token	t_token;
 
 //  start_lexing.c
-int		start_lexing(t_data *gen);
+int		start_lexing(t_data *gen, int j);
+int		num_token(char *str, t_data *gen);
+int		count_char_token(char *str, int *i, int *len, t_data *gen);
+int		operator_token(char *str, int *i, int *len, t_data *gen);
+int		quotes_token(char *str, int *i, int *len, int *temp);
 
 //  fill_struct.c
 void	fill_struct(t_token *token, t_data *gen);
@@ -60,11 +64,16 @@ void	free_struct(t_token *token);
 // utils_2.c
 void	skip_single_quotes(char *str, int *i);
 void	ft_error(char *str, int exit_c, t_data *gen, char *token);
+int		heredoc_d_case(t_token *token, int *id);
+void	if_inside_quote(t_token *token, t_data *gen);
+int		num_token(char *str, t_data *gen);
 
 // struct_alloc.c
 int		alloc_str_token(t_token *token, t_data *gen);
+
 // remove_quotes.c
-void	remove_quotes_token(t_token *token, t_data *gen);
+int		remove_quotes_token(t_token *token, t_data *gen);
+void	fix_gen_token_num(t_token *token, t_data *gen);
 
 // define_token.c
 int		define_token_and_parenthesis(t_token *token, t_data *gen);
@@ -76,11 +85,11 @@ int		is_cmd_2(t_token *tok, int *id);
 int		is_cmd(t_token *tok, t_data *gen);
 
 // expand_env.c
-void	expanding_variables(t_token *token, t_data *gen);
+int		expanding_variables(t_token *token, t_data *gen);
 
 // expand_env_2.c
 char	*what_to_search(t_token *token, int *i);
-void	expand_exit_code(t_token *token, t_data *gen);
+void	expand_exit_code(t_token *token, t_data *gen, int *id, int *i);
 void	expand_exit_code_2(t_token *token, t_data *gen, int *i,
 			char *exit_code);
 void	insert_exit_code(t_token *token, int *i, int e_l, char *exit_code);
@@ -92,8 +101,19 @@ int		count_parenthesis(t_token *token, t_data *gen);
 
 // expand_wildcard.c
 int		expand_wildcard(t_token *token, t_data *gen);
+int		find_char(t_token *token, char c);
+
+// expand_wildcard_2.c
+t_token	*reallocation_and_all(t_data *gen, t_token *token);
+int		intersection(t_token *token, t_data *gen);
 
 // parser.c
 int		actual_parser(t_token *token, t_data *gen);
+
+// parser_2.
+int		even_more_cases(t_token *tok, int *id, t_data *gen);
+
+// ambiguous_redir.c
+int		ambiguous_redir(t_token *token, t_data *gen);
 
 #endif

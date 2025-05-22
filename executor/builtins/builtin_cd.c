@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/07 17:19:56 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:41:24 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
 static int	up_env(char **update, char *old_pwd, char *pwd, t_exec *exec);
-static void	back_to_home(char **env, char **new);
+static int	back_to_home(char **env, char **new);
+static int	dir_is_invalid(char *dir, t_exec *exec);
 
 /*REVIEW - ft_cd
 
@@ -48,16 +49,16 @@ int	ft_cd(char **args, t_exec *exec)
 	char	*new;
 
 	*exec->exit_code = 0;
-	if (exec->at_least_one_pipe)
-		return (0);
 	if (args[1] && args[2])
 		return (bash_message(E_CD_ARGS, NULL), set_exit_code(exec, 1));
+	if (dir_is_invalid(args[1], exec) || exec->at_least_one_pipe)
+		return (0);
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd)
 		error(E_MALLOC, exec);
 	new = args[1];
-	if (!args[1])
-		back_to_home(*exec->env, &new);
+	if (!args[1] && back_to_home(*exec->env, &new) == 1)
+		return (free(old_pwd), set_exit_code(exec, 1));
 	if (chdir(new) != 0)
 		return (bash_message(E_CD, new), free(old_pwd), set_exit_code(exec, 1));
 	pwd = getcwd(NULL, 0);
@@ -69,23 +70,33 @@ int	ft_cd(char **args, t_exec *exec)
 	return (up_env(pwd_update, old_pwd, pwd, exec), 0);
 }
 
+static int	dir_is_invalid(char *dir, t_exec *exec)
+{
+	if (!dir)
+		return (_NO);
+	if (access(dir, F_OK) == -1)
+	{
+		bash_message(E_CD, dir);
+		set_exit_code(exec, 1);
+		return (_YES);
+	}
+	return (_NO);
+}
+
 /*REVIEW - back_to_home
 
 //	cd without arguments change current directory to $HOME (from env).		
 	If $HOME is unsetted, bash prints a unique message.
 */
-static void	back_to_home(char **env, char **new)
+static int	back_to_home(char **env, char **new)
 {
-	*new = ft_getenv(env, "HOME", NULL);
+	*new = get_env(env, "HOME");
 	if (!*new)
 	{
 		bash_message(E_CD_NOHOME, NULL);
-		return ;
+		return (1);
 	}
-	while (**new && **new != '=')
-		++(*new);
-	if (**new == '=')
-		++(*new);
+	return (0);
 }
 
 /*REVIEW - update_environment

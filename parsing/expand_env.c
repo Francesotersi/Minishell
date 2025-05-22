@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 08:55:30 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/08 09:50:46 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:03:27 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	expand_var(t_token *tok, int *i, t_data *gen, char *search)
 		{
 			if (tok->content[(*i)] && tok->content[(*i)] == '$' && \
 			tok->content[(*i) + 1] != '\"' && tok->content[(*i) + 1] != '\'' \
-			&& tok->content[(*i) + 1] != ' ')
+			&& tok->content[(*i) + 1] != ' ' && tok->content[(*i) + 1] != '?')
 			{
 				temp = what_to_search(tok, i);
 				search = get_env(gen->env, temp);
@@ -90,22 +90,24 @@ void	expand_var_alone(t_token *tok, int *i, t_data *gen, char *search)
 	free(temp);
 }
 
-void	expand_env(t_token *token, t_data *gen)
+void	expand_env(t_token *token, t_data *gen, char *search)
 {
 	int		id;
 	int		i;
-	char	*search;
 
-	search = NULL;
 	id = -1;
-	i = 0;
 	while (token[++id].content != NULL)
 	{
 		i = 0;
 		while (token[id].content[i] != '\0')
 		{
-			if (token[id].content[i] == '\'')
+			if (heredoc_d_case(token, &id) == 1)
+				break ;
+			else if (token[id].content[i] == '\'')
 				skip_single_quotes(token[id].content, &i);
+			else if (token[id].content[i] == '$' && token[id].content[i + 1] && \
+				token[id].content[i + 1] == '?')
+				expand_exit_code(token, gen, &id, &i);
 			else if (token[id].content[i] == '\"')
 				expand_var(&token[id], &i, gen, search);
 			else if (token[id].content[i] == '$')
@@ -119,9 +121,15 @@ void	expand_env(t_token *token, t_data *gen)
 //	funzione chiamata all`interno della funzione remove_quotes_token()
 //	nel file remove_quotes.c
 //	--serve per espandere le variabili di ambiente all`interno della struttura
-void	expanding_variables(t_token *token, t_data *gen)
+int	expanding_variables(t_token *token, t_data *gen)
 {
-	expand_exit_code(token, gen);
-	expand_env(token, gen);
-	expand_wildcard(token, gen);
+	char	*search;
+
+	search = NULL;
+	if (ambiguous_redir(token, gen) == 1)
+		return (2);
+	expand_env(token, gen, search);
+	if (expand_wildcard(token, gen) == 1)
+		return (1);
+	return (0);
 }

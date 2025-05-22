@@ -2,7 +2,7 @@ NAME = parsing
 
 SRC = start_lexing.c fill_struct.c utils.c struct_alloc.c remove_quotes.c \
 	define_token.c define_token_2.c expand_env.c expand_env_2.c utils_2.c \
-	parenthesis.c expand_wildcard.c parser.c \
+	parenthesis.c expand_wildcard.c parser.c ../set_signals.c\
 
 SRC_DEBUG = debug.c 
 
@@ -23,7 +23,7 @@ $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ_DIR) $(OBJ)
-	ar rcs $(NAME).a $(OBJ)
+# ar rcs $(NAME).a $(OBJ)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)

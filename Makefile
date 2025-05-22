@@ -11,10 +11,14 @@ PARS_DIR  = parsing
 #–– Top‑level target
 NAME     = minishell
 
+#––	Suppression file
+SUPP_FILE = $(shell pwd)/supp.supp
+
 #–– All source files, with their relative paths
 SRCS = \
   main.c \
   signals.c \
+  set_signal.c \
   executor/bonus/bonus_parenthesis.c \
   executor/bonus/bonus_wildcards1.c \
   executor/bonus/bonus_wildcards2.c \
@@ -33,13 +37,15 @@ SRCS = \
   executor/execution_prep/get_file_data.c \
   executor/execution_prep/get_paths_data.c \
   executor/execution_prep/get_tokens.c \
-  executor/memory_management/memory.c \
   executor/utils/printf_fd.c \
   executor/utils/utils_count.c \
   executor/utils/utils_debug.c \
   executor/utils/utils_fds.c \
+  executor/utils/utils_fds2.c \
   executor/utils/utils_generic.c \
+  executor/utils/utils_heredoc.c \
   executor/utils/utils_matrix.c \
+  executor/utils/utils_memory.c \
   executor/utils/utils_parenthesis2.c \
   executor/utils/utils_parenthesis.c \
   executor/utils/utils_string2.c \
@@ -58,6 +64,9 @@ SRCS = \
   parsing/parenthesis.c \
   parsing/parser.c \
   parsing/expand_wildcard.c \
+  parsing/expand_wildcard_2.c \
+  parsing/parser_2.c \
+  parsing/ambiguous_redir.c \
 
 #–– Object files go under obj/, mirroring the tree
 OBJ_DIR = obj
@@ -81,6 +90,18 @@ $(LIBFT):
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+supp: 
+	$(MAKE) val -C executor/
+	mv executor/v.supp .
+	mv v.supp $(SUPP_FILE)
+
+deb:
+	$(MAKE) gdb -C executor/
+	mv executor/a.gdb .
+
+val: 
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s -q --suppressions=$(SUPP_FILE) ./minishell
 
 clean:
 	rm -rf $(OBJ_DIR)

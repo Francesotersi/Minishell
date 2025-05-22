@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/06 14:25:00 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/22 09:43:26 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 # include <dirent.h>
 # include "../minishell.h"
 # include "../enum.h"
+# define DOC_NAME ".here_doc"
 
 typedef struct s_exec	t_exec;
 typedef int				(*t_builtin)(char **, t_exec *);
-typedef struct s_token t_token;
+typedef struct s_token	t_token;
 
 //NOTE - Valgrind home
 /*
@@ -130,11 +131,11 @@ valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
 	//
 	last_in:	last input file token id in a 
 	//			command block.
-	//			for cat <f1 <<EOF <f2, last_in == 3
+	//			for "cat <f1 <<EOF <f2", last_in == 3
 	//
 	last_out:	last output file token id in a 
 	//			command block.
-	//			for cat >f1 >>f2 >f3, last_out == 3
+	//			for "cat >f1 >>f2 >f3", last_out == 3
 	//
 	curr_cmd:	current command block that is being
 	//			executed
@@ -192,7 +193,7 @@ struct s_exec
 	int				stdout_fd;
 	int				prior_layer;
 	int				at_least_one_pipe:1;
-	int				debug:1;
+	int				file_not_found:1;
 };
 
 /*REVIEW - wildcard data structure
@@ -220,7 +221,7 @@ typedef struct s_wildcard
 	char	*search;
 	char	*dir_path;
 	int		dir_size;
-}t_wildcard;
+}	t_wildcard;
 
 /*REVIEW - wildcard data structure
 
@@ -273,10 +274,12 @@ char	*get_pwd_address(char **env);
 int		realloc_env(char ***env, int *env_size, t_exec *exec);
 char	*ft_getenv(char **env, char *search, int *where);
 int		env_pars(char *item, int *no_eq_plus, int *name_size, int *cont_size);
+int		increase_shell_level(char **env);
+int		change_shell_name(char **env);
 
 //SECTION -	Execution main
 
-int		execute(t_token *tokens, void *data, int debug);
+int		execute(t_token *tokens, void *data);
 int		execute_loop(t_token *token, t_exec *exec);
 int		wait_everyone(t_exec *exec);
 
@@ -287,18 +290,18 @@ int		bash_message(int message, char *file);
 
 //SECTION -	Execution preparations
 
-void	merge_tokens(t_token *token, int debug);
-void	prepare_here_docs(t_exec *exec, t_token *token);
+void	merge_tokens(t_token *token);
+int		prepare_here_docs(t_exec *exec, t_token *token);
 int		get_commands_data(t_exec *exec, t_token *token);
-int		get_paths_data(t_exec *exec, t_token *token);
-int		get_file_data(t_exec *exec, t_token *token);
+int		get_paths_data(t_exec *exec);
+int		get_file_data(t_exec *exec, t_token *token, bool do_pipe);
 
 //SECTION -	Memory management
 
 void	alloc_memory(t_exec *exec, t_token *token, int cmd_num);
 void	free_memory(t_exec *memory);
-void	*free_debug_data(t_debug_data *data);
-void	get_main_struct_data(t_exec *exec, void *data, int debug);
+void	get_main_struct_data(t_exec *exec, void *data);
+void	create_empty_matrix(t_exec *exec, int cmd_num);
 
 //SECTION -	Utils
 
@@ -308,10 +311,11 @@ int		_fd_printf(int fd, const char *str, ...);
 
 //	NOTE -	utils_count:Get crucial data from token
 
-int		count_commands(t_exec *exec, t_token *tokens);
+int		count_commands(t_token *token);
 int		find_command_argument_index(t_exec *exec, t_token *token);
 int		proc_sub_num(t_token *token);
 int		deepest(t_token *token);
+int		matrix_size(char **matrix);
 
 //	NOTE -	debug:		Prints all token, delimiting execution		
 
@@ -325,6 +329,8 @@ void	save_process_substitution_fd(t_exec *exec, int proc_sub_fd);
 void	close_temp_files(t_exec *exec);
 void	close_and_reset(int *fd);
 void	dup_and_reset(int *new_fd, int old_fd);
+void	save_temp_fds(t_exec *exec, int fd1, int fd2, int do_pipe);
+void	remove_temp_fds(t_exec *exec);
 
 //	NOTE -	generic:	Various functions
 
@@ -332,6 +338,7 @@ int		bigger(int n1, int n2);
 int		is_a_valid_executable(t_exec *exec, int i);
 int		set_exit_code(t_exec *exec, int exit_code);
 void	write_here_doc(char *line, t_exec *exec, int fd);
+int		overflow_check(char *s, long long max, long long min, int limit_size);
 
 //	NOTE -	matrix:		Matrix management
 
@@ -350,7 +357,9 @@ int		count_in_layer(t_token *token, int layer);
 int		cmd_block_len(t_token *token, int layer);
 void	goto_valid_block(t_exec *exec, t_token **token);
 void	tok_next(t_token **token, int chr, int layer, bool accept_deeper_tok);
+void	token_out_parenthesis(t_exec *exec, t_token **token, bool process_sub);
 bool	detect_pipe(t_token *token, int getfd, int layer);
+bool	check_proc_sub(t_exec *exec, t_token *token);
 
 //	NOTE -	string:		String utilities
 
@@ -361,6 +370,7 @@ char	*_cat_string(char *src, char *catstr, size_t start, int which_free);
 char	*_ft_strjoin_free(char *s1, char *s2);
 int		_reverse_strncmp(char *s1, char *s2, int len);
 int		double_cmp(char *s1, char *s2, int s1_len, int ignore_n_char);
+char	*remove_plus(char *str);
 
 //	NOTE -	tokencheck:	is_alpha for token types (is redirection sign? ecc.)
 

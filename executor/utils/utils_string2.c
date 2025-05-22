@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_string2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 17:25:07 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/01 12:49:57 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:34:57 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,18 @@ int	double_cmp(char *s1, char *s2, int s1_len, int ignore_n_char)
 	if (ft_strncmp(s1, s2, s1_len))
 		return (1);
 	return (0);
+}
+
+char	*remove_plus(char *str)
+{
+	int	i;
+
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (str[i] && str[i] != '+' && str[i] != '=')
+		++i;
+	if (str[i] == '+')
+		_cut_string(str + i, 0, 0);
+	return (str);
 }

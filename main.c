@@ -6,20 +6,18 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/07 13:56:24 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 09:50:00 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // readline ritorna una stringa da freeare ad ogni input
-int	start(t_data *gen)
+int	start(t_data *gen, int i, int j)
 {
-	int	i;
-
-	i = 0;
 	while (1)
 	{
+		reset_standard_signal();
 		gen->input = readline("minishell$> ");
 		if (!gen->input)
 			break ;
@@ -27,12 +25,13 @@ int	start(t_data *gen)
 			add_history(gen->input);
 		if (ft_strncmp(gen->input, "", ft_strlen(gen->input)))
 		{
-			i = start_lexing(gen);
+			i = start_lexing(gen, j);
 			if (i == -1)
 				return (1);
 			else if (i != 2)
 			{
-				execute(gen->token, (void*)gen, 0);
+				execute(gen->token, (void *)gen);
+				assign_signal_exit_code(gen);
 				free_all(gen->token, gen);
 			}
 		}
@@ -45,22 +44,20 @@ int	start(t_data *gen)
 int	main(int ac, char **av, char **env)
 {
 	t_data				gen;
-	struct sigaction	sa;
+	int					i;
+	int					j;
 
+	i = 0;
+	j = 0;
 	(void)ac, (void)av;
 	gen = (t_data){0};
 	if (cpy_env(env, &gen.env, &gen.env_size, &gen.last_env) != 0)
-		return (/* malloc error */1);
-	sa.sa_flags = SA_SIGINFO;
-	sigemptyset(&sa.sa_mask);
-	sigaddset(&sa.sa_mask, SIGQUIT);
-	sa.sa_sigaction = signals;
-	signal(SIGQUIT, SIG_IGN);
-	sigaction(SIGINT, &sa, NULL);
-	if (start(&gen) == 1)
+		return (ft_error("env error", -1, &gen, ""), 1);
+	if (start(&gen, i, j) == 1)
 		return (1);
 	_free_matrix(gen.env);
-	// ricordarsi di forse levare sta cosa
-	// gen.env = _free_matrix(gen.env);
-	return (0);
+	close(0);
+	close(1);
+	close(2);
+	return (gen.exit_code);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_paths_data.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 19:22:21 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/22 09:33:01 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ static int	_add_sign_left(char **string, char sign);
 			everything is fine.
 			Live like bash. You'll live better;
 		3)	We split the PATH with ft_split, using ':' as parameter;
-		4)	We iterate throught every command stored in the matrix of argv;
+		4)	We iterate through every command stored in the matrix of argv;
 		5)	If the file is NOT a builtin and is not already a valid executable
 			(/bin/grep is already a valid executable), get it. 
 */
-int	get_paths_data(t_exec *exec, t_token *token)
+int	get_paths_data(t_exec *exec)
 {
 	char	*path;
 	int		cmd_index;
@@ -44,7 +44,8 @@ int	get_paths_data(t_exec *exec, t_token *token)
 	cmd_index = 0;
 	while (exec->commands[cmd_index])
 	{
-		if (exec->which_cmd[cmd_index] == _NO && access(token->content, X_OK))
+		if (exec->which_cmd[cmd_index] == _NO && \
+			access(*exec->commands[cmd_index], X_OK))
 		{
 			get_one(exec, exec->commands[cmd_index], exec->path);
 		}
@@ -70,6 +71,8 @@ static int	get_one(t_exec *exec, char **command, char **path)
 	char	*temp;
 	int		i;
 
+	if (!command || !command[0])
+		return (0);
 	i = 0;
 	if (_add_sign_left(command, '/') != 0)
 		error(E_MALLOC, exec);

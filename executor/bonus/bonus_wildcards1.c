@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_wildcards1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 16:24:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/06 13:56:12 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:27:57 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	convert_wildcard(char *old_str, char **new_str)
 
 	wdata = (t_wildcard){0};
 	wdata.old_str = old_str;
+	free(*new_str);
 	*new_str = NULL;
 	if (find_directory(&wdata.dir_path, &old_str) == E_MALLOC)
 		return (E_MALLOC);
@@ -62,6 +63,8 @@ int	convert_wildcard(char *old_str, char **new_str)
 		If it does not find any '/', return "./" = CURRENT_DIRECTORY
 
 		Else, dir_path copy old str (/bin/g*e*p) till last /.
+		So, in this case, dir_path = /bin/
+		Then, old_str is moved to the string after the last '/'.
 */
 static int	find_directory(char **dir_path, char **old_str)
 {
@@ -92,7 +95,9 @@ static int	find_directory(char **dir_path, char **old_str)
 
 //		Counts all files in directory.
 
-		*dir functions uses two structs
+		*dir functions uses two structs:
+		- dir: contains the directory stream;
+		- dirent: contains the name of the current file and other info.
 */
 static int	dir_size(int *size, char *dir_path)
 {

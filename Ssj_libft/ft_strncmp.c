@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:48:43 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/05 12:09:28 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/16 12:32:46 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	i = 0;
 	a = (unsigned char *)s1;
 	b = (unsigned char *)s2;
-	if (!s1 || !s2)
+	if (!s1 || !s2 || s1[0] == '\0')
 		return (999999);
 	while (i < n && s1[i] && (s1[i] == s2[i]))
 		i++;

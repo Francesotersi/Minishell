@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:16:00 by alerusso          #+#    #+#             */
-/*   Updated: 2025/04/28 20:02:55 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:45:35 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,7 @@ int	main()
 	printf("\n\nYou didn't crash!\n");
 }*/
 
-int	main()
+int	main(void)
 {
 	pid_t	pid;
 	int		exit_status;
@@ -283,6 +283,6 @@ int	main()
 		exit(0);
 	}
 	wait(&exit_status);
-		printf("%d\n", exit_status / 256);
+	printf("%d\n", exit_status / 256);
 	return (0);
 }

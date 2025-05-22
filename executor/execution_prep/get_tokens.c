@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_tokens.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 12:03:58 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/07 09:31:29 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/22 09:41:12 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../executor.h"
 
-static void	merge_one(t_token *token, int debug, int i, bool update_type);
+static void	merge_one(t_token *token, int i, bool update_type);
 static void	manage_subshell(t_token *token);
 static void	sort_id(t_token *token);
 static void	switch_tokens(t_token *token, int i, int j);
@@ -53,9 +53,10 @@ static void	switch_tokens(t_token *token, int i, int j);
 		3)	Else, if is a regular redirector sign (<, <<, >, >>), merge it with
 			its file;
 		4)	We restart the loop, to merge '(' and ')';
-		5)	Lastly, sort the id of every token.
+		5)	Lastly, sort the id of every token, and decrease in subshell the
+			layer of the <() token.
 */
-void	merge_tokens(t_token *token, int debug)
+void	merge_tokens(t_token *token)
 {
 	int	i;
 
@@ -69,7 +70,7 @@ void	merge_tokens(t_token *token, int debug)
 		}
 		else if (is_red_sign(token[i].type))
 		{
-			merge_one(token, debug, i, 0);
+			merge_one(token, i, 0);
 		}
 		i++;
 	}
@@ -77,42 +78,25 @@ void	merge_tokens(t_token *token, int debug)
 	while (token[i].content)
 	{
 		if (token[i].content[0] == '(' || token[i].content[0] == ')')
-			merge_one(token, debug, i, 1);
+			merge_one(token, i, 1);
 		else
 			++i;
 	}
 	return (manage_subshell(token), sort_id(token));
 }
 
-/*
-void	p_tok(t_token *token)
-{
-	int i = 0;
-	while (token[i].content)
-	{
-		_fd_printf(1, "\n^^\n%d:", i);
-		_fd_printf(1, "\ncont:\t%s", token[i].content);
-		_fd_printf(1, "\ntype:\t%d", token[i].type);
-		_fd_printf(1, "\nid:\t%d", token[i].id);
-		_fd_printf(1, "\nprior:\t%d", token[i].prior);
-		++i;
-	}
-}
-*/
-
 /*REVIEW - merge_one
 
-//		1)	If we are not in debug mode, free the current content ('>');
+//		1)	free the current content ('>');
 		2)	We update ONLY the content;
 		3)	For every other token after current token,
 			we drag them one position behind.
 */
-static void	merge_one(t_token *token, int debug, int i, bool update_type)
+static void	merge_one(t_token *token, int i, bool update_type)
 {
 	int	j;
 
-	if (!debug)
-		free(token[i].content);
+	free(token[i].content);
 	token[i].content = NULL;
 	token[i].content = token[i + 1].content;
 	if (update_type)
@@ -142,8 +126,37 @@ static void	manage_subshell(t_token *token)
 
 /*REVIEW - merge_one
 
-//		Every token is indexed with its position in the token array.
+		Every token is indexed with its position in the token array.
 		This index is its ID.
+
+//		We set:
+		-	The ID of every token;
+		-	The command number of every token.
+
+		Doing this is tough because we have to manage subshells:
+
+		cat <(ls) <(ls) -a -a file1.txt file2.txt && grep -v <(./a.out) string
+		Content		type				cmd_num		prior
+		//cat		command (0)			0			0
+		//<(		RED_SUBSHELL(10)	0			0
+		//ls		command (0)			1			1
+		//<(		RED_SUBSHELL(10)	0			0
+		//ls		command (0)			2			1
+		//-a		argument (1)		0			0
+		//-a		argument (1)		0			0
+		//file1.txt	argument (1)		0			0
+		//file2.txt	argument (1)		0			0
+		//&&		operator (3)		0			0
+		//grep		command (0)			3			0
+		//-v		argument (1)		3			0
+		...
+
+		In short, to do this we start from 'cat' and we go on until
+		the current layer is equal or lower than the current token's layer.
+		So, we reach end of prompt.
+		Then we do the same for the next command (ls), but it stop 
+		immeadiately after the first token, because the layer is
+		0, and the current token's layer is 1.
 */
 static void	sort_id(t_token *token)
 {
