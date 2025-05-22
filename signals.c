@@ -6,7 +6,7 @@
 /*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:40:55 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/22 11:10:36 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:52:56 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	signals(int signal, siginfo_t *info, void *s)
 	(void)s;
 	if (signal == SIGINT)
 	{
+		g_exit_code_sig_received = CTRL_C;
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
