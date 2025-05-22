@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_paths_data.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 11:17:10 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:57:28 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	get_paths_data(t_exec *exec)
 	char	*path;
 	int		cmd_index;
 
-	path = ft_getenv(*exec->env, "PATH", NULL);
+	path = get_env(*exec->env, "PATH");
 	if (!path)
 		return (0);
 	exec->path = ft_split(path, ':');

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_wildcards2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:11:14 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/14 20:37:50 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:44:48 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,17 +120,18 @@ static int	check_one(char *search, char *file)
 			return (_NO);
 		else if (search[s_i] != '*')
 		{
-			while (file[f_i] && file[f_i] != search[s_i])
+			while (file[f_i] != search[s_i])
 			{
-				if (s_i == 0 || search[s_i - 1] != '*')
+				if (!file[f_i] || s_i == 0 || search[s_i - 1] != '*')
 					return (_NO);
 				++f_i;
 			}
 			++f_i;
 		}
 		++s_i;
-	}
-	if (search[s_i - 1] != '*' && file[f_i])
+	}//aggiungere funzione con strrchr e strncmp
+	if (s_i != 0 && ((search[s_i - 1] == '*' && !file[f_i]) || \
+		))
 		return (_NO);
 	return (_YES);
 }
