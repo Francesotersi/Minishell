@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   define_token.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 16:51:32 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/19 08:40:52 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 20:38:53 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	define_token_and_parenthesis(t_token *token, t_data *gen)
 	int	i;
 	int	id;
 
-	i = 0;
+	(void)i;
 	id = 0;
 	while (token[id].content != NULL)
 	{

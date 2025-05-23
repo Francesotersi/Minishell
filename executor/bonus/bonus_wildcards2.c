@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_wildcards2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:11:14 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 16:44:48 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/22 20:47:53 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static int	fill_matrix(t_wildcard *wdata, char **matrix);
 static int	check_one(char *search, char *file);
+static int	check_end(char *search, char *file, int s_i);
 
 /*REVIEW - fill_occurrences
 
@@ -129,9 +130,28 @@ static int	check_one(char *search, char *file)
 			++f_i;
 		}
 		++s_i;
-	}//aggiungere funzione con strrchr e strncmp
+	}
 	if (s_i != 0 && ((search[s_i - 1] == '*' && !file[f_i]) || \
-		))
+		check_end(search, file + f_i, s_i) == 1))
 		return (_NO);
 	return (_YES);
+}
+
+static int	check_end(char *search, char *file, int s_i)
+{
+	if (!*file || search[s_i - 1] == '*')
+		return (0);
+	while (s_i > 0 && search[s_i - 1] != '*')
+		--s_i;
+	file = _ft_strrstr(file, search + s_i);
+	if (!file)
+		return (1);
+	while (search[s_i])
+	{
+		++s_i;
+		file++;
+	}
+	if (*(file + 1))
+		return (1);
+	return (0);
 }

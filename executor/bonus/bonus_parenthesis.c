@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:52:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/20 14:29:30 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/23 09:34:59 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,7 @@ static int	prep_recursion(t_exec *exec, int fds[2], int std_out, int do_pipe)
 			close_and_reset(&exec->pipe_fds[1]);
 	}
 	save_temp_fds(exec, std_out, fds[0], do_pipe);
+	exec->prior_layer += 1;
 	return (0);
 }
 
@@ -166,6 +167,10 @@ static int	redir_output(t_exec *exec, t_token **token, bool _pipe, int fds[2])
 	{
 		close_and_reset(&exec->pipe_fds[0]);
 		exec->pipe_fds[0] = fds[0];
+	}
+	if (exec->pipe_fds[0])
+	{
+		dup_and_reset(&exec->pipe_fds[0], 0);
 	}
 	if ((*token)->id != 0 && (*token - 1)->type == RED_SUBSHELL)
 		process_sub = 1;

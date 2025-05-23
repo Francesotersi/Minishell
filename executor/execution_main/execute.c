@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 09:38:57 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/23 09:50:40 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,6 @@ int	execute(t_token *token, void *data)
 	while (token->prior > 0)
 	{
 		manage_parenthesis(&exec, &token, 0);
-		if (exec.pipe_fds[0])
-		{
-			dup_and_reset(&exec.pipe_fds[0], 0);
-		}
 	}
 	if (token->content)
 		execute_loop(token, &exec);
@@ -111,9 +107,10 @@ int	execute(t_token *token, void *data)
 */
 int	execute_loop(t_token *token, t_exec *exec)
 {
-	exec->prior_layer = token->prior;
 	exec->curr_cmd = token->cmd_num;
 	exec->at_least_one_pipe = detect_pipe(token, _NO, token->prior);
+	if (exec->prior_layer != token->prior)
+		manage_parenthesis(exec, &token, 0);
 	while (token->content)
 	{
 		*exec->exit_code = 0;

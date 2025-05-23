@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_string2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 17:25:07 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/20 14:34:57 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/22 20:37:56 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,24 @@ char	*remove_plus(char *str)
 	if (str[i] == '+')
 		_cut_string(str + i, 0, 0);
 	return (str);
+}
+
+/*REVIEW - _ft_strrstr
+	Like strrchr, but returns the last occurrence 
+	of the string needle in the string haystack.
+*/
+char	*_ft_strrstr(const char *haystack, const char *needle)
+{
+	int		needle_len;
+	char	*last;
+
+	needle_len = ft_strlen(needle);
+	last = NULL;
+	while (*haystack)
+	{
+		if (!ft_strncmp(haystack, needle, needle_len))
+			last = (char *)haystack;
+		haystack++;
+	}
+	return (last);
 }

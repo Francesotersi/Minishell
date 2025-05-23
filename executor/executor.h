@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 11:10:49 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/22 20:38:09 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,6 +371,7 @@ char	*_ft_strjoin_free(char *s1, char *s2);
 int		_reverse_strncmp(char *s1, char *s2, int len);
 int		double_cmp(char *s1, char *s2, int s1_len, int ignore_n_char);
 char	*remove_plus(char *str);
+char	*_ft_strrstr(const char *haystack, const char *needle);
 
 //	NOTE -	tokencheck:	is_alpha for token types (is redirection sign? ecc.)
 

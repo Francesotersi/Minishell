@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_fds2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 12:15:15 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/19 18:19:48 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/23 09:33:41 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	remove_temp_fds(t_exec *exec)
 {
 	int	i;
 
+	exec->prior_layer -= 1;
 	if (exec->file_not_found)
 		return ;
 	i = 0;
