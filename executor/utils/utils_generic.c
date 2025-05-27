@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_generic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:04:20 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 16:43:28 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 10:41:31 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	overflow_check(char *s, long long max, long long min, int limit_size)
 	if (!s || !s[0])
 		return (_YES);
 	limit = max * (s[0] != '-') + min * (s[0] == '-');
-	i = (s[0] == '-') || (s[0] == '+');
+	i = ((s[0] == '-') || (s[0] == '+'));
 	max = limit;
 	while (++limit_size && (limit > 9 || limit < -9))
 		limit /= 10;

@@ -128,6 +128,8 @@ int	start_lexing(t_data *gen, int j)
 {
 	t_token			*token;
 
+	if (command_substitution(&gen->input, gen) != 0)
+		return (2);
 	gen->token_num = num_token(gen->input, gen);
 	if (gen->token_num == 0)
 		return (2);

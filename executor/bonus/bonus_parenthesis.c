@@ -50,7 +50,7 @@ int	manage_parenthesis(t_exec *exec, t_token **token, int getfd)
 	(*token) += (getfd != 0);
 	temp_fd = exec->stdout_fd;
 	exec->curr_cmd = (*token)->cmd_num;
-	redir_to_pipe = detect_pipe(*token, getfd, (*token)->prior - 1);
+	redir_to_pipe = detect_pipe(*token, getfd, exec->prior_layer);
 	if (filedata_after_parenthesis(exec, *token) == 1)
 		return (redir_output(exec, token, redir_to_pipe, fds), 0);
 	prep_recursion(exec, fds, temp_fd, getfd || redir_to_pipe);

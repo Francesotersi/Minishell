@@ -17,8 +17,8 @@ static int	invoke_programs(t_exec *exec, int i);
 
 //NOTE - Il main della parte di esecuzione.
 //		Utilizzo:
-//		Manda il puntatore al primo token, t_data (castato void *), 0.
-//		execute(token, (void *)t_data, 0);
+//		Manda il puntatore al primo token, t_data (castato void *).
+//		execute(token, (void *)t_data);
 //		execute torna sempre 0.
 //		QUANDO CHIAMI EXECUTE OGNI FILE APERTO/MEMORIA ALLOCATA DEVE ESSERE
 //		LIBERATA, OPPURE INSERITA NELLA STRUTTURA t_data, IN UN PUNTATORE
@@ -66,6 +66,8 @@ int	execute(t_token *token, void *data)
 {
 	t_exec	exec;
 
+	if (!token || !token->content)
+		return (0);
 	exec = (t_exec){0};
 	get_main_struct_data(&exec, data);
 	merge_tokens(token);
@@ -77,12 +79,7 @@ int	execute(t_token *token, void *data)
 	set_last_signal();
 	get_commands_data(&exec, token);
 	get_paths_data(&exec);
-	while (token->prior > 0)
-	{
-		manage_parenthesis(&exec, &token, 0);
-	}
-	if (token->content)
-		execute_loop(token, &exec);
+	execute_loop(token, &exec);
 	wait_everyone(&exec);
 	return (free_memory(&exec), 0);
 }
@@ -109,16 +106,16 @@ int	execute_loop(t_token *token, t_exec *exec)
 {
 	exec->curr_cmd = token->cmd_num;
 	exec->at_least_one_pipe = detect_pipe(token, _NO, token->prior);
-	if (exec->prior_layer != token->prior)
+	while (exec->prior_layer < token->prior)
 		manage_parenthesis(exec, &token, 0);
-	while (token->content)
+	while (exec->prior_layer == token->prior)
 	{
 		*exec->exit_code = 0;
 		dup2(exec->stdout_fd, 1);
 		if (get_file_data(exec, token, _YES) == 0)
 			invoke_programs(exec, exec->curr_cmd);
 		else
-			*exec->exit_code = 1;
+			set_exit_code(exec, 1);
 		close_temp_files(exec);
 		if (exec->pipe_fds[0])
 			dup_and_reset(&exec->pipe_fds[0], 0);
@@ -242,7 +239,7 @@ int	wait_everyone(t_exec *exec)
 				set_execve_signal();
 			waitpid(exec->pid_list[i], &exit_code, 0);
 			if (i == exec->curr_cmd - 1)
-				*exec->exit_code = exit_code / 256;
+				set_exit_code(exec, exit_code / 256);
 			exec->pid_list[i] = 0;
 		}
 		++i;

@@ -30,6 +30,7 @@ void	get_main_struct_data(t_exec *exec, void *data)
 	exec->last_env = &gen->last_env;
 	exec->exit_code = &gen->exit_code;
 	exec->first_token = gen->token;
+	exec->minishell_path = gen->minishell_path;
 	*exec->exit_code = 0;
 }
 

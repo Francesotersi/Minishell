@@ -85,9 +85,9 @@ int	bash_message(int message, char *file)
 
 static int	bash_message2(int message, char *file)
 {
-	if (message == E_CD_NOHOME)
+	if (message == E_CD_ENV)
 	{
-		_fd_printf(2, "bash: cd: HOME not set\n");
+		_fd_printf(2, "bash: cd: %s not set\n", file);
 	}
 	else if (message == E_EXIT_NUMERIC)
 	{

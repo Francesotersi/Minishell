@@ -12,9 +12,10 @@
 
 #include "../executor.h"
 
-static int	up_env(char **update, char *old_pwd, char *pwd, t_exec *exec);
-static int	back_to_home(char **env, char **new);
+static int	manage_special_cases(t_exec *exec, char **cd_update, char **new);
 static int	dir_is_invalid(char *dir, t_exec *exec);
+static int	back_to_home(char **env, char **new);
+static int	up_env(char **update, char *old_pwd, char *pwd, t_exec *exec);
 
 /*REVIEW - ft_cd
 
@@ -48,17 +49,17 @@ int	ft_cd(char **args, t_exec *exec)
 	char	**pwd_update;
 	char	*new;
 
-	*exec->exit_code = 0;
 	if (args[1] && args[2])
 		return (bash_message(E_CD_ARGS, NULL), set_exit_code(exec, 1));
-	if (dir_is_invalid(args[1], exec) || exec->at_least_one_pipe)
+	if (manage_special_cases(exec, &args[1], &new) == 1)
+		return (set_exit_code(exec, 1));
+	if (dir_is_invalid(new, exec) || exec->at_least_one_pipe)
 		return (0);
+	if (!args[1] && back_to_home(*exec->env, &new) == 1)
+		return (set_exit_code(exec, 1));
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd)
 		error(E_MALLOC, exec);
-	new = args[1];
-	if (!args[1] && back_to_home(*exec->env, &new) == 1)
-		return (free(old_pwd), set_exit_code(exec, 1));
 	if (chdir(new) != 0)
 		return (bash_message(E_CD, new), free(old_pwd), set_exit_code(exec, 1));
 	pwd = getcwd(NULL, 0);
@@ -67,7 +68,36 @@ int	ft_cd(char **args, t_exec *exec)
 	pwd_update = (char **)ft_calloc(3, sizeof(char *));
 	if (!pwd_update)
 		return (free(old_pwd), free(pwd), error(E_MALLOC, exec));
-	return (up_env(pwd_update, old_pwd, pwd, exec), 0);
+	return (up_env(pwd_update, old_pwd, pwd, exec), set_exit_code(exec, 0));
+}
+
+static int	manage_special_cases(t_exec *exec, char **cd_update, char **new)
+{
+	char	*temp;
+
+	*new = NULL;
+	if (!*cd_update)
+		return (0);
+	*new = *cd_update;
+	if (!ft_strchr("-~", (*cd_update)[0]))
+		return (0);
+	if ((*cd_update)[0] == '-' && (*cd_update)[1] != '\0')
+		return (0);
+	else if ((*cd_update)[0] == '-' && (*cd_update)[1] == '\0')
+	{
+		temp = get_env(*exec->env, "OLDPWD");
+		if (!temp)
+			return (bash_message(E_CD_ENV, "OLDPWD"), 1);
+		*new = temp;
+		return (0);
+	}
+	temp = get_env(*exec->env, "HOME");
+	if (!temp)
+		return (bash_message(E_CD_ENV, "HOME"), 1);
+	_cut_string(*cd_update, 0, 0);
+	*cd_update = _cat_string(*cd_update, temp, 0, 1);
+	*new = *cd_update;
+	return (*new == NULL);
 }
 
 static int	dir_is_invalid(char *dir, t_exec *exec)
@@ -93,7 +123,7 @@ static int	back_to_home(char **env, char **new)
 	*new = get_env(env, "HOME");
 	if (!*new)
 	{
-		bash_message(E_CD_NOHOME, NULL);
+		bash_message(E_CD_ENV, "HOME");
 		return (1);
 	}
 	return (0);

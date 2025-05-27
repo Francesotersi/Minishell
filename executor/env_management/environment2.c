@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 14:43:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 17:21:18 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 10:41:53 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	env_pars(char *item, int *no_eq_plus, int *name_size, int *cont_size)
 	else if (no_eq_plus == NULL)
 		return (0);
 	*name_size = i;
-	*no_eq_plus = item[i] == '=' || item[i] == '+';
+	*no_eq_plus = (item[i] == '=' || item[i] == '+');
 	if (item[i] == '+' && item[i + 1] == '=')
 		*no_eq_plus += 1;
 	while (item[i])

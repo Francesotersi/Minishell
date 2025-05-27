@@ -6,7 +6,7 @@
 /*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 20:38:09 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 00:02:59 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,34 +33,6 @@ valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
 */
 
 //ANCHOR - Data structures
-
-/*REVIEW - token array 
-
-	The array of token:		ls // 	> // 	file // -R
-	
--	content:	a string with token content (ls, file.txt, >...)
-	//
--	t_quote:	type of quotes (0 = -, 1 = "", 2 = '')
-	//
-	id:			integer that shows token index. Last is -1
-	//
--	prior:		layer in the parenthesis.
-	//			( increase by 1, ) decrease by 1.
-	//			last token has layer == -1
-	//
--	cmd_num:	command block num -> 	ls | 	grep .c		/
-	//									0		1			2
--	type:		read the enum "types" below
-*/
-/*typedef struct s_token
-{
-	char			*content;
-	int				t_quote;
-	int				id;
-	int				prior;
-	int				cmd_num;
-	unsigned int	type:4;
-}	t_token;*/
 
 /*REVIEW - execution data structure
 
@@ -184,6 +156,7 @@ struct s_exec
 	int				*proc_sub_fds;
 	int				*proc_sub_temp_fds;
 	unsigned char	*exit_code;
+	char			*minishell_path;
 	int				pipe_fds[2];
 	int				last_in;
 	int				last_out;
@@ -223,25 +196,7 @@ typedef struct s_wildcard
 	int		dir_size;
 }	t_wildcard;
 
-/*REVIEW - wildcard data structure
-
-	Data to free from execution debug mode
-*/
-typedef struct s_debug_data
-{
-	char	***matrix;
-	char	*temp;
-	char	*filename1;
-	char	*filename2;
-	char	**env;
-	t_token	*tokens;
-	int		exit_code;
-	int		last_env;
-	int		env_size;
-	int		fd_to_close;
-}	t_debug_data;
-
-//ANCHOR - 	List of unctions called in all program.
+//ANCHOR - 	List of functions called in all execution part.
 //			Section name is folder name.
 
 //SECTION -	Bonus

@@ -19,6 +19,9 @@ SRCS = \
   main.c \
   signals.c \
   set_signal.c \
+  executor/bonus/bonus_cmd_sub.c \
+  executor/bonus/bonus_cmd_utils.c \
+  executor/bonus/bonus_cmd_utils_2.c \
   executor/bonus/bonus_parenthesis.c \
   executor/bonus/bonus_wildcards1.c \
   executor/bonus/bonus_wildcards2.c \
@@ -101,7 +104,7 @@ deb:
 	mv executor/a.gdb .
 
 val: 
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s -q --suppressions=$(SUPP_FILE) ./minishell
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes -s --quiet --suppressions=$(SUPP_FILE) ./minishell
 
 clean:
 	rm -rf $(OBJ_DIR)

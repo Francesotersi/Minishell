@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/22 12:53:17 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/27 00:05:54 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	start(t_data *gen, int i, int j)
 	while (1)
 	{
 		reset_standard_signal();
-		gen->input = readline("Minishell$> ");
+		gen->input = readline(PROMPT);
 		assign_signal_exit_code(gen);
 		if (!gen->input)
 			break ;
@@ -37,8 +37,22 @@ int	start(t_data *gen, int i, int j)
 			}
 		}
 		free(gen->input);
+		gen->input = NULL;
 	}
-	write(1, "exit\n", 5);
+	return (write(1, "exit\n", 5), 0);
+}
+
+int	get_minishell_path(t_data *gen)
+{
+	char	*pwd;
+
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		return (1);
+	gen->minishell_path = ft_strjoin(pwd, PROG_NAME);
+	free(pwd);
+	if (!gen->minishell_path)
+		return (1);
 	return (0);
 }
 
@@ -54,9 +68,13 @@ int	main(int ac, char **av, char **env)
 	gen = (t_data){0};
 	if (cpy_env(env, &gen.env, &gen.env_size, &gen.last_env) != 0)
 		return (ft_error("env error", -1, &gen, ""), 1);
+	if (get_minishell_path(&gen) == 1)
+		return (ft_error("malloc error", -1, &gen, ""), 1);
 	if (start(&gen, i, j) == 1)
 		return (1);
 	_free_matrix(gen.env);
+	free(gen.minishell_path);
+	free(gen.subcmd_stdout);
 	close(0);
 	close(1);
 	close(2);

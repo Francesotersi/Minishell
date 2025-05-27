@@ -105,7 +105,7 @@ enum e_exec_errors
 	E_CD,
 	E_CD_ARGS,
 	E_CD_PATH,
-	E_CD_NOHOME,
+	E_CD_ENV,
 	E_EXIT_NUMERIC,
 	E_EXIT_ARGS,
 	E_CMD_NOTFOUND,

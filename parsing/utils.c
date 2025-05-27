@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:13:21 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/22 10:45:20 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:13:26 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,10 @@ void	free_struct(t_token *token)
 // fa il free di tutto
 void	free_all(t_token *token, t_data *gen)
 {
+	free(gen->subcmd_stdout);
+	gen->subcmd_stdout = NULL;
 	free_token(token, gen);
 	free_struct(token);
+	free(gen->input);
+	gen->input = NULL;
 }

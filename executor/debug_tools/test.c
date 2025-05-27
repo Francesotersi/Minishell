@@ -269,6 +269,8 @@ int	main()
 	printf("\n\nYou didn't crash!\n");
 }*/
 
+//SECTION - Divisione per impostare correttamente exit code
+/*
 int	main(void)
 {
 	pid_t	pid;
@@ -285,4 +287,4 @@ int	main(void)
 	wait(&exit_status);
 	printf("%d\n", exit_status / 256);
 	return (0);
-}
+}*/

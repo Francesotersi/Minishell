@@ -35,6 +35,7 @@ int	ft_exit(char **args, t_exec *exec)
 	if (exec->prior_layer == 0)
 		_fd_printf(2, "exit\n");
 	exit_code = *exec->exit_code;
+	free(exec->minishell_path);
 	free_all(exec->first_token, exec->main_struct_pointer);
 	_free_matrix(*exec->env);
 	exec->main_struct_pointer = NULL;
@@ -87,6 +88,7 @@ int	exit_process(t_exec *exec)
 	int	exit_code;
 
 	exit_code = *exec->exit_code;
+	free(exec->minishell_path);
 	free_all(exec->first_token, exec->main_struct_pointer);
 	_free_matrix(*exec->env);
 	exec->main_struct_pointer = NULL;
