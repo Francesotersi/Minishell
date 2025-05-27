@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/23 09:50:40 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:34:45 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,13 @@ int	execute(t_token *token, void *data)
 	11)	We wait every children. If the layer is not 0, we exit from the
 		process.
 */
-int	execute_loop(t_token *token, t_exec *exec)
+void	execute_loop(t_token *token, t_exec *exec)
 {
 	exec->curr_cmd = token->cmd_num;
 	exec->at_least_one_pipe = detect_pipe(token, _NO, token->prior);
 	while (exec->prior_layer < token->prior)
 		manage_parenthesis(exec, &token, 0);
+	exec->curr_cmd = token->cmd_num;
 	while (exec->prior_layer == token->prior)
 	{
 		*exec->exit_code = 0;
@@ -128,7 +129,6 @@ int	execute_loop(t_token *token, t_exec *exec)
 	wait_everyone(exec);
 	if (exec->prior_layer != 0)
 		exit_process(exec);
-	return (0);
 }
 
 /*REVIEW - next_command

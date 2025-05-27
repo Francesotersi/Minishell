@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   remove_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:48:07 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/22 12:26:22 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/27 15:57:20 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*actual_removal_temp_alloc(t_token *token)
 	token->content = (char *)ft_calloc(ft_strlen(temp) + 1, sizeof(char));
 	if (!token->content)
 	{
-		free_all(token, NULL);
+		free_all(token, NULL, false);
 		return (NULL);
 	}
 	return (temp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_message.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:47:51 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/19 16:14:21 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:08:01 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	bash_message2(int message, char *file);
 static int	bash_message3(int message, char *file);
-static int	bash_message4(int message);
+static int	bash_message4(int message, char *file);
 
 /*
 //REVIEW - error
@@ -133,15 +133,19 @@ static int	bash_message3(int message, char *file)
 		_fd_printf(2, "bash: %s: Permission denied\n", file);
 	}
 	else
-		return (bash_message4(message));
+		return (bash_message4(message, file));
 	return (1);
 }
 
-static int	bash_message4(int message)
+static int	bash_message4(int message, char *file)
 {
 	if (message == E_HEREDOC_CTRL_D)
 	{
 		_fd_printf(2, "bash: warning: here-doc delimited by end-of-file\n");
+	}
+	else if (message == E_NOFILE)
+	{
+		_fd_printf(2, "bash: %s: No such file or directory\n", file);
 	}
 	else if (message == E_PROC_SUB)
 	{

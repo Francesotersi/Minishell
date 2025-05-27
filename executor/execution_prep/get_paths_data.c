@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 11:37:40 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 15:57:28 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 15:38:44 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	get_paths_data(t_exec *exec)
 	cmd_index = 0;
 	while (exec->commands[cmd_index])
 	{
-		if (*exec->commands[cmd_index] && \
+		if ((*exec->commands[cmd_index] && *exec->commands[cmd_index][0] != '\0') && \
 			exec->which_cmd[cmd_index] == _NO && \
 			access(*exec->commands[cmd_index], X_OK))
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   enum.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:15:38 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/20 15:03:15 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:05:56 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ enum e_exec_errors
 	E_CD_ENV,
 	E_EXIT_NUMERIC,
 	E_EXIT_ARGS,
+	E_NOFILE,
 	E_CMD_NOTFOUND,
 	E_IS_DIRECTORY,
 	E_PERMISSION_DENIED,

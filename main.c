@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 09:53:39 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/27 00:05:54 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:37:27 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	start(t_data *gen, int i, int j)
 			{
 				execute(gen->token, (void *)gen);
 				assign_signal_exit_code(gen);
-				free_all(gen->token, gen);
+				free_all(gen->token, gen, true);
 			}
 		}
 		free(gen->input);

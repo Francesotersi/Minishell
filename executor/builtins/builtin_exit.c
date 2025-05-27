@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/22 11:11:13 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:37:14 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_exit(char **args, t_exec *exec)
 		_fd_printf(2, "exit\n");
 	exit_code = *exec->exit_code;
 	free(exec->minishell_path);
-	free_all(exec->first_token, exec->main_struct_pointer);
+	free_all(exec->first_token, exec->main_struct_pointer, true);
 	_free_matrix(*exec->env);
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);
@@ -89,7 +89,7 @@ int	exit_process(t_exec *exec)
 
 	exit_code = *exec->exit_code;
 	free(exec->minishell_path);
-	free_all(exec->first_token, exec->main_struct_pointer);
+	free_all(exec->first_token, exec->main_struct_pointer, true);
 	_free_matrix(*exec->env);
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);

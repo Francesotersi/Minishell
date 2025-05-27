@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:04:20 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/27 10:41:31 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:05:42 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,20 @@ int	is_a_valid_executable(t_exec *exec, int i)
 	if (!exec->commands[i][0])
 		return (_NO);
 	dir = opendir(exec->commands[i][0]);
-	if (dir)
+	if (access(exec->commands[i][0], X_OK) != 0)
+	{
+		if (*exec->commands[i][0] != '/')
+			bash_message(E_CMD_NOTFOUND, _cut_string(exec->commands[i][0], 0, 0));
+		else
+			bash_message(E_NOFILE, _cut_string(exec->commands[i][0], 0, 0));
+		set_exit_code(exec, 127);
+		return (_NO);
+	}
+	else if (dir)
 	{
 		bash_message(E_IS_DIRECTORY, _cut_string(exec->commands[i][0], 0, 0));
 		closedir(dir);
 		set_exit_code(exec, 126);
-		return (_NO);
-	}
-	else if (access(exec->commands[i][0], F_OK | X_OK) != 0)
-	{
-		bash_message(E_CMD_NOTFOUND, _cut_string(exec->commands[i][0], 0, 0));
-		set_exit_code(exec, 127);
 		return (_NO);
 	}
 	return (_YES);

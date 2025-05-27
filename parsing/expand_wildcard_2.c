@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_wildcard_2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:08:56 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/22 12:25:11 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/27 15:56:36 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ t_token	*reallocation_and_all(t_data *gen, t_token *token)
 	gen->token_num = num_token(gen->input, gen);
 	if (gen->token_num == 0)
 		return (NULL);
-	free_all(token, gen);
+	free_all(token, gen, true);
 	token = (t_token *)ft_calloc(sizeof(t_token), gen->token_num + 1);
 	if (!token)
 		return (write(2, "bash: malloc error\n", 14), NULL);

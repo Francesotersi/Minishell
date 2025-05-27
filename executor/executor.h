@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/27 00:02:59 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:33:47 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,7 @@ int		change_shell_name(char **env);
 //SECTION -	Execution main
 
 int		execute(t_token *tokens, void *data);
-int		execute_loop(t_token *token, t_exec *exec);
+void	execute_loop(t_token *token, t_exec *exec);
 int		wait_everyone(t_exec *exec);
 
 //	NOTE -	Error and prints
