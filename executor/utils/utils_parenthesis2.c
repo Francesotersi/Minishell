@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_parenthesis2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:40:37 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/19 18:00:22 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:30:32 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:09 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 17:20:18 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:19:40 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	ft_unset(char **args, t_exec *exec)
 	int		i;
 
 	i = 1;
-	*exec->exit_code = 0;
+	set_exit_code(exec, 0);
 	while (args[i])
 	{
 		if (!env_pars(args[i], NULL, NULL, NULL) && !ft_strchr(args[i], '='))
@@ -56,7 +56,7 @@ int	ft_unset(char **args, t_exec *exec)
 		else
 		{
 			bash_message(E_UNSET_PARSING, args[i]);
-			*exec->exit_code = 1;
+			set_exit_code(exec, 1);
 		}
 		++i;
 	}

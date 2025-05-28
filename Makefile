@@ -114,4 +114,6 @@ fclean: clean
 	rm -f $(NAME)
 	$(MAKE) fclean -C $(LIBFT_DIR)
 
+bonus: fclean $(NAME)
+
 re: fclean all

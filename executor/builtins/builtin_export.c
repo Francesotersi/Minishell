@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:47:04 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/20 14:57:15 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:19:30 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	ft_export(char **args, t_exec *exec)
 	int		pars_data[4];	
 
 	i = 1;
-	*exec->exit_code = 0;
+	set_exit_code(exec, 0);
 	if (!args[1])
 		return (print_export(*exec->env), 0);
 	while (args[i])
@@ -68,7 +68,7 @@ int	ft_export(char **args, t_exec *exec)
 		else
 		{
 			bash_message(E_EXPORT_PARSING, args[i]);
-			*exec->exit_code = 1;
+			set_exit_code(exec, 1);
 		}
 		++i;
 	}

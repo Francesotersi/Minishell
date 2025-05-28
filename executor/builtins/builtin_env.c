@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alessandro.russo.frc@gmail.co    +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:57 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/15 17:19:44 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:17:42 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_env(char **args, t_exec *exec)
 {
 	if (args[1])
 		return (what_file_is(exec, args[1]));
-	*exec->exit_code = 0;
+	set_exit_code(exec, 0);
 	print_env(*exec->env);
 	return (0);
 }

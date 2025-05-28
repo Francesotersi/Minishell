@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_generic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:04:20 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/27 16:05:42 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:33:01 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	bigger(int n1, int n2)
 int	set_exit_code(t_exec *exec, int exit_code)
 {
 	*exec->exit_code = exit_code;
+	exec->pid_list[exec->curr_cmd] = exit_code * -1;
 	return (exit_code);
 }
 
@@ -47,8 +48,9 @@ int	is_a_valid_executable(t_exec *exec, int i)
 	dir = opendir(exec->commands[i][0]);
 	if (access(exec->commands[i][0], X_OK) != 0)
 	{
-		if (*exec->commands[i][0] != '/')
-			bash_message(E_CMD_NOTFOUND, _cut_string(exec->commands[i][0], 0, 0));
+		if (*exec->commands[i][0] && exec->commands[i][0][1] != '/')
+			bash_message(E_CMD_NOTFOUND, \
+			_cut_string(exec->commands[i][0], 0, 0));
 		else
 			bash_message(E_NOFILE, _cut_string(exec->commands[i][0], 0, 0));
 		set_exit_code(exec, 127);

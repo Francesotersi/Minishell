@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 18:46:54 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/27 16:37:14 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:44:52 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_exit(char **args, t_exec *exec)
 		_fd_printf(2, "exit\n");
 	exit_code = *exec->exit_code;
 	free(exec->minishell_path);
-	free_all(exec->first_token, exec->main_struct_pointer, true);
+	free_all(exec->first_token, exec->main_struct_pointer, false);
 	_free_matrix(*exec->env);
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);
@@ -59,7 +59,7 @@ int	ft_exit(char **args, t_exec *exec)
 */
 static int	check_args(char **args, t_exec *exec)
 {
-	*exec->exit_code = 0;
+	set_exit_code(exec, 0);
 	if (!args[1])
 		return (0);
 	else if (overflow_check(args[1], LLONG_MAX, LLONG_MIN, 0) == _YES)
@@ -72,7 +72,7 @@ static int	check_args(char **args, t_exec *exec)
 		set_exit_code(exec, 1);
 		return (bash_message(E_EXIT_ARGS, NULL), 1);
 	}
-	*exec->exit_code = ft_atoi(args[1]);
+	set_exit_code(exec, ft_atoi(args[1]));
 	return (0);
 }
 
@@ -89,7 +89,7 @@ int	exit_process(t_exec *exec)
 
 	exit_code = *exec->exit_code;
 	free(exec->minishell_path);
-	free_all(exec->first_token, exec->main_struct_pointer, true);
+	free_all(exec->first_token, exec->main_struct_pointer, false);
 	_free_matrix(*exec->env);
 	exec->main_struct_pointer = NULL;
 	free_memory(exec);
