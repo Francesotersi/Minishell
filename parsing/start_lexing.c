@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_lexing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 12:05:20 by ftersill          #+#    #+#             */
-/*   Updated: 2025/05/27 16:38:17 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/28 08:59:56 by ftersill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,14 +113,14 @@ int	start_lexing_2(t_data *gen, int j, t_token **token)
 	{
 		*token = reallocation_and_all(gen, *token);
 		if (!*token)
-			return (free_all(*token, gen), 2);
+			return (free_all(*token, gen, false), 2);
 	}
 	else if (j == 2)
-		return (free_all(*token, gen), 2);
+		return (free_all(*token, gen, false), 2);
 	if (define_token_and_parenthesis(*token, gen) == 1)
-		return (free_all(*token, gen), 2);
+		return (free_all(*token, gen, false), 2);
 	if (actual_parser(*token, gen) == 1)
-		return (free_all(*token, gen), 2);
+		return (free_all(*token, gen, false), 2);
 	return (0);
 }
 
