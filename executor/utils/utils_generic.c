@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_generic.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:04:20 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/28 10:33:01 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:43:52 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,29 +41,29 @@ int	is_a_valid_executable(t_exec *exec, int i)
 {
 	DIR	*dir;
 
-	if (exec->which_cmd[i] != 0)
-		return (_YES);
 	if (!exec->commands[i][0])
 		return (_NO);
 	dir = opendir(exec->commands[i][0]);
-	if (access(exec->commands[i][0], X_OK) != 0)
+	if ((!dir) && (exec->which_cmd[i] || !access(exec->commands[i][0], X_OK)))
+		return (_YES);
+	if (exec->path && !dir)
+		_cut_string(exec->commands[i][0], 0, 0);
+	if (dir || access(exec->commands[i][0], F_OK) == 0)
 	{
-		if (*exec->commands[i][0] && exec->commands[i][0][1] != '/')
-			bash_message(E_CMD_NOTFOUND, \
-			_cut_string(exec->commands[i][0], 0, 0));
+		if (dir)
+		{
+			bash_message(E_IS_DIRECTORY, exec->commands[i][0]);
+			closedir(dir);
+		}
 		else
-			bash_message(E_NOFILE, _cut_string(exec->commands[i][0], 0, 0));
-		set_exit_code(exec, 127);
-		return (_NO);
+			bash_message(E_PERMISSION_DENIED, exec->commands[i][0]);
+		return (set_exit_code(exec, 126), _NO);
 	}
-	else if (dir)
-	{
-		bash_message(E_IS_DIRECTORY, _cut_string(exec->commands[i][0], 0, 0));
-		closedir(dir);
-		set_exit_code(exec, 126);
-		return (_NO);
-	}
-	return (_YES);
+	if (exec->commands[i][0][0] == '/')
+		bash_message(E_CMD_NOTFOUND, exec->commands[i][0]);
+	else
+		bash_message(E_NOFILE, exec->commands[i][0]);
+	return (set_exit_code(exec, 127), _NO);
 }
 
 static long long int	ft_pow(long long int n, int p)
