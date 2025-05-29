@@ -6,7 +6,7 @@
 /*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:43:01 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/27 16:33:47 by alerusso         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:13:37 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,10 @@ valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes \
 -	*pid_list:	an array of pid.
 	//			0 refers to the command in token->cmd_num == 0.
 	//			for ls | grep, ls pid goes in pid_list[0]
+	//			for BUILTIN, the exit code is set in this array,
+	//			setted negative (ex: Exit Code 5 ---> -5).
+	//			so, for every command, the exit code is taken
+	//			with waitpid, or making the pid value positive for builtins
 	//
 	***commands:3d matrix of commands.
 	//			commands = {ls, NULL}, {grep, .c, NULL}

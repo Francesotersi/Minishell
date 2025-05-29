@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftersill <ftersill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alerusso <alerusso@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:43:26 by alerusso          #+#    #+#             */
-/*   Updated: 2025/05/28 10:32:24 by ftersill         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:10:33 by alerusso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,9 +219,13 @@ static int	invoke_programs(t_exec *exec, int i)
 //	1)	We reset STDIN and STDOUT;
 	2)	We loop until we reach the last command;
 		-	We wait for every pid in the list;
-		-	If the pid is not 0, we wait for it;
-		-	If the pid is the last command done, we set the exit code;
-		-	If the pid is 0, we skip it.
+		-	If the pid is bigger than 0, we wait for it;
+		-	If the pid is lower than 0, it's a builtin exit code. We get it
+			making it positive;
+		-	If the pid is 0, the exit code is updated by zero;
+		-	the exit code is updated;
+	When i becomes the curr_cmd -1, we change signal function.
+	
 */
 int	wait_everyone(t_exec *exec)
 {
